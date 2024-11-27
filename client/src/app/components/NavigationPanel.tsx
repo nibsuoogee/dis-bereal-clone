@@ -3,19 +3,17 @@ import {
   AccordionDetails,
   AccordionGroup,
   AccordionSummary,
-  Card,
   Stack,
-  Typography,
 } from "@mui/joy";
 import Link from "next/link";
 
 export default function NavigationPanel() {
   return (
     <>
-      <AccordionGroup sx={{ maxWidth: 400 }}>
+      <AccordionGroup sx={{ maxWidth: 400, zIndex: 10 }}>
         <Accordion>
           <AccordionSummary>Navigation panel</AccordionSummary>
-          <AccordionDetails>
+          <AccordionDetails sx={{ bgcolor: "background.level1" }}>
             <Stack
               spacing={1}
               sx={{
@@ -23,7 +21,7 @@ export default function NavigationPanel() {
                 alignItems: "flex-start",
               }}
             >
-              <Link href="/">Default page</Link>
+              <Link href="/">Front page</Link>
               <Link href="/views/dashboard">Dashboard</Link>
               <Link href="/views/login">login</Link>
               <Link href="/views/profile">profile</Link>
