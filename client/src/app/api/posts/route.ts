@@ -1,11 +1,14 @@
+import { API_CONFIG } from "@/app/config/api";
 import { getErrorMessage, reportError } from "@/app/utils/logger";
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const data = null;
-
     // logic
+
+    const response = await axios.get(`${API_CONFIG.baseURL}/api/posts`);
+    const data = response.data;
 
     return NextResponse.json({ message: "Success message", data });
   } catch (err) {
