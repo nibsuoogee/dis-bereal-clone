@@ -1,0 +1,17 @@
+{
+  "name": "dis-bereal-clone",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "install:all": "concurrently \"npm install --prefix server\" \"npm install --prefix client\"",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "dev:all": "concurrently \"npm run dev:server\" \"npm run dev:client\""
+  },
+  "main": "",
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
