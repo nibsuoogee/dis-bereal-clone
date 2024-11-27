@@ -16,8 +16,14 @@ export default function Dashboard() {
   return (
     <PageLayoutShell>
       <Typography level="h1">Dashboard</Typography>
-
-      <Grid container spacing={1} sx={{ flexGrow: 1 }}>
+      <Grid
+        container
+        spacing={1}
+        sx={{
+          justifyContent: "flex-center",
+          alignItems: "center",
+        }}
+      >
         {videoIds.map((videoId) => (
           <VideoCard key={videoId} videoId={videoId} />
         ))}

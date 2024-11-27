@@ -1,4 +1,4 @@
-# dis-bereal-clone
+# Data-Intensive Systems - BeReal Clone
 
 ## Development
 

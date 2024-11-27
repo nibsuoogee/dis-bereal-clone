@@ -2,7 +2,7 @@ import { Card, CardContent, Grid, Typography } from "@mui/joy";
 
 export default function VideoCard({ videoId }: { videoId: string }) {
   return (
-    <Grid xs={12} md={4} lg={3}>
+    <Grid xs={12} sm={6} md={3}>
       <Card variant="outlined" sx={{ height: "300px", width: "169px" }}>
         <CardContent>
           <Typography level="title-md">Video ID: {videoId}</Typography>
