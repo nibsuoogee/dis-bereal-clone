@@ -9,14 +9,22 @@ export async function GET() {
 
     const response = await axios.get(`${API_CONFIG.baseURL}/api/posts`);
     const data = response.data;
+    console.log(data);
+
+    if (response.status !== 200) {
+      const errorMessage = data.message;
+      reportError({
+        message: errorMessage,
+      });
+    }
 
     return NextResponse.json({ message: "Success message", data });
   } catch (err) {
-    const errorDescriptor = "Error in posts route";
+    const errorMessage = "Error in posts route" + ": " + getErrorMessage(err);
     reportError({
-      message: errorDescriptor + ":" + getErrorMessage(err),
+      message: errorMessage,
     });
-    return NextResponse.json({ message: errorDescriptor }, { status: 500 });
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
   }
 }
 
@@ -33,7 +41,7 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     const errorDescriptor = "Error in posts route";
     reportError({
-      message: errorDescriptor + ":" + getErrorMessage(err),
+      message: errorDescriptor + ": " + getErrorMessage(err),
     });
     return NextResponse.json({ message: errorDescriptor }, { status: 500 });
   }

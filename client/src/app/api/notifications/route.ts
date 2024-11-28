@@ -11,7 +11,7 @@ export async function GET() {
   } catch (err) {
     const errorDescriptor = "Error in notifications route";
     reportError({
-      message: errorDescriptor + ":" + getErrorMessage(err),
+      message: errorDescriptor + ": " + getErrorMessage(err),
     });
     return NextResponse.json({ message: errorDescriptor }, { status: 500 });
   }
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
   } catch (err) {
     const errorDescriptor = "Error in notifications route";
     reportError({
-      message: errorDescriptor + ":" + getErrorMessage(err),
+      message: errorDescriptor + ": " + getErrorMessage(err),
     });
     return NextResponse.json({ message: errorDescriptor }, { status: 500 });
   }

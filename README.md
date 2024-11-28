@@ -4,11 +4,27 @@
 
 ### Install dependencies 🪐
 
-To install node dependencies in the root directory and then the client and server directories, run the following commands in the root directory:
+To install node dependencies in the root directory and then the client and server directories, run the following commands in the root directory (you will need to run these commands when new dependencies are added to the project):
 
 ```
 npm install
 npm run install:all
+```
+
+### Install PostgreSQL 🐘
+
+For local development, download and install PostgreSQL from the [official website](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads).
+
+### Set up environment variables 📝
+
+The following environment variables should be set in a .env file in the server directory:
+
+```
+DB_USER=postgres
+DB_PASSWORD=< your_password >
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=postgres
 ```
 
 ### Run the app 🏃‍♂️

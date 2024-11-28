@@ -17,7 +17,7 @@ export const usePostService = () => {
 
       return data;
     } catch (err) {
-      showSnackbar("Failed to fetch posts");
+      //showSnackbar("Failed to fetch posts");
     }
     return [];
   };

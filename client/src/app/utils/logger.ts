@@ -1,5 +1,5 @@
 /**
- * Converta any error to a string safely.
+ * Convert any error to a string safely.
  * @param error Any error.
  * @returns A string version of the error.
  */
