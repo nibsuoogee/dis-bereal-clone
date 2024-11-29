@@ -4,10 +4,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const { command } = await request.json();
+    const body = await request.json();
     const response = await fetch(`${API_CONFIG.baseURL}/api/dev`, {
       method: "POST",
-      body: command,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
     });
     const { message, data } = await response.json();
 

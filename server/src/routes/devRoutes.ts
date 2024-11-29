@@ -1,9 +1,9 @@
 //import { authMiddleware } from "@middlewares/authMiddleware";
 import express from "express";
-import { initDB } from "../controllers/devController";
+import { handleDevRequest } from "../controllers/devController";
 
 export const router = express.Router();
 
-router.post("/", /*authMiddleware,*/ initDB);
+router.post("/", /*authMiddleware,*/ handleDevRequest);
 
 export default router;

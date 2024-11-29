@@ -1,3 +1,5 @@
+"use client";
+
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
 import { getErrorMessage } from "../utils/logger";
 
@@ -8,6 +10,9 @@ export const useDEVService = () => {
     try {
       const response = await fetch("/api/dev", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ command: "initialize-database" }),
       });
       const { message, data } = await response.json();

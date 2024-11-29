@@ -1,18 +1,5 @@
-import { getErrorMessage } from "@utils/logger";
 import { Pool } from "pg";
 import dotenv from "dotenv";
-
-/*export const connectDB = async () => {
-  try {
-    // await connect to database function
-
-    
-    console.log("Database connected");
-  } catch (err) {
-    reportError({ message: "Error in connectDB():" + getErrorMessage(err) });
-    process.exit(1);
-  }
-};*/
 
 // Load environment variables
 dotenv.config();

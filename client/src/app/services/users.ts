@@ -1,3 +1,5 @@
+"use client";
+
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
 
 export const useUserService = () => {
