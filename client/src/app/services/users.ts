@@ -1,27 +1,19 @@
 "use client";
 
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
+import { serviceGetRequest } from "@/app/services/requestHandlers";
 
 export const useUserService = () => {
   const { showSnackbar } = useSnackbar();
 
   const getUsers = async (): Promise<string[]> => {
-    try {
-      const response = await fetch("/api/users", {
-        method: "GET",
-      });
-      const { message, data } = await response.json();
-
-      if (!response.ok) {
-        showSnackbar(message);
-        throw new Error("Failed to fetch users");
-      }
-
-      return data;
-    } catch (err) {
-      showSnackbar("Failed to fetch users");
-    }
-    return [];
+    const routeName = "/api/users";
+    const defaultErrorMessage = "Failed to fetch users";
+    return await serviceGetRequest(
+      routeName,
+      defaultErrorMessage,
+      showSnackbar
+    );
   };
 
   return { getUsers };
