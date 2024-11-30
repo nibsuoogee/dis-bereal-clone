@@ -5,7 +5,8 @@ const routeName = "dev";
 const routePath = "/api/dev";
 
 export async function POST(request: NextRequest) {
-  return postWrapper(routeName, routePath, request);
+  const body = await request.json();
+  return postWrapper(routeName, routePath, body);
 }
 
 export async function GET(request: NextRequest) {

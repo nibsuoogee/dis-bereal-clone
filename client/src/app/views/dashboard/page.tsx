@@ -1,18 +1,21 @@
 "use client";
 
-import { Grid, Typography } from "@mui/joy";
+import { Button, Grid, Typography } from "@mui/joy";
 import PageLayoutShell from "../../components/PageLayoutShell";
 import { useEffect, useState } from "react";
 import VideoCard from "../../components/VideoCard";
 import { usePostService } from "@/app/services/posts";
+import VideoUpload from "@/app/components/VideoUpload";
+import { post } from "../../../../../shared/types";
 
 export default function Dashboard() {
   const { getPosts } = usePostService();
-  const [videoIds, setVideoIds] = useState<string[]>([]);
+  const [posts, setPosts] = useState<post[]>([]);
 
   async function handleGetPosts() {
-    const newIds = await getPosts();
-    setVideoIds(newIds);
+    const newPosts = await getPosts();
+
+    setPosts(newPosts);
   }
 
   useEffect(() => {
@@ -35,10 +38,12 @@ export default function Dashboard() {
           alignItems: "center",
         }}
       >
-        {videoIds.map((videoId) => (
-          <VideoCard key={videoId} videoId={videoId} />
+        {posts.map((post) => (
+          <VideoCard key={post.postid} post={post} />
         ))}
       </Grid>
+
+      <VideoUpload></VideoUpload>
     </PageLayoutShell>
   );
 }

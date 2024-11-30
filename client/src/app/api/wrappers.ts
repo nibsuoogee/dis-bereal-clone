@@ -5,11 +5,10 @@ import { NextRequest, NextResponse } from "next/server";
 export async function postWrapper(
   routeName: string,
   routePath: string,
-  request: NextRequest,
+  body: any,
   operation?: () => Promise<any>
 ) {
   try {
-    const body = await request.json();
     const response = await fetch(`${API_CONFIG.baseURL}${routePath}`, {
       method: "POST",
       headers: {
@@ -25,8 +24,38 @@ export async function postWrapper(
       });
     }
 
-    // An optional operation could be passed in to this wrapper
-    // const result = await operation();
+    return NextResponse.json({ message, data }, { status: response.status });
+  } catch (err) {
+    const errorMessage = `Error in ${routeName} route: ${getErrorMessage(err)}`;
+    reportError({
+      message: errorMessage,
+    });
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
+  }
+}
+
+export async function postWrapperFormData(
+  routeName: string,
+  routePath: string,
+  operation: () => Promise<any>
+) {
+  try {
+    const content = await operation();
+
+    const response = await fetch(`${API_CONFIG.baseURL}${routePath}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(content),
+    });
+    const { message, data } = await response.json();
+
+    if (response.status !== 200) {
+      reportError({
+        message: message,
+      });
+    }
 
     return NextResponse.json({ message, data }, { status: response.status });
   } catch (err) {
