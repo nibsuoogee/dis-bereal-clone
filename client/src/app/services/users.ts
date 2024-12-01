@@ -7,10 +7,10 @@ export const useUserService = () => {
   const { showSnackbar } = useSnackbar();
 
   const getUsers = async (): Promise<string[]> => {
-    const routeName = "/api/users";
+    const routePath = "/api/users";
     const defaultErrorMessage = "Failed to fetch users";
     return await serviceGetRequest(
-      routeName,
+      routePath,
       defaultErrorMessage,
       showSnackbar
     );

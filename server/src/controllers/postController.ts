@@ -98,3 +98,20 @@ export const getVideo = async (req: Request, res: Response) => {
     "handleDevRequest"
   );*/
 };
+
+export const deletePost = async (req: Request, res: Response) => {
+  return handleControllerRequest(
+    res,
+    async () => {
+      const { id } = req.params;
+
+      await query("DELETE FROM posts WHERE postid = $1 RETURNING postid", [id]);
+
+      return {
+        message: "Post deleted successfully",
+        data: null,
+      };
+    },
+    "handleDevRequest"
+  );
+};

@@ -1,10 +1,14 @@
-import { getWrapper, postWrapperFormData } from "@/app/api/wrappers";
+import {
+  deleteWrapper,
+  getWrapper,
+  postWrapperFormData,
+} from "@/app/api/wrappers";
 import { NextRequest, NextResponse } from "next/server";
 
 const routeName = "posts";
 const routePath = "/api/posts";
 
-export async function POST(request: NextRequest, res: Response) {
+export async function POST(request: NextRequest, response: Response) {
   return postWrapperFormData(routeName, routePath, async () => {
     const formData = await request.formData();
     const file = formData.get("file") as File;

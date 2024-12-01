@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Grid, Typography } from "@mui/joy";
+import { CircularProgress, Grid, Stack, Typography } from "@mui/joy";
 import PageLayoutShell from "../../components/PageLayoutShell";
 import { useEffect, useState } from "react";
 import VideoCard from "../../components/VideoCard";
@@ -11,11 +11,14 @@ import { post } from "../../../../../shared/types";
 export default function Dashboard() {
   const { getPosts } = usePostService();
   const [posts, setPosts] = useState<post[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function handleGetPosts() {
+    setIsLoading(true);
     const newPosts = await getPosts();
 
     setPosts(newPosts);
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -24,7 +27,17 @@ export default function Dashboard() {
 
   return (
     <PageLayoutShell>
-      <Typography level="h1">Dashboard</Typography>
+      <Stack
+        spacing={2}
+        direction={"row"}
+        sx={{
+          justifyContent: "flex-center",
+          alignItems: "flex-center",
+        }}
+      >
+        <Typography level="h1">Dashboard</Typography>
+        {isLoading && <CircularProgress thickness={1} color="neutral" />}
+      </Stack>
 
       <Typography level="title-sm">
         The following data has been fetched from the express server:
@@ -39,11 +52,15 @@ export default function Dashboard() {
         }}
       >
         {posts.map((post) => (
-          <VideoCard key={post.postid} post={post} />
+          <VideoCard
+            key={post.postid}
+            post={post}
+            handleGetPosts={handleGetPosts}
+          />
         ))}
       </Grid>
 
-      <VideoUpload></VideoUpload>
+      <VideoUpload handleGetPosts={handleGetPosts}></VideoUpload>
     </PageLayoutShell>
   );
 }

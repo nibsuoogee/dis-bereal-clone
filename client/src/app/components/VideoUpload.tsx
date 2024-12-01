@@ -2,7 +2,11 @@ import { Button } from "@mui/joy";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { usePostService } from "@/app/services/posts";
 
-export default function VideoUpload() {
+export default function VideoUpload({
+  handleGetPosts,
+}: {
+  handleGetPosts: () => void;
+}) {
   const { uploadPost } = usePostService();
 
   async function handleVideoUpload(event: any) {
@@ -14,7 +18,8 @@ export default function VideoUpload() {
       const formData = new FormData();
       formData.append("file", file);
 
-      uploadPost(formData);
+      await uploadPost(formData);
+      handleGetPosts();
     }
   }
 

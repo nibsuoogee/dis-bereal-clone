@@ -87,3 +87,31 @@ export async function serviceGetRequest(
   }
   return [];
 }
+
+export async function serviceDeleteRequest(
+  routePath: string,
+  defaultErrorMessage: string,
+  showSnackbar: (message: string) => void,
+  showResponseSnackbar: boolean,
+  operation?: () => Promise<any>
+) {
+  try {
+    const response = await fetch(routePath, {
+      method: "DELETE",
+    });
+    const { message, data } = await response.json();
+
+    if (!response.ok) {
+      throw new Error(message ?? defaultErrorMessage);
+    }
+
+    if (showResponseSnackbar) {
+      showSnackbar(message);
+    }
+
+    return data;
+  } catch (err) {
+    showSnackbar(getErrorMessage(err));
+  }
+  return [];
+}

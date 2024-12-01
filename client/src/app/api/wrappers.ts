@@ -97,3 +97,27 @@ export async function getWrapper(
     return NextResponse.json({ message: errorMessage }, { status: 500 });
   }
 }
+
+export async function deleteWrapper(routeName: string, request: NextRequest) {
+  try {
+    const url = new URL(request.url);
+    const response = await fetch(`${API_CONFIG.baseURL}${url.pathname}`, {
+      method: "DELETE",
+    });
+    const { message, data } = await response.json();
+
+    if (response.status !== 200) {
+      reportError({
+        message: message,
+      });
+    }
+
+    return NextResponse.json({ message, data }, { status: response.status });
+  } catch (err) {
+    const errorMessage = `Error in ${routeName} route: ${getErrorMessage(err)}`;
+    reportError({
+      message: errorMessage,
+    });
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
+  }
+}
