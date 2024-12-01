@@ -1,6 +1,6 @@
 "use client";
 
-import { post } from "../../../../shared/types.js";
+import { Post } from "../../../../shared/types.js";
 
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
 import {
@@ -12,14 +12,14 @@ import {
 export const usePostService = () => {
   const { showSnackbar } = useSnackbar();
 
-  const getPosts = async (): Promise<post[]> => {
+  const getPosts = async (showResponseSnackbar: boolean): Promise<Post[]> => {
     const routePath = "/api/posts";
     const defaultErrorMessage = "Failed to fetch posts";
     return await serviceGetRequest(
       routePath,
       defaultErrorMessage,
       showSnackbar,
-      true
+      showResponseSnackbar
     );
   };
 
@@ -36,7 +36,7 @@ export const usePostService = () => {
     );
   };
 
-  const deletePost = async (id: string): Promise<string[]> => {
+  const deletePost = async (id: number): Promise<string[]> => {
     const routePath = `/api/posts/${id}`;
     const defaultErrorMessage = "Failed to delete post";
 

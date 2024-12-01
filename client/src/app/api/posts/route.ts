@@ -1,15 +1,9 @@
-import {
-  deleteWrapper,
-  getWrapper,
-  postWrapperFormData,
-} from "@/app/api/wrappers";
+import { getWrapper, postWrapper } from "@/app/api/wrappers";
+import { getErrorMessage } from "@/app/utils/logger";
 import { NextRequest, NextResponse } from "next/server";
 
-const routeName = "posts";
-const routePath = "/api/posts";
-
 export async function POST(request: NextRequest, response: Response) {
-  return postWrapperFormData(routeName, routePath, async () => {
+  try {
     const formData = await request.formData();
     const file = formData.get("file") as File;
 
@@ -21,12 +15,18 @@ export async function POST(request: NextRequest, response: Response) {
     }
 
     // Read the file as a buffer
-    const fileBuffer = Buffer.from(await file.arrayBuffer());
+    const fileBuffer = Buffer.from(await file.arrayBuffer()).toString("base64");
 
-    return { content: fileBuffer.toString("base64") };
-  });
+    return postWrapper(request, { content: fileBuffer });
+  } catch (err) {
+    const errorMessage = `Error in /api/posts route: ${getErrorMessage(err)}`;
+    reportError({
+      message: errorMessage,
+    });
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
+  }
 }
 
 export async function GET(request: NextRequest) {
-  return getWrapper(routeName, routePath, request);
+  return getWrapper(request);
 }

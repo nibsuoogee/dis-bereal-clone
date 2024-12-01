@@ -1,4 +1,3 @@
-//import { authMiddleware } from "@middlewares/authMiddleware";
 import {
   deletePost,
   getPosts,
@@ -9,11 +8,11 @@ import express from "express";
 
 export const router = express.Router();
 
-router.get("/", /*authMiddleware,*/ getPosts);
-router.get("/:id", /*authMiddleware,*/ getVideo);
+router.get("/", getPosts);
+router.get("/:id", getVideo);
 
-router.post("/", /*authMiddleware,*/ uploadPost);
+router.post("/", uploadPost);
 
-router.delete("/:id", /*authMiddleware,*/ deletePost);
+router.delete("/:id", deletePost);
 
 export default router;

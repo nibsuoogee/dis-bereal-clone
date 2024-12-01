@@ -2,14 +2,11 @@ import { API_CONFIG } from "@/app/config/api";
 import { getErrorMessage, reportError } from "@/app/utils/logger";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function postWrapper(
-  routeName: string,
-  routePath: string,
-  body: any,
-  operation?: () => Promise<any>
-) {
+export async function postWrapper(request: NextRequest, body: any) {
+  let urlPathName = "";
   try {
-    const response = await fetch(`${API_CONFIG.baseURL}${routePath}`, {
+    urlPathName = new URL(request.url).pathname;
+    const response = await fetch(`${API_CONFIG.baseURL}${urlPathName}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -26,7 +23,9 @@ export async function postWrapper(
 
     return NextResponse.json({ message, data }, { status: response.status });
   } catch (err) {
-    const errorMessage = `Error in ${routeName} route: ${getErrorMessage(err)}`;
+    const errorMessage = `Error in ${urlPathName} route: ${getErrorMessage(
+      err
+    )}`;
     reportError({
       message: errorMessage,
     });
@@ -35,14 +34,15 @@ export async function postWrapper(
 }
 
 export async function postWrapperFormData(
-  routeName: string,
-  routePath: string,
+  request: NextRequest,
   operation: () => Promise<any>
 ) {
+  let urlPathName = "";
   try {
+    urlPathName = new URL(request.url).pathname;
     const content = await operation();
 
-    const response = await fetch(`${API_CONFIG.baseURL}${routePath}`, {
+    const response = await fetch(`${API_CONFIG.baseURL}${urlPathName}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,7 +59,9 @@ export async function postWrapperFormData(
 
     return NextResponse.json({ message, data }, { status: response.status });
   } catch (err) {
-    const errorMessage = `Error in ${routeName} route: ${getErrorMessage(err)}`;
+    const errorMessage = `Error in ${urlPathName} route: ${getErrorMessage(
+      err
+    )}`;
     reportError({
       message: errorMessage,
     });
@@ -67,14 +69,11 @@ export async function postWrapperFormData(
   }
 }
 
-export async function getWrapper(
-  routeName: string,
-  routePath: string,
-  request: NextRequest,
-  operation?: () => Promise<any>
-) {
+export async function getWrapper(request: NextRequest) {
+  let urlPathName = "";
   try {
-    const response = await fetch(`${API_CONFIG.baseURL}${routePath}`, {
+    urlPathName = new URL(request.url).pathname;
+    const response = await fetch(`${API_CONFIG.baseURL}${urlPathName}`, {
       method: "GET",
     });
     const { message, data } = await response.json();
@@ -85,12 +84,11 @@ export async function getWrapper(
       });
     }
 
-    // An optional operation could be passed in to this wrapper
-    // const result = await operation();
-
     return NextResponse.json({ message, data }, { status: response.status });
   } catch (err) {
-    const errorMessage = `Error in ${routeName} route: ${getErrorMessage(err)}`;
+    const errorMessage = `Error in ${request.url} route: ${getErrorMessage(
+      err
+    )}`;
     reportError({
       message: errorMessage,
     });
@@ -98,10 +96,11 @@ export async function getWrapper(
   }
 }
 
-export async function deleteWrapper(routeName: string, request: NextRequest) {
+export async function deleteWrapper(request: NextRequest) {
+  let urlPathName = "";
   try {
-    const url = new URL(request.url);
-    const response = await fetch(`${API_CONFIG.baseURL}${url.pathname}`, {
+    urlPathName = new URL(request.url).pathname;
+    const response = await fetch(`${API_CONFIG.baseURL}${urlPathName}`, {
       method: "DELETE",
     });
     const { message, data } = await response.json();
@@ -114,7 +113,9 @@ export async function deleteWrapper(routeName: string, request: NextRequest) {
 
     return NextResponse.json({ message, data }, { status: response.status });
   } catch (err) {
-    const errorMessage = `Error in ${routeName} route: ${getErrorMessage(err)}`;
+    const errorMessage = `Error in ${urlPathName} route: ${getErrorMessage(
+      err
+    )}`;
     reportError({
       message: errorMessage,
     });

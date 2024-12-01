@@ -41,7 +41,6 @@ export async function servicePostRequestFormData(
   try {
     const response = await fetch(routePath, {
       method: "POST",
-
       body: formData,
     });
     const { message, data } = await response.json();
@@ -64,8 +63,7 @@ export async function serviceGetRequest(
   routePath: string,
   defaultErrorMessage: string,
   showSnackbar: (message: string) => void,
-  showResponseSnackbar: boolean,
-  operation?: () => Promise<any>
+  showResponseSnackbar: boolean
 ) {
   try {
     const response = await fetch(routePath, {
@@ -92,8 +90,7 @@ export async function serviceDeleteRequest(
   routePath: string,
   defaultErrorMessage: string,
   showSnackbar: (message: string) => void,
-  showResponseSnackbar: boolean,
-  operation?: () => Promise<any>
+  showResponseSnackbar: boolean
 ) {
   try {
     const response = await fetch(routePath, {
