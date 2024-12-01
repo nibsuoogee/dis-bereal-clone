@@ -1,4 +1,6 @@
-import { Request, Response, NextFunction } from "express"; // Importing Request and Response types
+// Authentication may be added later
+
+/*import { Request, Response, NextFunction } from "express"; // Importing Request and Response types
 
 export const authMiddleware = (
   req: Request,
@@ -14,4 +16,4 @@ export const authMiddleware = (
   } catch (error) {
     res.status(403).json({ message: "Invalid token" });
   }
-};
+};*/

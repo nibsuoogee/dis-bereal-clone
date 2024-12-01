@@ -1,17 +1,17 @@
 import { Request, Response } from "express"; // Importing Request and Response types
 import { handleControllerRequest } from "@controllers/handlers";
-import { query } from "src/database/db";
+import { queryDB } from "src/database/db";
 import { getErrorMessage } from "@utils/logger";
 
 export const getPosts = async (req: Request, res: Response) => {
   return handleControllerRequest(
     res,
     async () => {
-      const result = await query("SELECT * FROM posts", []);
+      const result = await queryDB("SELECT * FROM posts", []);
 
       return { message: "Posts fetched successfully", data: result.rows };
     },
-    "handleDevRequest"
+    "getPosts"
   );
 };
 
@@ -24,7 +24,7 @@ export const uploadPost = async (req: Request, res: Response) => {
       // Decode the Base64 content back to a buffer
       const fileBuffer = Buffer.from(content, "base64");
 
-      const result = await query(
+      const result = await queryDB(
         "INSERT INTO posts (content) VALUES ($1) RETURNING postid",
         [fileBuffer]
       );
@@ -34,7 +34,7 @@ export const uploadPost = async (req: Request, res: Response) => {
         data: { fileId: result.rows[0].postid },
       };
     },
-    "handleDevRequest"
+    "uploadPost"
   );
 };
 
@@ -43,9 +43,10 @@ export const getVideo = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     // Query the database for the video
-    const result = await query("SELECT content FROM posts WHERE postid = $1", [
-      id,
-    ]);
+    const result = await queryDB(
+      "SELECT content FROM posts WHERE postid = $1",
+      [id]
+    );
 
     if (result.rows.length === 0) {
       res.status(404).json({
@@ -105,13 +106,15 @@ export const deletePost = async (req: Request, res: Response) => {
     async () => {
       const { id } = req.params;
 
-      await query("DELETE FROM posts WHERE postid = $1 RETURNING postid", [id]);
+      await queryDB("DELETE FROM posts WHERE postid = $1 RETURNING postid", [
+        id,
+      ]);
 
       return {
         message: "Post deleted successfully",
         data: null,
       };
     },
-    "handleDevRequest"
+    "deletePost"
   );
 };

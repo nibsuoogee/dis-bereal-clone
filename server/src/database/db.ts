@@ -17,4 +17,5 @@ pool.on("connect", () => {
   console.log("Connected to the PostgreSQL database.");
 });
 
-export const query = (text: string, params: any[]) => pool.query(text, params);
+export const queryDB = (text: string, params: any[]) =>
+  pool.query(text, params);

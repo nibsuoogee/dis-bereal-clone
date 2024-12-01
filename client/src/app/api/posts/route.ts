@@ -2,7 +2,7 @@ import { getWrapper, postWrapper } from "@/app/api/wrappers";
 import { getErrorMessage } from "@/app/utils/logger";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextRequest, response: Response) {
+export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;

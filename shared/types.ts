@@ -52,3 +52,13 @@ export interface Notification {
   sentTimestamp: Date;
   wasDismissed: boolean;
 }
+
+export enum Continents {
+  Africa = "Africa",
+  Antarctica = "Antarctica",
+  Asia = "Asia",
+  Europe = "Europe",
+  NorthAmerica = "North America",
+  Oceania = "Oceania",
+  SouthAmerica = "South America",
+}

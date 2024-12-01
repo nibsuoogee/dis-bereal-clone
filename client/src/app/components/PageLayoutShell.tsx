@@ -32,7 +32,6 @@ export default function PageLayoutShell({
             justifyContent: "flex-start",
             alignItems: "flex-start",
           }}
-          minWidth={{ xs: "400px", sm: "800px" }}
         >
           {children}
         </Stack>

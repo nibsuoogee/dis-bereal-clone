@@ -4,14 +4,16 @@ import { createContext, useContext, useState, ReactNode } from "react";
 import { User } from "../../../../shared/types";
 
 type DataContextType = {
-  setData: (data: string[]) => void;
-  data: string[];
   setCurrentUser: (user: User) => void;
   currentUser: User;
 };
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
+/**
+ * @description This is a custom hook that allows us to use the DataContext in any component
+ * @returns DataContextType
+ */
 export const useDataContext = () => {
   const context = useContext(DataContext);
   if (!context) {
@@ -21,14 +23,11 @@ export const useDataContext = () => {
 };
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
-  const [data, setData] = useState<Array<string>>([]);
   const [currentUser, setCurrentUser] = useState<User>({} as User);
 
   return (
     <DataContext.Provider
       value={{
-        setData,
-        data,
         setCurrentUser,
         currentUser,
       }}

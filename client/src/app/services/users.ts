@@ -12,7 +12,8 @@ export const useUserService = () => {
     return await serviceGetRequest(
       routePath,
       defaultErrorMessage,
-      showSnackbar
+      showSnackbar,
+      true
     );
   };
 

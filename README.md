@@ -2,6 +2,10 @@
 
 ## Development
 
+### Prerequisites 📋
+
+Code formatting in this project is handled by Prettier. Install the [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension for VS Code.
+
 ### Install dependencies 🪐
 
 To install node dependencies in the root directory and then the client and server directories, run the following commands in the root directory (you will need to run these commands when new dependencies are added to the project):
@@ -99,3 +103,7 @@ For example, from the client dashboard view `\client\src\app\views\dashboard\pag
    In the server side, `app.ts` is used to register routers. `routes\postRoutes.ts` defines the routes for the posts router, and controllers such as `controllers\postController.ts` define the logic that is executed when a route is hit.
 
 5. `\server\src\database\db.ts`: contains the definition of query() and handles the connection to the database when it is called.
+
+### TypeScript types 🧪
+
+`\shared\types.ts` contains all common type definitions for the data structures used in the project, such as User and Post. Use these common definitions in the client and server code to ensure consistency.

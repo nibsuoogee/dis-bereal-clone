@@ -1,5 +1,5 @@
 import { Request, Response } from "express"; // Importing Request and Response types
-import { query } from "../database/db";
+import { queryDB } from "../database/db";
 import { initDBQuery } from "../database/sqlQueries";
 import { handleControllerRequest } from "@controllers/handlers";
 
@@ -7,8 +7,9 @@ import { handleControllerRequest } from "@controllers/handlers";
  * Run queries to create tables and insert sample data based on config settings.
  */
 async function initDB() {
-  await query(initDBQuery, []);
-  //const result = await query(initDBQuery, []);
+  await queryDB(initDBQuery, []);
+
+  // TODO: Add query to insert sample data
 
   return { message: "Database initialized", data: null };
 }
