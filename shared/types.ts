@@ -64,13 +64,13 @@ export enum Continents {
 }
 
 export enum TableOption {
-  User = "User",
-  Friend = "Friend",
-  Post = "Post",
-  Location = "Location",
-  Comment = "Comment",
-  Reaction = "Reaction",
-  Notification = "Notification",
+  Users = "Users",
+  Friends = "Friends",
+  Posts = "Posts",
+  Locations = "Locations",
+  Comments = "Comments",
+  Reactions = "Reactions",
+  Notifications = "Notifications",
 }
 
 export enum DatabaseOption {

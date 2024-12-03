@@ -1,6 +1,70 @@
 import { DatabaseOption, TableOption } from "../../../shared/types";
 
 /**
+ * Generate the columns text in an SQL create query
+ * @param columns The columns of the table
+ * @returns A string with everything that comes after "CREATE TABLE x"
+ */
+function createTableColumns(columns: Record<string, string>): string {
+  const columnDefinitions = Object.entries(columns)
+    .map(([name, definition]) => `${name} ${definition}`)
+    .join(",\n");
+
+  return `${columnDefinitions}`;
+}
+
+const TableSchemas = {
+  Users: {
+    userid: "SERIAL PRIMARY KEY",
+    username: "VARCHAR(255) NOT NULL",
+    fullname: "VARCHAR(255) NOT NULL",
+    email: "VARCHAR(255) NOT NULL",
+    passwordHash: "VARCHAR(255) NOT NULL",
+    photo: "BYTEA",
+    creationDate: "DATE NOT NULL",
+    continent: "VARCHAR(255) NOT NULL",
+  },
+  Friends: {
+    userid1: "INTEGER NOT NULL",
+    userid2: "INTEGER NOT NULL",
+    friendSinceDate: "DATE NOT NULL",
+  },
+  Posts: {
+    postid: "SERIAL PRIMARY KEY",
+    userid: "INTEGER NOT NULL",
+    video: "BYTEA",
+    isLate: "BOOLEAN NOT NULL",
+    timestamp: "TIMESTAMP NOT NULL",
+    locationid: "INTEGER NOT NULL",
+  },
+  Locations: {
+    locationid: "SERIAL PRIMARY KEY",
+    latitude: "DECIMAL(9,6) NOT NULL",
+    longitude: "DECIMAL(9,6) NOT NULL",
+  },
+  Comments: {
+    commentid: "SERIAL PRIMARY KEY",
+    postid: "INTEGER NOT NULL",
+    userid: "INTEGER NOT NULL",
+    text: "TEXT NOT NULL",
+    timestamp: "TIMESTAMP NOT NULL",
+  },
+  Reactions: {
+    reactionid: "SERIAL PRIMARY KEY",
+    postid: "INTEGER NOT NULL",
+    userid: "INTEGER NOT NULL",
+    type: "VARCHAR(50) NOT NULL",
+    timestamp: "TIMESTAMP NOT NULL",
+  },
+  Notifications: {
+    notificationid: "SERIAL PRIMARY KEY",
+    userid: "INTEGER NOT NULL",
+    sentTimestamp: "TIMESTAMP NOT NULL",
+    wasDismissed: "BOOLEAN NOT NULL",
+  },
+};
+
+/**
  * Generates the SQL for creating any regional table
  * @param tableName
  * @param regionAbbreviation e.g. UK
@@ -13,7 +77,7 @@ function createRegionalTableSQL(
   fields: string
 ) {
   const name = `${tableName}_${regionAbbreviation}`;
-  return `CREATE TABLE ${name}(${fields});`;
+  return `CREATE TABLE ${name}(\n${fields}\n);`;
 }
 
 /**
@@ -24,8 +88,9 @@ function createRegionalTableSQL(
 function createAllRegionalTablesSQL(regionAbbreviation: string) {
   const createCommands = Object.entries(TableOption).map(
     ([tableKey, tableValue]) => {
-      const fields = `postid SERIAL PRIMARY KEY,
-	content BYTEA`; // TODO get fields for each table from an enum
+      const fields = createTableColumns(
+        TableSchemas[tableKey as keyof typeof TableSchemas]
+      );
       return createRegionalTableSQL(tableValue, regionAbbreviation, fields);
     }
   );

@@ -1,5 +1,5 @@
 import { Request, Response } from "express"; // Importing Request and Response types
-import { queryDB } from "../database/db";
+import { queryDB, queryMultiDB } from "../database/db";
 import { initDBQuery } from "../database/sqlQueries";
 import { handleControllerRequest } from "@controllers/handlers";
 import { createAllRegionsAllTablesSQL } from "../database/multiDatabaseSQL";
@@ -26,7 +26,7 @@ async function initMultiDB() {
 
   // Loop through each database connection
   Object.entries(DatabaseOption).map(async ([dbKey, dbValue]) => {
-    await queryDB(allCreateTablesSQL, []);
+    await queryMultiDB(dbValue, allCreateTablesSQL, []);
   });
 
   return { message: "Multi database initialized", data: null };
