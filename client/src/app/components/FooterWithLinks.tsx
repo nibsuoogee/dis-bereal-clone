@@ -12,16 +12,11 @@ import Image from "next/image";
 import { useDEVService } from "../services/DEV";
 
 export default function FooterWithLinks() {
-  const { initDB } = useDEVService();
+  const { initDB, initMultiDB } = useDEVService();
   return (
     <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-      <Stack
-        spacing={1}
-        sx={{
-          direction: "row",
-        }}
-      >
-        <AccordionGroup sx={{ maxWidth: 400 }}>
+      <Stack spacing={1}>
+        <AccordionGroup sx={{}}>
           <Accordion>
             <AccordionSummary>Development links</AccordionSummary>
             <AccordionDetails>
@@ -81,9 +76,18 @@ export default function FooterWithLinks() {
             </AccordionDetails>
           </Accordion>
         </AccordionGroup>
-        <Button onClick={() => initDB()} variant="outlined" color="neutral">
-          DEV: Initialize database
-        </Button>
+        <Stack spacing={1} direction={"row"} sx={{}}>
+          <Button onClick={() => initDB()} variant="outlined" color="neutral">
+            DEV: Initialize database
+          </Button>
+          <Button
+            onClick={() => initMultiDB()}
+            variant="outlined"
+            color="neutral"
+          >
+            DEV: Initialize multi-database with replication
+          </Button>
+        </Stack>
       </Stack>
     </footer>
   );

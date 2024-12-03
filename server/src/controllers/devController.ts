@@ -2,6 +2,8 @@ import { Request, Response } from "express"; // Importing Request and Response t
 import { queryDB } from "../database/db";
 import { initDBQuery } from "../database/sqlQueries";
 import { handleControllerRequest } from "@controllers/handlers";
+import { createAllRegionsAllTablesSQL } from "../database/multiDatabaseSQL";
+import { DatabaseOption } from "../../../shared/types";
 
 /**
  * Run queries to create tables and insert sample data based on config settings.
@@ -14,6 +16,22 @@ async function initDB() {
   return { message: "Database initialized", data: null };
 }
 
+/**
+ * For each database in DatabaseOption:
+ * - For each table in TableOption:
+ *     -
+ */
+async function initMultiDB() {
+  const allCreateTablesSQL = createAllRegionsAllTablesSQL();
+
+  // Loop through each database connection
+  Object.entries(DatabaseOption).map(async ([dbKey, dbValue]) => {
+    await queryDB(allCreateTablesSQL, []);
+  });
+
+  return { message: "Multi database initialized", data: null };
+}
+
 export const handleDevRequest = async (req: Request, res: Response) => {
   return handleControllerRequest(
     res,
@@ -23,6 +41,8 @@ export const handleDevRequest = async (req: Request, res: Response) => {
       switch (command) {
         case "initialize-database":
           return await initDB();
+        case "initialize-multi-database":
+          return await initMultiDB();
         default:
           break;
       }

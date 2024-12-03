@@ -63,6 +63,25 @@ export enum Continents {
   SouthAmerica = "South America",
 }
 
+export enum TableOption {
+  User = "User",
+  Friend = "Friend",
+  Post = "Post",
+  Location = "Location",
+  Comment = "Comment",
+  Reaction = "Reaction",
+  Notification = "Notification",
+}
+
+export enum DatabaseOption {
+  SouthAfrica = "ZA",
+  Brazil = "BR",
+  UnitedStates = "US",
+  Japan = "JP",
+  UnitedKingdom = "UK",
+  Germany = "DE",
+}
+
 export enum ReactionType {
   Like = "Like",
   Love = "Love",

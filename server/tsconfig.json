@@ -21,6 +21,7 @@
       "@models/*": ["src/models/*"],
       "@routes/*": ["src/routes/*"],
       "@utils/*": ["src/utils/*"],
+      "@shared/*": ["../shared/*"],
     },
   },
   "include": ["src/*.ts", "src/**/*.ts"],

@@ -19,5 +19,18 @@ export const useDEVService = () => {
     );
   };
 
-  return { initDB };
+  const initMultiDB = async (): Promise<any> => {
+    const routePath = "/api/dev";
+    const content = { command: "initialize-multi-database" };
+    const defaultErrorMessage = "Failed to initialize multi-database";
+    return await servicePostRequest(
+      routePath,
+      content,
+      defaultErrorMessage,
+      showSnackbar,
+      true
+    );
+  };
+
+  return { initDB, initMultiDB };
 };
