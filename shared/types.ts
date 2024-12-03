@@ -42,7 +42,7 @@ export interface Reaction {
   reactionid: number;
   postid: number;
   userid: number;
-  photo: Buffer;
+  type: ReactionType;
   timestamp: Date;
 }
 
@@ -61,4 +61,13 @@ export enum Continents {
   NorthAmerica = "North America",
   Oceania = "Oceania",
   SouthAmerica = "South America",
+}
+
+export enum ReactionType {
+  Like = "Like",
+  Love = "Love",
+  Haha = "Haha",
+  Wow = "Wow",
+  Sad = "Sad",
+  Angry = "Angry",
 }
