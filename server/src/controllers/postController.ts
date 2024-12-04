@@ -24,14 +24,24 @@ export const uploadPost = async (req: Request, res: Response) => {
       // Decode the Base64 content back to a buffer
       const fileBuffer = Buffer.from(content, "base64");
 
-      const result = await queryDB(
+      const postResult = await queryDB(
         "INSERT INTO posts (content) VALUES ($1) RETURNING postid",
         [fileBuffer]
       );
 
+      const postid = postResult.rows[0].postid;
+
+      const latitude = (Math.random() * 180 - 90).toFixed(6)
+      const longitude = (Math.random() * 360 - 180).toFixed(6)
+
+      const locationResult = await queryDB(
+        "INSERT INTO location (latitude, longitude, postid) VALUES ($1, $2, $3) RETURNING locationid", 
+        [latitude, longitude, postid]
+      );
+
       return {
         message: "Post uploaded successfully",
-        data: { fileId: result.rows[0].postid },
+        data: { fileId: postid },
       };
     },
     "uploadPost"

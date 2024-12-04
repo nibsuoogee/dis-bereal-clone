@@ -21,13 +21,13 @@ export interface Post {
   video: Buffer;
   isLate: boolean;
   timestamp: Date;
-  locationid: number;
 }
 
 export interface Location {
   locationid: number;
   latitude: number;
   longitude: number;
+  postid: number; 
 }
 
 export interface Comment {
