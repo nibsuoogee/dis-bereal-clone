@@ -1,10 +1,10 @@
 import { Pool } from "pg";
-import dotenv from "dotenv";
+import { configDotenv } from "dotenv";
 import { DatabaseOption } from "../../../shared/types";
 import { DB_NAME_PREFIX } from "../config/constants";
 
 // Load environment variables
-dotenv.config();
+configDotenv();
 
 // Define the pool configuration object with common details (same for all DBs)
 const poolConfig = {

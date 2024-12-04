@@ -1,4 +1,9 @@
+import { configDotenv } from "dotenv";
 import { DatabaseOption, TableOption } from "../../../shared/types";
+import { DB_NAME_PREFIX } from "src/config/constants";
+
+// Load environment variables
+configDotenv();
 
 /**
  * Generate the columns text in an SQL create query
@@ -104,4 +109,45 @@ export function createAllRegionsAllTablesSQL() {
     }
   );
   return allRegionsAllRegionalTables.join("\n");
+}
+
+export function createPublicationSQL(name: string) {
+  const tables = Object.entries(TableOption).map(([tableKey, tableValue]) => {
+    return `${tableValue}_${name}`;
+  });
+  const tablesString = tables.join(", ");
+  return `CREATE PUBLICATION pub_${name} FOR TABLE ${tablesString};`;
+}
+
+export function createReplicationSlotSQL(name: string) {
+  return `SELECT pg_create_logical_replication_slot('sub_${name.toLocaleLowerCase()}_slot', 'pgoutput');`;
+}
+
+export function createSubscriptionSQL(name: string) {
+  const user = process.env.DB_USER;
+  const password = process.env.DB_PASSWORD;
+  const host = process.env.DB_HOST;
+  const port = parseInt(process.env.DB_PORT ?? "5432");
+
+  return `CREATE SUBSCRIPTION sub_${name} \
+  CONNECTION 'host=${host} port=${port} dbname=${DB_NAME_PREFIX}${name} user=${user} password=${password}' \
+  PUBLICATION pub_global WITH (slot_name = 'sub_${name.toLocaleLowerCase()}_slot', create_slot = false);`;
+}
+
+export function createTableViewSQL(tableName: string) {
+  const allSelects = Object.entries(DatabaseOption).map(([dbKey, dbValue]) => {
+    return `SELECT * FROM ${tableName}_${dbValue}`;
+  });
+  const allUnionsString = allSelects.join("\n UNION ALL\n");
+  return `CREATE VIEW ${tableName} AS \
+  ${allUnionsString};`;
+}
+
+export function createViewsSQL() {
+  const tablesViews = Object.entries(TableOption).map(
+    ([tableKey, tableValue]) => {
+      return createTableViewSQL(tableValue);
+    }
+  );
+  return tablesViews.join("\n");
 }
