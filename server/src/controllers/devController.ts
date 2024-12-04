@@ -33,36 +33,31 @@ async function initMultiDB() {
   const allCreateTablesSQL = createAllRegionsAllTablesSQL();
   const allViewsSQL = createViewsSQL();
 
-  // Create subscription SQL for each database
-  const subscriptionSQLMap = Object.entries(DatabaseOption).reduce<
-    Record<DatabaseOption, string>
-  >((acc, [_, dbValue]) => {
-    acc[dbValue as DatabaseOption] = createSubscriptionSQL(dbValue);
-    return acc;
-  }, {} as Record<DatabaseOption, string>);
-
   // Loop through each database connection
   Object.entries(DatabaseOption).map(async ([dbKey, dbValue], index) => {
+    if (index !== 0) return;
     // 1)
-    await queryMultiDB(dbValue, allCreateTablesSQL, []);
+    //await queryMultiDB(dbValue, allCreateTablesSQL, []);
 
     // 2)
     const publicationSQL = createPublicationSQL(dbValue);
-    await queryMultiDB(dbValue, publicationSQL, []);
+    //await queryMultiDB(dbValue, publicationSQL, []);
+    console.log("PublicationSQL:", publicationSQL);
 
     // 3)
     const replicationSlotSQL = createReplicationSlotSQL(dbValue);
-    await queryMultiDB(dbValue, replicationSlotSQL, []);
+    //await queryMultiDB(dbValue, replicationSlotSQL, []);
+    console.log("replicationSlotSQL:", replicationSlotSQL);
 
     // 4)
-    const subscribeOtherDatabasesSQL = Object.entries(subscriptionSQLMap)
-      .filter(([db, _]) => db !== dbValue)
-      .map(([_, sql]) => sql)
-      .join("\n");
-    await queryMultiDB(dbValue, subscribeOtherDatabasesSQL, []);
+    const subscribeOtherDatabasesSQL = createSubscriptionSQL(dbValue);
+    console.log("subscribeOtherDatabasesSQL:", subscribeOtherDatabasesSQL);
+
+    //await queryMultiDB(dbValue, subscribeOtherDatabasesSQL, []);
 
     // 5)
-    await queryMultiDB(dbValue, allViewsSQL, []);
+    //await queryMultiDB(dbValue, allViewsSQL, []);
+    console.log("allViewsSQL:", allViewsSQL);
   });
 
   return { message: "Multi database initialized", data: null };
