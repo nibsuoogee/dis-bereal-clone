@@ -129,9 +129,17 @@ export function createSubscriptionSQL(name: string) {
   const host = process.env.DB_HOST;
   const port = parseInt(process.env.DB_PORT ?? "5432");
 
-  return `CREATE SUBSCRIPTION sub_${name} \
-  CONNECTION 'host=${host} port=${port} dbname=${DB_NAME_PREFIX}${name} user=${user} password=${password}' \
-  PUBLICATION pub_global WITH (slot_name = 'sub_${name.toLocaleLowerCase()}_slot', create_slot = false);`;
+  const allSubscriptions = Object.entries(DatabaseOption)
+    .map(([dbKey, dbValue]) => {
+      // Don't create a subscription for the same database
+      if (name === dbValue) return null;
+      return `CREATE SUBSCRIPTION sub_${dbValue} \
+  CONNECTION 'host=${host} port=${port} dbname=${DB_NAME_PREFIX}${dbValue} user=${user} password=${password}' \
+  PUBLICATION pub_${dbValue} WITH (slot_name = 'sub_${name.toLocaleLowerCase()}_slot', create_slot = false);`;
+    })
+    .filter(Boolean);
+
+  return allSubscriptions.join("\n");
 }
 
 export function createTableViewSQL(tableName: string) {
