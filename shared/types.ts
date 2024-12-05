@@ -73,6 +73,16 @@ export enum TableOption {
   Notifications = "Notifications",
 }
 
+export enum TablePrimaryKey {
+  Users = "userid",
+  //Friends = "userid1, userid2",
+  Posts = "postid",
+  Locations = "locationid",
+  Comments = "commentid",
+  Reactions = "reactionid",
+  Notifications = "notificationid",
+}
+
 export enum DatabaseOption {
   SouthAfrica = "ZA",
   Brazil = "BR",

@@ -5,7 +5,7 @@ import { handleControllerRequest } from "@controllers/handlers";
 import {
   createAllRegionsAllTablesSQL,
   createPublicationSQL,
-  createReplicationSlotSQL,
+  createReplicationSlotsSQL,
   createSubscriptionSQL,
   createViewsSQL,
 } from "../database/multiDatabaseSQL";
@@ -23,6 +23,7 @@ async function initDB() {
 }
 
 /**
+ * 0) Enable extension for uuid-ossp
  * 1) Create all region specific tables in all databases
  * 2) Create publications for each region
  * 3) Create replication slots for each region
@@ -35,29 +36,33 @@ async function initMultiDB() {
 
   // Loop through each database connection
   Object.entries(DatabaseOption).map(async ([dbKey, dbValue], index) => {
-    if (index !== 0) return;
+    // 0)
+    await queryMultiDB(
+      dbValue,
+      "CREATE EXTENSION IF NOT EXISTS 'uuid-ossp'",
+      []
+    );
+
     // 1)
-    //await queryMultiDB(dbValue, allCreateTablesSQL, []);
+    await queryMultiDB(dbValue, allCreateTablesSQL, []);
 
     // 2)
     const publicationSQL = createPublicationSQL(dbValue);
-    //await queryMultiDB(dbValue, publicationSQL, []);
-    console.log("PublicationSQL:", publicationSQL);
+    await queryMultiDB(dbValue, publicationSQL, []);
 
     // 3)
-    const replicationSlotSQL = createReplicationSlotSQL(dbValue);
-    //await queryMultiDB(dbValue, replicationSlotSQL, []);
-    console.log("replicationSlotSQL:", replicationSlotSQL);
+    const replicationSlotsSQL = createReplicationSlotsSQL(dbValue);
+    await queryMultiDB(dbValue, replicationSlotsSQL, []);
+  });
 
+  // Loop through each database connection
+  Object.entries(DatabaseOption).map(async ([dbKey, dbValue], index) => {
     // 4)
     const subscribeOtherDatabasesSQL = createSubscriptionSQL(dbValue);
-    console.log("subscribeOtherDatabasesSQL:", subscribeOtherDatabasesSQL);
-
-    //await queryMultiDB(dbValue, subscribeOtherDatabasesSQL, []);
+    await queryMultiDB(dbValue, subscribeOtherDatabasesSQL, []);
 
     // 5)
-    //await queryMultiDB(dbValue, allViewsSQL, []);
-    console.log("allViewsSQL:", allViewsSQL);
+    await queryMultiDB(dbValue, allViewsSQL, []);
   });
 
   return { message: "Multi database initialized", data: null };
@@ -80,17 +85,27 @@ async function resetMultiDB() {
       []
     );
     console.log("result.rows", result.rows);
-
-    result.rows.map(async (row) => {
-      const subscriptionName = row.subname;
-      const alterSubscriptionSQL = `ALTER SUBSCRIPTION ${subscriptionName} DISABLE;`;
-      //const alterSubscriptionSQL = `ALTER SUBSCRIPTION ${subscriptionName} SET (slot_name = NONE);`;
-      await queryMultiDB(dbValue, alterSubscriptionSQL, []);
-    });
     /*
     result.rows.map(async (row) => {
+      if (!row.subname.includes(`sub_${dbValue.toLocaleLowerCase()}`)) return;
       const subscriptionName = row.subname;
-      const dropSubscriptionSQL = `DROP SUBSCRIPTION IF EXISTS ${subscriptionName};`;
+      const disableSubscriptionSQL = `ALTER SUBSCRIPTION ${subscriptionName} DISABLE;`;
+      await queryMultiDB(dbValue, disableSubscriptionSQL, []);
+
+      const slotNoneSubscriptionSQL = `ALTER SUBSCRIPTION ${subscriptionName} SET (slot_name = NONE);`;
+      await queryMultiDB(dbValue, slotNoneSubscriptionSQL, []);
+    });
+    
+    result.rows.map(async (row) => {
+      console.log("");
+      console.log("row.subname", row.subname);
+      console.log("sub_${dbValue}: ", `sub_${dbValue.toLocaleLowerCase()}`);
+
+      if (!row.subname.includes(`sub_${dbValue.toLocaleLowerCase()}`)) return;
+      console.log("THROUGH %%%%%%%%%%%%");
+
+      const subscriptionName = row.subname;
+      const dropSubscriptionSQL = `DROP SUBSCRIPTION ${subscriptionName};`;
       await queryMultiDB(dbValue, dropSubscriptionSQL, []);
     });
     

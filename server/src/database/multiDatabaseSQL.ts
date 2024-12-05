@@ -1,5 +1,9 @@
 import { configDotenv } from "dotenv";
-import { DatabaseOption, TableOption } from "../../../shared/types";
+import {
+  DatabaseOption,
+  TableOption,
+  TablePrimaryKey,
+} from "../../../shared/types";
 import { DB_NAME_PREFIX } from "src/config/constants";
 
 // Load environment variables
@@ -20,7 +24,7 @@ function createTableColumns(columns: Record<string, string>): string {
 
 const TableSchemas = {
   Users: {
-    userid: "SERIAL PRIMARY KEY",
+    userid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
     username: "VARCHAR(255) NOT NULL",
     fullname: "VARCHAR(255) NOT NULL",
     email: "VARCHAR(255) NOT NULL",
@@ -30,40 +34,40 @@ const TableSchemas = {
     continent: "VARCHAR(255) NOT NULL",
   },
   Friends: {
-    userid1: "INTEGER NOT NULL",
-    userid2: "INTEGER NOT NULL",
+    userid1: "UUID NOT NULL",
+    userid2: "UUID NOT NULL",
     friendSinceDate: "DATE NOT NULL",
   },
   Posts: {
-    postid: "SERIAL PRIMARY KEY",
-    userid: "INTEGER NOT NULL",
+    postid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
+    userid: "UUID NOT NULL",
     video: "BYTEA",
     isLate: "BOOLEAN NOT NULL",
     timestamp: "TIMESTAMP NOT NULL",
-    locationid: "INTEGER NOT NULL",
+    locationid: "UUID NOT NULL",
   },
   Locations: {
-    locationid: "SERIAL PRIMARY KEY",
+    locationid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
     latitude: "DECIMAL(9,6) NOT NULL",
     longitude: "DECIMAL(9,6) NOT NULL",
   },
   Comments: {
-    commentid: "SERIAL PRIMARY KEY",
-    postid: "INTEGER NOT NULL",
-    userid: "INTEGER NOT NULL",
+    commentid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
+    postid: "UUID NOT NULL",
+    userid: "UUID NOT NULL",
     text: "TEXT NOT NULL",
     timestamp: "TIMESTAMP NOT NULL",
   },
   Reactions: {
-    reactionid: "SERIAL PRIMARY KEY",
-    postid: "INTEGER NOT NULL",
-    userid: "INTEGER NOT NULL",
+    reactionid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
+    postid: "UUID NOT NULL",
+    userid: "UUID NOT NULL",
     type: "VARCHAR(50) NOT NULL",
     timestamp: "TIMESTAMP NOT NULL",
   },
   Notifications: {
-    notificationid: "SERIAL PRIMARY KEY",
-    userid: "INTEGER NOT NULL",
+    notificationid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
+    userid: "UUID NOT NULL",
     sentTimestamp: "TIMESTAMP NOT NULL",
     wasDismissed: "BOOLEAN NOT NULL",
   },
@@ -119,8 +123,15 @@ export function createPublicationSQL(name: string) {
   return `CREATE PUBLICATION pub_${name} FOR TABLE ${tablesString};`;
 }
 
-export function createReplicationSlotSQL(name: string) {
-  return `SELECT pg_create_logical_replication_slot('sub_${name.toLocaleLowerCase()}_slot', 'pgoutput');`;
+export function createReplicationSlotsSQL(name: string) {
+  const allReplicationSlots = Object.entries(DatabaseOption)
+    .map(([dbKey, dbValue]) => {
+      // Don't create a subscription for the same database
+      if (name === dbValue) return null;
+      return `SELECT pg_create_logical_replication_slot('sub_${name.toLocaleLowerCase()}_slot_for_${dbValue.toLocaleLowerCase()}', 'pgoutput');`;
+    })
+    .filter(Boolean);
+  return allReplicationSlots.join("\n");
 }
 
 export function createSubscriptionSQL(name: string) {
@@ -133,12 +144,11 @@ export function createSubscriptionSQL(name: string) {
     .map(([dbKey, dbValue]) => {
       // Don't create a subscription for the same database
       if (name === dbValue) return null;
-      return `CREATE SUBSCRIPTION sub_${dbValue} \
+      return `CREATE SUBSCRIPTION sub_${dbValue}_from_${name} \
   CONNECTION 'host=${host} port=${port} dbname=${DB_NAME_PREFIX}${dbValue} user=${user} password=${password}' \
-  PUBLICATION pub_${dbValue} WITH (slot_name = 'sub_${name.toLocaleLowerCase()}_slot', create_slot = false);`;
+  PUBLICATION pub_${dbValue} WITH (slot_name = 'sub_${dbValue.toLocaleLowerCase()}_slot_for_${name.toLocaleLowerCase()}', create_slot = false);`;
     })
     .filter(Boolean);
-
   return allSubscriptions.join("\n");
 }
 
@@ -159,3 +169,25 @@ export function createViewsSQL() {
   );
   return tablesViews.join("\n");
 }
+
+/*export function createRegionPrefixFunctionsSQL(region: string) {
+  const allFunctions = Object.entries(TablePrimaryKey).map(
+    ([tableKey, primaryColumn]) => {
+      return `CREATE OR REPLACE FUNCTION add_region_prefix_${tableKey}()
+  RETURNS TRIGGER AS $$
+  BEGIN
+      IF NEW.${primaryColumn} IS NOT NULL AND LEFT(NEW.${primaryColumn}, 3) <> '${region}-' THEN
+          NEW.${primaryColumn} := '${region}-' || NEW.${primaryColumn};
+      END IF;
+      RETURN NEW;
+  END;
+  $$ LANGUAGE plpgsql;
+  
+  CREATE TRIGGER add_prefix_trigger_${tableKey}
+  BEFORE INSERT ON ${tableKey}_${region}
+  FOR EACH ROW
+  EXECUTE FUNCTION add_region_prefix_${tableKey}();`;
+    }
+  );
+  return allFunctions.join("\n");
+}*/
