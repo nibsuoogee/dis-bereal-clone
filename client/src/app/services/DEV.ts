@@ -32,5 +32,18 @@ export const useDEVService = () => {
     );
   };
 
-  return { initDB, initMultiDB };
+  const resetMultiDB = async (): Promise<any> => {
+    const routePath = "/api/dev";
+    const content = { command: "reset-multi-database" };
+    const defaultErrorMessage = "Failed to reset multi-database";
+    return await servicePostRequest(
+      routePath,
+      content,
+      defaultErrorMessage,
+      showSnackbar,
+      true
+    );
+  };
+
+  return { initDB, initMultiDB, resetMultiDB };
 };
