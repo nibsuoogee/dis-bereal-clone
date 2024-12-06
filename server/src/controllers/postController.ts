@@ -1,13 +1,18 @@
 import { Request, Response } from "express"; // Importing Request and Response types
 import { handleControllerRequest } from "@controllers/handlers";
-import { queryDB } from "src/database/db";
-import { getErrorMessage } from "@utils/logger";
+import { queryDB, queryMultiDB } from "src/database/db";
+import { getErrorMessage, reportError } from "@utils/logger";
+import { DatabaseOption, DBPayload, Post } from "../../types";
 
 export const getPosts = async (req: Request, res: Response) => {
   return handleControllerRequest(
     res,
     async () => {
-      const result = await queryDB("SELECT * FROM posts", []);
+      const result = await queryMultiDB(
+        "za" as DatabaseOption,
+        "SELECT * FROM posts",
+        []
+      );
 
       return { message: "Posts fetched successfully", data: result.rows };
     },
@@ -19,14 +24,17 @@ export const uploadPost = async (req: Request, res: Response) => {
   return handleControllerRequest(
     res,
     async () => {
-      const { content } = req.body;
+      const payload = req.body as DBPayload;
+      const post = payload.obj as Post;
+      const database = payload.database;
 
-      // Decode the Base64 content back to a buffer
-      const fileBuffer = Buffer.from(content, "base64");
+      console.log("2-fileBuffer: ", post.video);
 
-      const result = await queryDB(
-        "INSERT INTO posts (content) VALUES ($1) RETURNING postid",
-        [fileBuffer]
+      const result = await queryMultiDB(
+        database,
+        `INSERT INTO posts_${database} (userid, video, isLate, locationid) \
+         VALUES ($1, $2, $3, $4) RETURNING postid`,
+        [post.userid, post.video, post.isLate, post.userid]
       );
 
       return {
@@ -43,8 +51,9 @@ export const getVideo = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     // Query the database for the video
-    const result = await queryDB(
-      "SELECT content FROM posts WHERE postid = $1",
+    const result = await queryMultiDB(
+      "za" as DatabaseOption,
+      "SELECT video FROM posts WHERE postid = $1",
       [id]
     );
 
@@ -53,8 +62,10 @@ export const getVideo = async (req: Request, res: Response) => {
         message: "Video not found",
       });
     }
-    const videoBuffer = result.rows[0].content;
+    const videoBuffer = result.rows[0].video;
     const videoSize = videoBuffer.length;
+
+    console.log("3-fileBuffer: ", videoBuffer);
 
     const range = req.headers.range;
 

@@ -1,5 +1,6 @@
 import { User } from "types";
 
+// userid will actually be generated automatically by postgres
 const sampleUsers: User[] = [
   {
     userid: "550e8400-e29b-41d4-a716-446655440000",

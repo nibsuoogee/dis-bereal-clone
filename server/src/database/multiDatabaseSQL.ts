@@ -167,15 +167,7 @@ export function createViewsSQL() {
 }
 
 export function insertUserSQL(user: User) {
-  const {
-    userid,
-    username,
-    fullname,
-    email,
-    passwordHash,
-    creationDate,
-    database,
-  } = user;
-  return `INSERT INTO users (userid, username, fullname, email, passwordHash, creationDate, database) VALUES \
-     ('${userid}', '${username}', '${fullname}', '${email}', '${passwordHash}', '${creationDate}', '${database}');`;
+  const { username, fullname, email, passwordHash, database } = user;
+  return `INSERT INTO users_${database} (username, fullname, email, passwordHash, database) VALUES \
+     ('${username}', '${fullname}', '${email}', '${passwordHash}', '${database}');`;
 }

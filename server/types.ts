@@ -17,12 +17,12 @@ export interface Friend {
 }
 
 export interface Post {
-  postid: UUIDTypes;
+  postid: UUIDTypes | null;
   userid: UUIDTypes;
   video: Buffer;
   isLate: boolean;
-  timestamp: Date;
-  locationid: UUIDTypes;
+  timestamp: Date | null;
+  locationid: UUIDTypes | null;
 }
 
 export interface Location {
@@ -90,4 +90,9 @@ export enum ReactionType {
   Wow = "Wow",
   Sad = "Sad",
   Angry = "Angry",
+}
+
+export interface DBPayload {
+  database: DatabaseOption;
+  obj: unknown;
 }

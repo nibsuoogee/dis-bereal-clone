@@ -3,12 +3,15 @@ import VideoCallIcon from "@mui/icons-material/VideoCall";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { usePostService } from "@/app/services/posts";
 import { useState } from "react";
+import { useDataContext } from "../contexts/DataContext";
+import { DatabaseOption, DBPayload, Post } from "../../../types";
 
 export default function VideoUpload({
   handleGetPosts,
 }: {
   handleGetPosts: () => void;
 }) {
+  const { currentUser } = useDataContext();
   const { uploadPost } = usePostService();
   const [file, setFile] = useState<File | null>(null);
 
@@ -24,10 +27,26 @@ export default function VideoUpload({
 
   async function handleVideoUpload() {
     if (!file) return;
-    const formData = new FormData();
-    formData.append("file", file);
+    /*const formData = new FormData();
+    formData.append("file", file);*/
 
-    await uploadPost(formData);
+    // Read the file as a buffer
+    const fileBuffer = Buffer.from(await file.arrayBuffer());
+
+    const post: Post = {
+      postid: null,
+      userid: currentUser.userid,
+      video: fileBuffer,
+      isLate: false,
+      timestamp: null,
+      locationid: null,
+    };
+    const payload: DBPayload = {
+      database: currentUser.database as DatabaseOption,
+      obj: post,
+    };
+
+    await uploadPost(payload);
     handleGetPosts();
   }
 

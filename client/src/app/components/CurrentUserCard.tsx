@@ -40,6 +40,12 @@ export default function CurrentUserCard() {
     });
   };
 
+  function getDatabaseName(database: DatabaseOption) {
+    return Object.keys(DatabaseOption)[
+      Object.values(DatabaseOption).indexOf(database)
+    ];
+  }
+
   return (
     <>
       <Card variant="soft">
@@ -116,12 +122,6 @@ export default function CurrentUserCard() {
                   </ListItem>
                   <ListItem>
                     <ListItemDecorator>
-                      <PhotoIcon />
-                    </ListItemDecorator>{" "}
-                    {currentUser.photo ? "Photo exists" : "No photo"}
-                  </ListItem>
-                  <ListItem>
-                    <ListItemDecorator>
                       <CalendarTodayIcon />
                     </ListItemDecorator>
                     {currentUser.creationDate
@@ -132,18 +132,8 @@ export default function CurrentUserCard() {
                     <ListItemDecorator>
                       <PublicIcon />
                     </ListItemDecorator>{" "}
-                    {currentUser.database ?? "No database"}
-                    <Select defaultValue="dog" onChange={handleChangeDatabase}>
-                      {Object.entries(DatabaseOption).map(
-                        ([dbKey, dbValue]) => {
-                          return (
-                            <Option key={dbKey} value={dbValue}>
-                              {dbKey}
-                            </Option>
-                          );
-                        }
-                      )}
-                    </Select>
+                    {getDatabaseName(currentUser.database as DatabaseOption) ??
+                      "No database"}
                   </ListItem>
                 </List>
               </AccordionDetails>

@@ -2,6 +2,7 @@ import { Stack } from "@mui/joy";
 import NavigationPanel from "./NavigationPanel";
 import FooterWithLinks from "./FooterWithLinks";
 import CurrentUserCard from "@/app/components/CurrentUserCard";
+import DEVChangeUser from "./DEVChangeUser";
 
 export default function PageLayoutShell({
   children,
@@ -23,6 +24,7 @@ export default function PageLayoutShell({
         >
           <NavigationPanel />
           <CurrentUserCard />
+          <DEVChangeUser />
         </Stack>
       </header>
       <main className="flex flex-col gap-8 row-start-2 items-start sm:items-start">
