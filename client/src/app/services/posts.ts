@@ -1,6 +1,6 @@
 "use client";
 
-import { Post } from "../../../../shared/types.js";
+import { Post } from "../../../../server/types.js";
 
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
 import {
@@ -8,6 +8,7 @@ import {
   serviceGetRequest,
   servicePostRequestFormData,
 } from "@/app/services/requestHandlers";
+import { UUIDTypes } from "uuid";
 
 export const usePostService = () => {
   const { showSnackbar } = useSnackbar();
@@ -36,7 +37,7 @@ export const usePostService = () => {
     );
   };
 
-  const deletePost = async (id: number): Promise<string[]> => {
+  const deletePost = async (id: UUIDTypes): Promise<string[]> => {
     const routePath = `/api/posts/${id}`;
     const defaultErrorMessage = "Failed to delete post";
 

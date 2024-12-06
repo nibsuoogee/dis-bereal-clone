@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
-import { User } from "../../../../shared/types";
+import { User } from "types";
 
 type DataContextType = {
   setCurrentUser: (user: User) => void;

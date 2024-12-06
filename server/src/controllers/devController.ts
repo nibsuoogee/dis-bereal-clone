@@ -8,17 +8,16 @@ import {
   createReplicationSlotsSQL,
   createSubscriptionSQL,
   createViewsSQL,
+  insertUserSQL,
 } from "../database/multiDatabaseSQL";
-import { DatabaseOption } from "../../../shared/types";
+import { DatabaseOption, User } from "../../types";
+import sampleUsers from "../config/sampleData";
 
 /**
  * Run queries to create tables and insert sample data based on config settings.
  */
 async function initDB() {
   await queryDB(initDBQuery, []);
-
-  // TODO: Add query to insert sample data
-
   return { message: "Database initialized", data: null };
 }
 
@@ -39,7 +38,7 @@ async function initMultiDB() {
     // 0)
     await queryMultiDB(
       dbValue,
-      "CREATE EXTENSION IF NOT EXISTS 'uuid-ossp'",
+      `CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`,
       []
     );
 
@@ -66,6 +65,19 @@ async function initMultiDB() {
   });
 
   return { message: "Multi database initialized", data: null };
+}
+
+/**
+ * Add sample data users to all databases.
+ */
+async function populateMultiDB() {
+  const users: User[] = sampleUsers as any[];
+  users.map(async (user) => {
+    const insertSQL = insertUserSQL(user);
+    await queryMultiDB(user.database as DatabaseOption, insertSQL, []);
+  });
+
+  return { message: "Multi database populated", data: null };
 }
 
 /**
@@ -165,6 +177,8 @@ export const handleDevRequest = async (req: Request, res: Response) => {
           return await initDB();
         case "initialize-multi-database":
           return await initMultiDB();
+        case "populate-multi-database":
+          return await populateMultiDB();
         case "reset-multi-database":
           return await resetMultiDB();
         default:

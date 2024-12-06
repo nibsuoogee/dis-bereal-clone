@@ -1,1 +1,1 @@
-export const DB_NAME_PREFIX = "dis-bereal-clone-db-";
+export const DB_NAME_PREFIX = "bereal_clone_db_";

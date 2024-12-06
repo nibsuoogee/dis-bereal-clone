@@ -1,5 +1,5 @@
 import { Card, CardCover, Grid, IconButton, Stack, Typography } from "@mui/joy";
-import { Post } from "../../../../shared/types";
+import { Post } from "../../../../server/types";
 import { API_CONFIG } from "@/app/config/api";
 import ClearIcon from "@mui/icons-material/Clear";
 import { usePostService } from "@/app/services/posts";

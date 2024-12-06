@@ -11,6 +11,8 @@ import {
   List,
   ListItem,
   ListItemDecorator,
+  Option,
+  Select,
   Typography,
 } from "@mui/joy";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
@@ -22,10 +24,22 @@ import PublicIcon from "@mui/icons-material/Public";
 import PasswordIcon from "@mui/icons-material/Password";
 import PhotoIcon from "@mui/icons-material/Photo";
 import { useState } from "react";
+import { DatabaseOption } from "types";
 
 export default function CurrentUserCard() {
-  const { currentUser } = useDataContext();
+  const { currentUser, setCurrentUser } = useDataContext();
   const [showDetails, setShowDetails] = useState(false);
+
+  const handleChangeDatabase = (
+    event: React.SyntheticEvent | null,
+    newValue: string | null
+  ) => {
+    setCurrentUser({
+      ...currentUser,
+      database: newValue ?? "",
+    });
+  };
+
   return (
     <>
       <Card variant="soft">
@@ -118,7 +132,18 @@ export default function CurrentUserCard() {
                     <ListItemDecorator>
                       <PublicIcon />
                     </ListItemDecorator>{" "}
-                    {currentUser.continent ?? "No continent"}
+                    {currentUser.database ?? "No database"}
+                    <Select defaultValue="dog" onChange={handleChangeDatabase}>
+                      {Object.entries(DatabaseOption).map(
+                        ([dbKey, dbValue]) => {
+                          return (
+                            <Option key={dbKey} value={dbValue}>
+                              {dbKey}
+                            </Option>
+                          );
+                        }
+                      )}
+                    </Select>
                   </ListItem>
                 </List>
               </AccordionDetails>

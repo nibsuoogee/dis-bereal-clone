@@ -1,54 +1,55 @@
+import { UUIDTypes } from "uuid";
+
 export interface User {
-  userid: number;
+  userid: UUIDTypes;
   username: string;
   fullname: string;
   email: string;
   passwordHash: string;
-  photo: Buffer;
-  creationDate: Date;
-  continent: string;
+  creationDate: Date | null;
+  database: string;
 }
 
 export interface Friend {
-  userid1: number;
-  userid2: number;
+  userid1: UUIDTypes;
+  userid2: UUIDTypes;
   friendSinceDate: Date;
 }
 
 export interface Post {
-  postid: number;
-  userid: number;
+  postid: UUIDTypes;
+  userid: UUIDTypes;
   video: Buffer;
   isLate: boolean;
   timestamp: Date;
-  locationid: number;
+  locationid: UUIDTypes;
 }
 
 export interface Location {
-  locationid: number;
+  locationid: UUIDTypes;
   latitude: number;
   longitude: number;
 }
 
 export interface Comment {
-  commentid: number;
-  postid: number;
-  userid: number;
+  commentid: UUIDTypes;
+  postid: UUIDTypes;
+  userid: UUIDTypes;
   text: string;
   timestamp: Date;
 }
 
 export interface Reaction {
-  reactionid: number;
-  postid: number;
-  userid: number;
+  reactionid: UUIDTypes;
+  postid: UUIDTypes;
+  userid: UUIDTypes;
   type: ReactionType;
   timestamp: Date;
 }
 
 export interface Notification {
-  notificationid: number;
-  userid: number;
+  notificationid: UUIDTypes;
+  userid: UUIDTypes;
   sentTimestamp: Date;
   wasDismissed: boolean;
 }
@@ -64,32 +65,22 @@ export enum Continents {
 }
 
 export enum TableOption {
-  Users = "Users",
-  Friends = "Friends",
-  Posts = "Posts",
-  Locations = "Locations",
-  Comments = "Comments",
-  Reactions = "Reactions",
-  Notifications = "Notifications",
-}
-
-export enum TablePrimaryKey {
-  Users = "userid",
-  //Friends = "userid1, userid2",
-  Posts = "postid",
-  Locations = "locationid",
-  Comments = "commentid",
-  Reactions = "reactionid",
-  Notifications = "notificationid",
+  users = "users",
+  friends = "friends",
+  posts = "posts",
+  locations = "locations",
+  comments = "comments",
+  reactions = "reactions",
+  notifications = "notifications",
 }
 
 export enum DatabaseOption {
-  SouthAfrica = "ZA",
-  Brazil = "BR",
-  UnitedStates = "US",
-  Japan = "JP",
-  UnitedKingdom = "UK",
-  Germany = "DE",
+  SouthAfrica = "za",
+  Brazil = "br",
+  UnitedStates = "us",
+  Japan = "jp",
+  UnitedKingdom = "uk",
+  Germany = "de",
 }
 
 export enum ReactionType {

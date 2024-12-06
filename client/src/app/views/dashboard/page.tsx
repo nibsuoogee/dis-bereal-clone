@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import VideoCard from "../../components/VideoCard";
 import { usePostService } from "@/app/services/posts";
 import VideoUpload from "@/app/components/VideoUpload";
-import { Post } from "../../../../../shared/types";
+import { Post } from "../../../../../server/types";
 
 export default function Dashboard() {
   const { getPosts } = usePostService();
@@ -52,9 +52,9 @@ export default function Dashboard() {
           alignItems: "center",
         }}
       >
-        {posts.map((post) => (
+        {posts.map((post, index) => (
           <VideoCard
-            key={post.postid}
+            key={index}
             post={post}
             handleGetPosts={() => handleGetPosts(false)}
           />

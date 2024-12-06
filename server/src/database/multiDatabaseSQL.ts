@@ -1,9 +1,5 @@
 import { configDotenv } from "dotenv";
-import {
-  DatabaseOption,
-  TableOption,
-  TablePrimaryKey,
-} from "../../../shared/types";
+import { DatabaseOption, TableOption, User } from "../../types";
 import { DB_NAME_PREFIX } from "src/config/constants";
 
 // Load environment variables
@@ -23,52 +19,52 @@ function createTableColumns(columns: Record<string, string>): string {
 }
 
 const TableSchemas = {
-  Users: {
+  users: {
     userid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
     username: "VARCHAR(255) NOT NULL",
     fullname: "VARCHAR(255) NOT NULL",
     email: "VARCHAR(255) NOT NULL",
     passwordHash: "VARCHAR(255) NOT NULL",
     photo: "BYTEA",
-    creationDate: "DATE NOT NULL",
-    continent: "VARCHAR(255) NOT NULL",
+    creationDate: "DATE NOT NULL DEFAULT CURRENT_DATE",
+    database: "VARCHAR(50) NOT NULL",
   },
-  Friends: {
+  friends: {
     userid1: "UUID NOT NULL",
     userid2: "UUID NOT NULL",
     friendSinceDate: "DATE NOT NULL",
   },
-  Posts: {
+  posts: {
     postid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
     userid: "UUID NOT NULL",
     video: "BYTEA",
     isLate: "BOOLEAN NOT NULL",
-    timestamp: "TIMESTAMP NOT NULL",
+    timestamp: "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
     locationid: "UUID NOT NULL",
   },
-  Locations: {
+  locations: {
     locationid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
     latitude: "DECIMAL(9,6) NOT NULL",
     longitude: "DECIMAL(9,6) NOT NULL",
   },
-  Comments: {
+  comments: {
     commentid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
     postid: "UUID NOT NULL",
     userid: "UUID NOT NULL",
     text: "TEXT NOT NULL",
-    timestamp: "TIMESTAMP NOT NULL",
+    timestamp: "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
   },
-  Reactions: {
+  reactions: {
     reactionid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
     postid: "UUID NOT NULL",
     userid: "UUID NOT NULL",
     type: "VARCHAR(50) NOT NULL",
-    timestamp: "TIMESTAMP NOT NULL",
+    timestamp: "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
   },
-  Notifications: {
+  notifications: {
     notificationid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
     userid: "UUID NOT NULL",
-    sentTimestamp: "TIMESTAMP NOT NULL",
+    sentTimestamp: "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
     wasDismissed: "BOOLEAN NOT NULL",
   },
 };
@@ -76,7 +72,7 @@ const TableSchemas = {
 /**
  * Generates the SQL for creating any regional table
  * @param tableName
- * @param regionAbbreviation e.g. UK
+ * @param regionAbbreviation e.g. uk
  * @param fields Everything that comes after "CREATE TABLE x"
  * @returns A complete SQL command for creating a table
  */
@@ -91,7 +87,7 @@ function createRegionalTableSQL(
 
 /**
  * Generates the SQL for creating all regional tables
- * @param regionAbbreviation e.g. UK
+ * @param regionAbbreviation e.g. uk
  * @returns All SQL commands for creating regional tables for a specific region
  */
 function createAllRegionalTablesSQL(regionAbbreviation: string) {
@@ -170,24 +166,16 @@ export function createViewsSQL() {
   return tablesViews.join("\n");
 }
 
-/*export function createRegionPrefixFunctionsSQL(region: string) {
-  const allFunctions = Object.entries(TablePrimaryKey).map(
-    ([tableKey, primaryColumn]) => {
-      return `CREATE OR REPLACE FUNCTION add_region_prefix_${tableKey}()
-  RETURNS TRIGGER AS $$
-  BEGIN
-      IF NEW.${primaryColumn} IS NOT NULL AND LEFT(NEW.${primaryColumn}, 3) <> '${region}-' THEN
-          NEW.${primaryColumn} := '${region}-' || NEW.${primaryColumn};
-      END IF;
-      RETURN NEW;
-  END;
-  $$ LANGUAGE plpgsql;
-  
-  CREATE TRIGGER add_prefix_trigger_${tableKey}
-  BEFORE INSERT ON ${tableKey}_${region}
-  FOR EACH ROW
-  EXECUTE FUNCTION add_region_prefix_${tableKey}();`;
-    }
-  );
-  return allFunctions.join("\n");
-}*/
+export function insertUserSQL(user: User) {
+  const {
+    userid,
+    username,
+    fullname,
+    email,
+    passwordHash,
+    creationDate,
+    database,
+  } = user;
+  return `INSERT INTO users (userid, username, fullname, email, passwordHash, creationDate, database) VALUES \
+     ('${userid}', '${username}', '${fullname}', '${email}', '${passwordHash}', '${creationDate}', '${database}');`;
+}

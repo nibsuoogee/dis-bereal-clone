@@ -32,6 +32,19 @@ export const useDEVService = () => {
     );
   };
 
+  const populateMultiDB = async (): Promise<any> => {
+    const routePath = "/api/dev";
+    const content = { command: "populate-multi-database" };
+    const defaultErrorMessage = "Failed to populate multi-database";
+    return await servicePostRequest(
+      routePath,
+      content,
+      defaultErrorMessage,
+      showSnackbar,
+      true
+    );
+  };
+
   const resetMultiDB = async (): Promise<any> => {
     const routePath = "/api/dev";
     const content = { command: "reset-multi-database" };
@@ -45,5 +58,5 @@ export const useDEVService = () => {
     );
   };
 
-  return { initDB, initMultiDB, resetMultiDB };
+  return { initDB, initMultiDB, populateMultiDB, resetMultiDB };
 };
