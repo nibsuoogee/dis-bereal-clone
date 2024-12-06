@@ -84,12 +84,11 @@ export enum DatabaseOption {
 }
 
 export enum ReactionType {
-  Like = "Like",
-  Love = "Love",
-  Haha = "Haha",
-  Wow = "Wow",
-  Sad = "Sad",
-  Angry = "Angry",
+  love = "love",
+  like = "like",
+  haha = "haha",
+  wow = "wow",
+  angry = "angry",
 }
 
 export interface DBPayload {

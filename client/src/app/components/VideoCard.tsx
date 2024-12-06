@@ -3,6 +3,7 @@ import { Post } from "../../../../server/types";
 import { API_CONFIG } from "@/app/config/api";
 import ClearIcon from "@mui/icons-material/Clear";
 import { usePostService } from "@/app/services/posts";
+import ReactionArray from "./ReactionArray";
 
 export default function VideoCard({
   post,
@@ -27,7 +28,7 @@ export default function VideoCard({
           alignItems: "flex-start",
         }}
       >
-        <Card sx={{ height: "300px", width: "169px" }}>
+        <Card sx={{ height: "600px", width: "338px" }}>
           <CardCover>
             <video autoPlay muted controls>
               <source
@@ -38,7 +39,7 @@ export default function VideoCard({
           </CardCover>
           {/*<CardContent></CardContent>*/}
         </Card>
-        <Card sx={{ width: "169px" }}>
+        <Card>
           <Stack
             spacing={1}
             sx={{
@@ -69,6 +70,7 @@ export default function VideoCard({
             <IconButton variant="outlined" onClick={() => handleDeletePost()}>
               <ClearIcon />
             </IconButton>
+            <ReactionArray></ReactionArray>
           </Stack>
         </Card>
       </Stack>

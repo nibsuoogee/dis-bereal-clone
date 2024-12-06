@@ -41,8 +41,6 @@ export default function Dashboard() {
         )}
       </Stack>
 
-      <Typography level="title-md">Posts</Typography>
-
       <Grid
         container
         spacing={1}
