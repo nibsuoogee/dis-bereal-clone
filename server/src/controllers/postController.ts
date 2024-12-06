@@ -26,15 +26,14 @@ export const uploadPost = async (req: Request, res: Response) => {
     async () => {
       const payload = req.body as DBPayload;
       const post = payload.obj as Post;
+      const originalBuffer = Buffer.from(post.video);
       const database = payload.database;
-
-      console.log("2-fileBuffer: ", post.video);
 
       const result = await queryMultiDB(
         database,
         `INSERT INTO posts_${database} (userid, video, isLate, locationid) \
          VALUES ($1, $2, $3, $4) RETURNING postid`,
-        [post.userid, post.video, post.isLate, post.userid]
+        [post.userid, originalBuffer, post.isLate, post.userid]
       );
 
       return {
@@ -64,9 +63,6 @@ export const getVideo = async (req: Request, res: Response) => {
     }
     const videoBuffer = result.rows[0].video;
     const videoSize = videoBuffer.length;
-
-    console.log("3-fileBuffer: ", videoBuffer);
-
     const range = req.headers.range;
 
     if (!range) {
@@ -117,9 +113,26 @@ export const deletePost = async (req: Request, res: Response) => {
     async () => {
       const { id } = req.params;
 
-      await queryDB("DELETE FROM posts WHERE postid = $1 RETURNING postid", [
-        id,
-      ]);
+      // Get the database based on the user behind of the post
+      const result = await queryMultiDB(
+        "za" as DatabaseOption,
+        "SELECT userid FROM posts WHERE postid = $1",
+        [id]
+      );
+      const userid = result.rows[0]?.userid;
+
+      const result2 = await queryMultiDB(
+        "za" as DatabaseOption,
+        "SELECT database FROM users WHERE userid = $1",
+        [userid]
+      );
+      const database = result2.rows[0]?.database;
+
+      await queryMultiDB(
+        database,
+        `DELETE FROM posts_${database} WHERE postid = $1`,
+        [id]
+      );
 
       return {
         message: "Post deleted successfully",

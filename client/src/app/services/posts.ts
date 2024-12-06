@@ -23,19 +23,6 @@ export const usePostService = () => {
     );
   };
 
-  /*const uploadPost = async (formData: any): Promise<string[]> => {
-    const routePath = "/api/posts";
-    const defaultErrorMessage = "Failed to upload post";
-
-    return await servicePostRequestFormData(
-      routePath,
-      formData,
-      defaultErrorMessage,
-      showSnackbar,
-      true
-    );
-  };*/
-
   const uploadPost = async (content: any): Promise<string[]> => {
     const routePath = "/api/posts";
     const defaultErrorMessage = "Failed to upload post";
@@ -49,7 +36,7 @@ export const usePostService = () => {
     );
   };
 
-  const deletePost = async (id: UUIDTypes): Promise<string[]> => {
+  const deletePost = async (id: UUIDTypes | null): Promise<string[]> => {
     const routePath = `/api/posts/${id}`;
     const defaultErrorMessage = "Failed to delete post";
 
