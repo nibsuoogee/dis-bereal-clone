@@ -50,6 +50,10 @@ export default function Dashboard() {
         )}
       </Stack>
 
+      <VideoUpload
+        handleGetPosts={() => handleGetPosts(getPosts(false))}
+      ></VideoUpload>
+
       <ButtonGroup
         aria-label="radius button group"
         sx={{ "--ButtonGroup-radius": "40px" }}
@@ -79,10 +83,6 @@ export default function Dashboard() {
           />
         ))}
       </Grid>
-
-      <VideoUpload
-        handleGetPosts={() => handleGetPosts(getPosts(false))}
-      ></VideoUpload>
     </PageLayoutShell>
   );
 }

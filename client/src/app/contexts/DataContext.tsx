@@ -6,7 +6,7 @@ import { User } from "types";
 type DataContextType = {
   setCurrentUser: (user: User) => void;
   currentUser: User;
-  setNotificationTimestamp: (timestamp: Date) => void;
+  setNotificationTimestamp: (timestamp: Date | null) => void;
   notificationTimestamp: Date | null;
 };
 

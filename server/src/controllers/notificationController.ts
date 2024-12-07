@@ -11,8 +11,8 @@ export const getUserNotifications = async (req: Request, res: Response) => {
 
       const result = await queryMultiDB(
         "za" as DatabaseOption,
-        "SELECT (sentTimestamp) FROM notifications \
-        WHERE userid = $1 AND wasDismissed = false \
+        "SELECT * FROM notifications \
+        WHERE userid = $1 \
         ORDER BY sentTimestamp DESC LIMIT 1;",
         [userid]
       );

@@ -27,28 +27,32 @@ export default function NotificationPanel() {
 
   return (
     <>
-      <Card variant="soft" size="sm">
-        <LinearProgress
-          determinate
-          variant="outlined"
-          color="neutral"
-          size="sm"
-          thickness={24}
-          value={Number(Math.round(100 - (secondsLeft / MAX_TIME) * 100)!)}
-          sx={{
-            "--LinearProgress-radius": "20px",
-            "--LinearProgress-thickness": "24px",
-          }}
-        >
-          <Typography
-            level="body-xs"
-            textColor="common.white"
-            sx={{ fontWeight: "xl", mixBlendMode: "difference" }}
+      {notificationTimestamp ? (
+        <Card variant="soft" size="sm">
+          <LinearProgress
+            determinate
+            variant="outlined"
+            color="neutral"
+            size="sm"
+            thickness={24}
+            value={Number(Math.round(100 - (secondsLeft / MAX_TIME) * 100)!)}
+            sx={{
+              "--LinearProgress-radius": "20px",
+              "--LinearProgress-thickness": "24px",
+            }}
           >
-            {`Time to BeReal ${secondsLeft} s`}
-          </Typography>
-        </LinearProgress>
-      </Card>
+            <Typography
+              level="body-xs"
+              textColor="common.white"
+              sx={{ fontWeight: "xl", mixBlendMode: "difference" }}
+            >
+              {`Time to BeReal ${secondsLeft} s`}
+            </Typography>
+          </LinearProgress>
+        </Card>
+      ) : (
+        <></>
+      )}
     </>
   );
 }

@@ -22,11 +22,14 @@ export default function PageLayoutShell({
       false,
       currentUser?.userid
     )) as any;
-
+    if (notifications.wasDismissed) {
+      setNotificationTimestamp(null);
+    }
     setNotificationTimestamp(notifications[0]?.senttimestamp);
   }
 
   useEffect(() => {
+    if (!currentUser?.userid) return;
     handleGetNotification();
   }, []);
 
