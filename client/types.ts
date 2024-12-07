@@ -40,11 +40,11 @@ export interface Comment {
 }
 
 export interface Reaction {
-  reactionid: UUIDTypes;
-  postid: UUIDTypes;
+  reactionid: UUIDTypes | null;
+  postid: UUIDTypes | null;
   userid: UUIDTypes;
-  type: ReactionType;
-  timestamp: Date;
+  type: ReactionOption;
+  timestamp: Date | null;
 }
 
 export interface Notification {
@@ -83,13 +83,17 @@ export enum DatabaseOption {
   Germany = "de",
 }
 
-export enum ReactionType {
+export enum ReactionOption {
   love = "love",
   like = "like",
   haha = "haha",
   wow = "wow",
   angry = "angry",
 }
+
+export type ReactionCounts = {
+  [key in ReactionOption]: number;
+};
 
 export interface DBPayload {
   database: DatabaseOption;

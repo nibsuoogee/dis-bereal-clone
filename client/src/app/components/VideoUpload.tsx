@@ -27,8 +27,6 @@ export default function VideoUpload({
 
   async function handleVideoUpload() {
     if (!file) return;
-    /*const formData = new FormData();
-    formData.append("file", file);*/
 
     // Read the file as a buffer
     const fileBuffer = Buffer.from(await file.arrayBuffer());

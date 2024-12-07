@@ -36,8 +36,8 @@ export const usePostService = () => {
     );
   };
 
-  const deletePost = async (id: UUIDTypes | null): Promise<string[]> => {
-    const routePath = `/api/posts/${id}`;
+  const deletePost = async (postid: UUIDTypes | null): Promise<string[]> => {
+    const routePath = `/api/posts/${postid}`;
     const defaultErrorMessage = "Failed to delete post";
 
     return await serviceDeleteRequest(

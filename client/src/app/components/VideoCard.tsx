@@ -70,7 +70,7 @@ export default function VideoCard({
             <IconButton variant="outlined" onClick={() => handleDeletePost()}>
               <ClearIcon />
             </IconButton>
-            <ReactionArray></ReactionArray>
+            <ReactionArray post={post}></ReactionArray>
           </Stack>
         </Card>
       </Stack>

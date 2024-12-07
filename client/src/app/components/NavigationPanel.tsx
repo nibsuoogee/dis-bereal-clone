@@ -1,39 +1,45 @@
+import { Card, CardContent, Stack } from "@mui/joy";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionGroup,
-  AccordionSummary,
-  Card,
-  CardContent,
-  Stack,
-} from "@mui/joy";
-import Link from "next/link";
+  HomeOutlined,
+  DashboardOutlined,
+  LoginOutlined,
+  AccountCircleOutlined,
+  GroupsOutlined,
+} from "@mui/icons-material";
+import LinkIconButton from "./LinkIconButton";
 
+/**
+ * A navigation panel that displays a list of links to app pages.
+ */
 export default function NavigationPanel() {
   return (
     <>
       <Card variant="soft">
         <CardContent orientation="horizontal">
-          <AccordionGroup sx={{ maxWidth: "200px" }}>
-            <Accordion>
-              <AccordionSummary>Navigation panel</AccordionSummary>
-              <AccordionDetails sx={{ bgcolor: "background.level1" }}>
-                <Stack
-                  spacing={1}
-                  sx={{
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                  }}
-                >
-                  <Link href="/">Front page</Link>
-                  <Link href="/views/dashboard">Dashboard</Link>
-                  <Link href="/views/login">login</Link>
-                  <Link href="/views/profile">profile</Link>
-                  <Link href="/views/friends">Friends</Link>
-                </Stack>
-              </AccordionDetails>
-            </Accordion>
-          </AccordionGroup>
+          <Stack
+            spacing={1}
+            direction={"row"}
+            sx={{
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+            }}
+          >
+            <LinkIconButton linkPath="/" tooltipText="Home page">
+              <HomeOutlined />
+            </LinkIconButton>
+            <LinkIconButton linkPath="/views/dashboard" tooltipText="Dashboard">
+              <DashboardOutlined />
+            </LinkIconButton>
+            <LinkIconButton linkPath="/views/login" tooltipText="login">
+              <LoginOutlined />
+            </LinkIconButton>
+            <LinkIconButton linkPath="/views/profile" tooltipText="Profile">
+              <AccountCircleOutlined />
+            </LinkIconButton>
+            <LinkIconButton linkPath="/views/friends" tooltipText="Friends">
+              <GroupsOutlined />
+            </LinkIconButton>
+          </Stack>
         </CardContent>
       </Card>
     </>

@@ -5,8 +5,6 @@ import { DBPayload, Post } from "../../../../types";
 
 export async function POST(request: NextRequest) {
   try {
-    /*const formData = await request.formData();
-    const file = formData.get("file") as File;*/
     const payload: DBPayload = await request.json();
     const post = payload.obj as Post;
 
@@ -16,9 +14,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    // Read the file as a buffer
-    //const fileBuffer = Buffer.from(await file.arrayBuffer()).toString("base64");
 
     return postWrapper(request, payload);
   } catch (err) {

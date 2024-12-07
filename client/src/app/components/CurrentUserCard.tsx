@@ -11,8 +11,6 @@ import {
   List,
   ListItem,
   ListItemDecorator,
-  Option,
-  Select,
   Typography,
 } from "@mui/joy";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
@@ -22,24 +20,12 @@ import ContactsIcon from "@mui/icons-material/Contacts";
 import BadgeIcon from "@mui/icons-material/Badge";
 import PublicIcon from "@mui/icons-material/Public";
 import PasswordIcon from "@mui/icons-material/Password";
-import PhotoIcon from "@mui/icons-material/Photo";
 import { useState } from "react";
 import { DatabaseOption } from "types";
 
 export default function CurrentUserCard() {
-  const { currentUser, setCurrentUser } = useDataContext();
+  const { currentUser } = useDataContext();
   const [showDetails, setShowDetails] = useState(false);
-
-  const handleChangeDatabase = (
-    event: React.SyntheticEvent | null,
-    newValue: string | null
-  ) => {
-    setCurrentUser({
-      ...currentUser,
-      database: newValue ?? "",
-    });
-  };
-
   function getDatabaseName(database: DatabaseOption) {
     return Object.keys(DatabaseOption)[
       Object.values(DatabaseOption).indexOf(database)
