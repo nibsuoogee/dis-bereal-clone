@@ -15,6 +15,7 @@ import ReactionArray from "./ReactionArray";
 import { useDataContext } from "../contexts/DataContext";
 import { useUserService } from "../services/users";
 import { useEffect, useState } from "react";
+import { timestampToReadableDate } from "../lib/conversions";
 
 export default function VideoCard({
   post,
@@ -82,13 +83,15 @@ export default function VideoCard({
               level="body-sm"
               sx={{ fontWeight: "lg", mt: { xs: 12, sm: 18 } }}
             >
-              Post id: {post.postid ?? "No post id"}
-            </Typography>
+              {post.timestamp
+                ? timestampToReadableDate(post.timestamp)
+                : "No date"}
+            </Typography>{" "}
             <Typography
               level="body-sm"
               sx={{ fontWeight: "lg", mt: { xs: 12, sm: 18 } }}
             >
-              {post.isLate ? "Late" : "Not Late"}
+              {post.isLate ? "Posted late" : "Posted on time"}
             </Typography>
             <ReactionArray
               post={post}

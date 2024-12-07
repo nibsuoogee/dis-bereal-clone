@@ -2,7 +2,6 @@
 
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
 import {
-  serviceDeleteRequest,
   serviceGetRequest,
   servicePostRequest,
 } from "@/app/services/requestHandlers";
@@ -26,6 +25,21 @@ export const useReactionService = () => {
     );
   };
 
+  const getUserReactions = async (
+    showResponseSnackbar: boolean,
+    postid: UUIDTypes | null,
+    userid: UUIDTypes | null
+  ): Promise<ReactionCounts> => {
+    const routePath = `/api/reactions/${postid}/${userid}`;
+    const defaultErrorMessage = "Failed to fetch user reactions";
+    return await serviceGetRequest(
+      routePath,
+      defaultErrorMessage,
+      showSnackbar,
+      showResponseSnackbar
+    );
+  };
+
   const postReaction = async (content: any): Promise<string[]> => {
     const routePath = `/api/reactions`;
     const defaultErrorMessage = "Failed to upload reaction";
@@ -39,19 +53,5 @@ export const useReactionService = () => {
     );
   };
 
-  const deleteReaction = async (
-    reactionid: UUIDTypes | null
-  ): Promise<string[]> => {
-    const routePath = `/api/reactions/${reactionid}`;
-    const defaultErrorMessage = "Failed to delete reaction";
-
-    return await serviceDeleteRequest(
-      routePath,
-      defaultErrorMessage,
-      showSnackbar,
-      true
-    );
-  };
-
-  return { getReactions, postReaction, deleteReaction };
+  return { getReactions, getUserReactions, postReaction };
 };

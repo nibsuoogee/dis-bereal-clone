@@ -1,16 +1,15 @@
 import express from "express";
 import {
-  deleteReaction,
   getReactions,
+  getUserReactions,
   postReaction,
 } from "../controllers/reactionController";
 
 export const router = express.Router();
 
 router.get("/:postid", getReactions);
+router.get("/:postid/:userid", getUserReactions);
 
 router.post("/", postReaction);
-
-router.delete("/:postid", deleteReaction);
 
 export default router;

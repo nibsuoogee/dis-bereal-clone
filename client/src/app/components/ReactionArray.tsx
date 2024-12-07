@@ -3,9 +3,14 @@ import { Post } from "../../../../server/types";
 import {
   FavoriteBorder,
   ThumbUpOffAlt,
-  Mood,
   OutletOutlined,
   SentimentVeryDissatisfiedOutlined,
+  Favorite,
+  ThumbUpAlt,
+  MoodOutlined,
+  Outlet,
+  EmojiEmotions,
+  Sick,
 } from "@mui/icons-material";
 import ReactionButton from "./ReactionButton";
 import { useReactionService } from "../services/reactions";
@@ -30,21 +35,39 @@ export default function ReactionArray({
   buttonsDisabled: boolean;
 }) {
   const { currentUser } = useDataContext();
-  const { getReactions, postReaction } = useReactionService();
-  const [reactions, setReactions] = useState<ReactionCounts>(
-    Object.fromEntries(
-      Object.values(ReactionOption).map((reaction) => [reaction, 0])
-    ) as ReactionCounts
+  const { getReactions, getUserReactions, postReaction } = useReactionService();
+  const [totalReactions, setTotalReactions] = useState<ReactionCounts>(
+    () =>
+      Object.fromEntries(
+        Object.values(ReactionOption).map((reaction) => [reaction, 0])
+      ) as ReactionCounts
+  );
+  const [userReactions, setUserReactions] = useState<ReactionCounts>(
+    () =>
+      Object.fromEntries(
+        Object.values(ReactionOption).map((reaction) => [reaction, 0])
+      ) as ReactionCounts
   );
 
   async function handleGetReactions() {
     const newReactions = await getReactions(false, post.postid);
+    setTotalReactions(newReactions);
+  }
 
-    setReactions(newReactions);
+  async function handleGetUserReactions() {
+    if (!currentUser?.userid) return;
+    console.log("handleGetUserReactions");
+    const newReactions = await getUserReactions(
+      false,
+      post.postid,
+      currentUser.userid
+    );
+    setUserReactions(newReactions);
   }
 
   useEffect(() => {
     handleGetReactions();
+    handleGetUserReactions();
   }, []);
 
   async function handlePostReaction(type: ReactionOption) {
@@ -62,50 +85,56 @@ export default function ReactionArray({
 
     await postReaction(payload);
     handleGetReactions();
+    handleGetUserReactions();
   }
 
   return (
     <Stack spacing={1} direction={"row"}>
-      <ReactionButton
-        buttonFunction={() => handlePostReaction(ReactionOption.love)}
-        reactionCount={reactions[ReactionOption.love]}
-        disabled={buttonsDisabled}
-        tooltipText="I love this"
-      >
-        <FavoriteBorder />
-      </ReactionButton>
-      <ReactionButton
-        buttonFunction={() => handlePostReaction(ReactionOption.like)}
-        reactionCount={reactions[ReactionOption.like]}
-        disabled={buttonsDisabled}
-        tooltipText="I like this"
-      >
-        <ThumbUpOffAlt />
-      </ReactionButton>
-      <ReactionButton
-        buttonFunction={() => handlePostReaction(ReactionOption.haha)}
-        reactionCount={reactions[ReactionOption.haha]}
-        disabled={buttonsDisabled}
-        tooltipText="This made me laugh"
-      >
-        <Mood />
-      </ReactionButton>
-      <ReactionButton
-        buttonFunction={() => handlePostReaction(ReactionOption.wow)}
-        reactionCount={reactions[ReactionOption.wow]}
-        disabled={buttonsDisabled}
-        tooltipText="This surprised me"
-      >
-        <OutletOutlined />
-      </ReactionButton>
-      <ReactionButton
-        buttonFunction={() => handlePostReaction(ReactionOption.angry)}
-        reactionCount={reactions[ReactionOption.angry]}
-        disabled={buttonsDisabled}
-        tooltipText="This made me angry"
-      >
-        <SentimentVeryDissatisfiedOutlined />
-      </ReactionButton>{" "}
+      {Object.values(ReactionOption).map((reaction) => {
+        const buttonConfig = {
+          love: {
+            tooltipText: "I love this",
+            IconOutlined: FavoriteBorder,
+            IconFilled: Favorite,
+          },
+          like: {
+            tooltipText: "I like this",
+            IconOutlined: ThumbUpOffAlt,
+            IconFilled: ThumbUpAlt,
+          },
+          haha: {
+            tooltipText: "This made me laugh",
+            IconOutlined: MoodOutlined,
+            IconFilled: EmojiEmotions,
+          },
+          wow: {
+            tooltipText: "This surprised me",
+            IconOutlined: OutletOutlined,
+            IconFilled: Outlet,
+          },
+          angry: {
+            tooltipText: "This made me angry",
+            IconOutlined: SentimentVeryDissatisfiedOutlined,
+            IconFilled: Sick,
+          },
+        };
+
+        const config = buttonConfig[reaction];
+        const IconOutlined = config.IconOutlined;
+        const IconFilled = config.IconFilled;
+
+        return (
+          <ReactionButton
+            key={reaction}
+            buttonFunction={() => handlePostReaction(reaction)}
+            reactionCount={totalReactions[reaction]}
+            disabled={buttonsDisabled}
+            tooltipText={config.tooltipText}
+          >
+            {userReactions[reaction] === 0 ? <IconOutlined /> : <IconFilled />}
+          </ReactionButton>
+        );
+      })}{" "}
     </Stack>
   );
 }

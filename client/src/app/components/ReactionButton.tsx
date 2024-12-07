@@ -20,7 +20,7 @@ export default function ReactionButton({
   tooltipText: string;
 }) {
   return (
-    <Stack spacing={1} sx={{ justifyContent: "center", alignItems: "center" }}>
+    <Stack spacing={0} sx={{ justifyContent: "center", alignItems: "center" }}>
       <Typography level="body-sm" sx={{ fontWeight: "lg" }}>
         {reactionCount}
       </Typography>
