@@ -1,9 +1,20 @@
-import { Card, CardCover, Grid, IconButton, Stack, Typography } from "@mui/joy";
+import {
+  Card,
+  CardCover,
+  Grid,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/joy";
 import { Post } from "../../../../server/types";
 import { API_CONFIG } from "@/app/config/api";
 import ClearIcon from "@mui/icons-material/Clear";
 import { usePostService } from "@/app/services/posts";
 import ReactionArray from "./ReactionArray";
+import { useDataContext } from "../contexts/DataContext";
+import { useUserService } from "../services/users";
+import { useEffect, useState } from "react";
 
 export default function VideoCard({
   post,
@@ -12,12 +23,26 @@ export default function VideoCard({
   post: Post;
   handleGetPosts: () => void;
 }) {
+  const { currentUser } = useDataContext();
   const { deletePost } = usePostService();
+  const { getUser } = useUserService();
+  const [username, setUsername] = useState<string>("");
+
+  const isUsersPost = currentUser?.userid === post?.userid;
 
   const handleDeletePost = async () => {
     await deletePost(post.postid);
     handleGetPosts();
   };
+
+  async function handleGetUser() {
+    const newUser = await getUser(false, post.userid);
+    setUsername(newUser?.username);
+  }
+
+  useEffect(() => {
+    handleGetUser();
+  }, []);
 
   return (
     <Grid>
@@ -51,9 +76,7 @@ export default function VideoCard({
               level="body-lg"
               sx={{ fontWeight: "lg", mt: { xs: 12, sm: 18 } }}
             >
-              {
-                "Username" /*TODO get username from database based on post.userid*/
-              }
+              {username ?? "No username"}
             </Typography>
             <Typography
               level="body-sm"
@@ -67,10 +90,22 @@ export default function VideoCard({
             >
               {post.isLate ? "Late" : "Not Late"}
             </Typography>
-            <IconButton variant="outlined" onClick={() => handleDeletePost()}>
-              <ClearIcon />
-            </IconButton>
-            <ReactionArray post={post}></ReactionArray>
+            <ReactionArray
+              post={post}
+              buttonsDisabled={isUsersPost}
+            ></ReactionArray>
+            {isUsersPost ? (
+              <Tooltip title="Delete post" variant="plain">
+                <IconButton
+                  variant="outlined"
+                  onClick={() => handleDeletePost()}
+                >
+                  <ClearIcon />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              ""
+            )}
           </Stack>
         </Card>
       </Stack>

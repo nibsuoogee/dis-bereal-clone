@@ -9,7 +9,7 @@ export const router = express.Router();
 
 router.get("/:postid", getReactions);
 
-router.post("/:postid", postReaction);
+router.post("/", postReaction);
 
 router.delete("/:postid", deleteReaction);
 

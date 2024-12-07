@@ -27,7 +27,7 @@ export const useReactionService = () => {
   };
 
   const postReaction = async (content: any): Promise<string[]> => {
-    const routePath = "/api/reactions";
+    const routePath = `/api/reactions`;
     const defaultErrorMessage = "Failed to upload reaction";
 
     return await servicePostRequest(

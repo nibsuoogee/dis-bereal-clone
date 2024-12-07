@@ -25,9 +25,13 @@ export const getReactions = async (req: Request, res: Response) => {
         Object.values(ReactionOption).map((reaction) => [reaction, 0])
       ) as ReactionCounts;
 
-      return { message: "Reactions fetched successfully", data: result.rows };
+      result.rows.forEach((row) => {
+        reactions[row.type as ReactionOption] += 1;
+      });
+
+      return { message: "Reactions fetched successfully", data: reactions };
     },
-    "getPosts"
+    "getReactions"
   );
 };
 
@@ -42,13 +46,13 @@ export const postReaction = async (req: Request, res: Response) => {
       const result = await queryMultiDB(
         database,
         `INSERT INTO reactions_${database} (postid, userid, type) \
-         VALUES ($1, $2, $3, $4) RETURNING reactionid`,
+         VALUES ($1, $2, $3) RETURNING reactionid`,
         [reaction.postid, reaction.userid, reaction.type]
       );
 
       return {
-        message: "Post uploaded successfully",
-        data: { fileId: result.rows[0].postid },
+        message: "Reaction uploaded successfully",
+        data: "",
       };
     },
     "postReaction"

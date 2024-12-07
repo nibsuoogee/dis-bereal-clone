@@ -18,3 +18,21 @@ export const getUsers = async (req: Request, res: Response) => {
     "getUsers"
   );
 };
+
+export const getUser = async (req: Request, res: Response) => {
+  return handleControllerRequest(
+    res,
+    async () => {
+      const { userid } = req.params;
+
+      const result = await queryMultiDB(
+        "za" as DatabaseOption,
+        "SELECT * FROM users WHERE userid = $1",
+        [userid]
+      );
+
+      return { message: "User fetched successfully", data: result.rows[0] };
+    },
+    "getUser"
+  );
+};
