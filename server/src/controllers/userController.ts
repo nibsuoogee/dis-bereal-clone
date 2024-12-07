@@ -1,5 +1,5 @@
 import { handleControllerRequest } from "@controllers/handlers";
-import { Request, Response } from "express"; // Importing Request and Response types
+import { Request, Response } from "express";
 import { queryDB, queryMultiDB } from "../database/db";
 import { DatabaseOption } from "../../types";
 

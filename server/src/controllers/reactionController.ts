@@ -1,4 +1,4 @@
-import { Request, Response } from "express"; // Importing Request and Response types
+import { Request, Response } from "express";
 import { handleControllerRequest } from "@controllers/handlers";
 import { queryMultiDB } from "src/database/db";
 import {

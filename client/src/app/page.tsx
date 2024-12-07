@@ -1,9 +1,9 @@
+"use client";
+
 import { Typography } from "@mui/joy";
 import PageLayoutShell from "./components/PageLayoutShell";
-import { useNotificationService } from "./services/notifications";
 
 export default function Home() {
-  const { getUserNotifications } = useNotificationService();
   return (
     <PageLayoutShell>
       <Typography

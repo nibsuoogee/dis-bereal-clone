@@ -6,6 +6,8 @@ import { User } from "types";
 type DataContextType = {
   setCurrentUser: (user: User) => void;
   currentUser: User;
+  setNotificationTimestamp: (timestamp: Date) => void;
+  notificationTimestamp: Date | null;
 };
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -24,12 +26,16 @@ export const useDataContext = () => {
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User>({} as User);
+  const [notificationTimestamp, setNotificationTimestamp] =
+    useState<Date | null>(null);
 
   return (
     <DataContext.Provider
       value={{
         setCurrentUser,
         currentUser,
+        setNotificationTimestamp,
+        notificationTimestamp,
       }}
     >
       {children}

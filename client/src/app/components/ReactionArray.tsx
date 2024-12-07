@@ -56,7 +56,6 @@ export default function ReactionArray({
 
   async function handleGetUserReactions() {
     if (!currentUser?.userid) return;
-    console.log("handleGetUserReactions");
     const newReactions = await getUserReactions(
       false,
       post.postid,
