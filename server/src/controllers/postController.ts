@@ -1,6 +1,6 @@
 import { Request, Response } from "express"; // Importing Request and Response types
 import { handleControllerRequest } from "@controllers/handlers";
-import { queryDB, queryMultiDB } from "src/database/db";
+import { queryMultiDB } from "src/database/db";
 import { getErrorMessage, reportError } from "@utils/logger";
 import { DatabaseOption, DBPayload, Post } from "../../types";
 
@@ -12,6 +12,24 @@ export const getPosts = async (req: Request, res: Response) => {
         "za" as DatabaseOption,
         "SELECT * FROM posts",
         []
+      );
+
+      return { message: "Posts fetched successfully", data: result.rows };
+    },
+    "getPosts"
+  );
+};
+
+export const getUserPosts = async (req: Request, res: Response) => {
+  return handleControllerRequest(
+    res,
+    async () => {
+      const { userid } = req.params;
+
+      const result = await queryMultiDB(
+        "za" as DatabaseOption,
+        "SELECT * FROM posts WHERE userid = $1",
+        [userid]
       );
 
       return { message: "Posts fetched successfully", data: result.rows };
@@ -47,13 +65,13 @@ export const uploadPost = async (req: Request, res: Response) => {
 
 export const getVideo = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { postid } = req.params;
 
     // Query the database for the video
     const result = await queryMultiDB(
       "za" as DatabaseOption,
       "SELECT video FROM posts WHERE postid = $1",
-      [id]
+      [postid]
     );
 
     if (result.rows.length === 0) {
@@ -102,9 +120,6 @@ export const getVideo = async (req: Request, res: Response) => {
     });
     res.status(500).json({ message: errorMessage });
   }
-  /*},
-    "handleDevRequest"
-  );*/
 };
 
 export const deletePost = async (req: Request, res: Response) => {

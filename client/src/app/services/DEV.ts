@@ -2,6 +2,7 @@
 
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
 import { servicePostRequest } from "@/app/services/requestHandlers";
+import { UUIDTypes } from "uuid";
 
 export const useDEVService = () => {
   const { showSnackbar } = useSnackbar();
@@ -58,5 +59,26 @@ export const useDEVService = () => {
     );
   };
 
-  return { initDB, initMultiDB, populateMultiDB, resetMultiDB };
+  const requestNotification = async (
+    userid: UUIDTypes | null
+  ): Promise<any> => {
+    const routePath = "/api/dev";
+    const content = { command: "request-notification", userid: userid };
+    const defaultErrorMessage = "Failed to request notification";
+    return await servicePostRequest(
+      routePath,
+      content,
+      defaultErrorMessage,
+      showSnackbar,
+      true
+    );
+  };
+
+  return {
+    initDB,
+    initMultiDB,
+    populateMultiDB,
+    resetMultiDB,
+    requestNotification,
+  };
 };

@@ -23,6 +23,20 @@ export const usePostService = () => {
     );
   };
 
+  const getUserPosts = async (
+    showResponseSnackbar: boolean,
+    userid: UUIDTypes | null
+  ): Promise<Post[]> => {
+    const routePath = `/api/posts/${userid}`;
+    const defaultErrorMessage = "Failed to fetch user posts";
+    return await serviceGetRequest(
+      routePath,
+      defaultErrorMessage,
+      showSnackbar,
+      showResponseSnackbar
+    );
+  };
+
   const uploadPost = async (content: any): Promise<string[]> => {
     const routePath = "/api/posts";
     const defaultErrorMessage = "Failed to upload post";
@@ -48,5 +62,5 @@ export const usePostService = () => {
     );
   };
 
-  return { getPosts, uploadPost, deletePost };
+  return { getPosts, getUserPosts, uploadPost, deletePost };
 };

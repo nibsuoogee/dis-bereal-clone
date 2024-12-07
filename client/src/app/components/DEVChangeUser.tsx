@@ -34,7 +34,7 @@ export default function DEVChangeUser() {
 
   return (
     <>
-      <Card variant="soft">
+      <Card variant="soft" size="sm">
         <AccordionGroup>
           <Accordion>
             <AccordionSummary>DEV: Sign in as user</AccordionSummary>

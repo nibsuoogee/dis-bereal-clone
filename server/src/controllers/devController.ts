@@ -12,6 +12,7 @@ import {
 } from "../database/multiDatabaseSQL";
 import { DatabaseOption, User } from "../../types";
 import sampleUsers from "../config/sampleData";
+import { UUIDTypes } from "uuid";
 
 /**
  * Run queries to create tables and insert sample data based on config settings.
@@ -166,11 +167,21 @@ async function resetMultiDB() {
   return { message: "Multi database reset", data: null };
 }
 
+async function requestNotification(userid: UUIDTypes | null) {
+  await queryMultiDB(
+    "za" as DatabaseOption,
+    `INSERT INTO notifications_za (userid, wasDismissed) \
+    VALUES ($1, $2) RETURNING notificationid`,
+    [userid, false]
+  );
+  return { message: "Notification requested", data: null };
+}
+
 export const handleDevRequest = async (req: Request, res: Response) => {
   return handleControllerRequest(
     res,
     async () => {
-      const command = req.body.command;
+      const { command, userid } = req.body;
 
       switch (command) {
         case "initialize-database":
@@ -181,6 +192,8 @@ export const handleDevRequest = async (req: Request, res: Response) => {
           return await populateMultiDB();
         case "reset-multi-database":
           return await resetMultiDB();
+        case "request-notification":
+          return await requestNotification(userid);
         default:
           break;
       }

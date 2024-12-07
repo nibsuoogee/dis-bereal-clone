@@ -58,14 +58,14 @@ export default function VideoCard({
           <CardCover>
             <video autoPlay muted controls>
               <source
-                src={`${API_CONFIG.baseURL}/api/posts/${post.postid}`}
+                src={`${API_CONFIG.baseURL}/api/posts/video/${post.postid}`}
                 type="video/mp4"
               />
             </video>
           </CardCover>
           {/*<CardContent></CardContent>*/}
         </Card>
-        <Card>
+        <Card size="sm">
           <Stack
             spacing={1}
             sx={{
