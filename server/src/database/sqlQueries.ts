@@ -69,8 +69,8 @@ CREATE TABLE Post (
 
 CREATE TABLE Location (
     LocationID SERIAL PRIMARY KEY,
-    Latitude NUMERIC NOT NULL,
-    Longitude NUMERIC NOT NULL,
+    Latitude NUMERIC (9,6) NOT NULL,
+    Longitude NUMERIC (9,6) NOT NULL,
     PostID INT NOT NULL,
     FOREIGN KEY (PostID) REFERENCES Post(PostID) ON DELETE CASCADE
 );
