@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -14,11 +14,9 @@
     "@mui/icons-material": "^6.1.9",
     "@mui/joy": "^5.0.0-beta.48",
     "@mui/material": "^6.1.9",
-    "axios": "^1.7.8",
-    "dis-bereal-clone": "file:..",
-    "next": "15.0.3",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "next": "^14.2.20",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "uuid": "^11.0.3"
   },
   "devDependencies": {
