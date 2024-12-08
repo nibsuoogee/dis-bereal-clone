@@ -1,10 +1,11 @@
 import { Card, LinearProgress, Typography } from "@mui/joy";
 import { useDataContext } from "../contexts/DataContext";
 import { useEffect, useState } from "react";
+import { TIME_TO_BEREAL_MS, TIME_TO_BEREAL_S } from "../config/constants";
 
 export default function NotificationPanel() {
   const { notificationTimestamp } = useDataContext();
-  const MAX_TIME = 120;
+  const MAX_TIME = TIME_TO_BEREAL_S;
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
 
   useEffect(() => {
@@ -16,7 +17,7 @@ export default function NotificationPanel() {
     const timer = setInterval(() => {
       const timestamp = new Date(notificationTimestamp);
       const now = Date.now();
-      const end = timestamp.getTime() + 120000; // 2 minutes in milliseconds
+      const end = timestamp.getTime() + TIME_TO_BEREAL_MS;
       const remaining = Math.max(0, Math.floor((end - now) / 1000));
       setSecondsLeft(remaining);
 

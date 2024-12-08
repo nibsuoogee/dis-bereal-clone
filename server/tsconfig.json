@@ -15,8 +15,9 @@
     "outDir": "./dist",
     "baseUrl": "./",                  
     "paths": {
-      "@config/*": ["src/services/*"],
+      "@config/*": ["src/config/*"],
       "@controllers/*": ["src/controllers/*"],
+      "@database/*": ["src/database/*"],
       "@middlewares/*": ["src/middlewares/*"],
       "@models/*": ["src/models/*"],
       "@routes/*": ["src/routes/*"],

@@ -22,6 +22,7 @@ import PublicIcon from "@mui/icons-material/Public";
 import PasswordIcon from "@mui/icons-material/Password";
 import { useState } from "react";
 import { DatabaseOption } from "types";
+import { timestampToReadableDate } from "../lib/conversions";
 
 export default function CurrentUserCard() {
   const { currentUser } = useDataContext();
@@ -111,7 +112,7 @@ export default function CurrentUserCard() {
                       <CalendarTodayIcon />
                     </ListItemDecorator>
                     {currentUser.creationdate
-                      ? currentUser.creationdate.toLocaleDateString()
+                      ? timestampToReadableDate(currentUser.creationdate)
                       : "No creation date"}
                   </ListItem>
                   <ListItem>

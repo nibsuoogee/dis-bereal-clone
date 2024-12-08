@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { handleControllerRequest } from "@controllers/handlers";
-import { queryMultiDB } from "src/database/db";
+import { queryMultiDB } from "@database/db";
 import { getErrorMessage, reportError } from "@utils/logger";
-import { DatabaseOption, DBPayload, Notification, Post } from "@types";
+import { DatabaseOption, DBPayload, Notification, Post, User } from "@types";
+import { TIME_TO_BEREAL_MS } from "@config/constants";
 
 export const getPosts = async (req: Request, res: Response) => {
   return handleControllerRequest(
@@ -56,12 +57,12 @@ export const uploadPost = async (req: Request, res: Response) => {
         [post.userid]
       );
 
-      const notification = result.rows[0] as any;
+      const notification = result.rows[0] as Notification;
       let islate = false;
 
       if (notification.senttimestamp) {
         const timestamp = new Date(notification?.senttimestamp);
-        islate = Date.now() - timestamp.getTime() > 120000;
+        islate = Date.now() - timestamp.getTime() > TIME_TO_BEREAL_MS;
       }
 
       await queryMultiDB(
@@ -161,14 +162,16 @@ export const deletePost = async (req: Request, res: Response) => {
         "SELECT userid FROM posts WHERE postid = $1",
         [id]
       );
-      const userid = result.rows[0]?.userid;
+      const user = result.rows[0] as User;
+      const userid = user?.userid;
 
       const result2 = await queryMultiDB(
         "za" as DatabaseOption,
         "SELECT database FROM users WHERE userid = $1",
         [userid]
       );
-      const database = result2.rows[0]?.database;
+      const user2 = result2.rows[0] as User;
+      const database = user2?.database;
 
       await queryMultiDB(
         database,

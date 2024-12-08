@@ -11,7 +11,7 @@ import { getErrorMessage } from "@/app/utils/logger";
  */
 export async function servicePostRequest(
   routePath: string,
-  content: any,
+  content: unknown,
   defaultErrorMessage: string,
   showSnackbar: (message: string) => void,
   showResponseSnackbar: boolean

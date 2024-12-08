@@ -7,7 +7,7 @@ import { UUIDTypes } from "uuid";
 export const useDEVService = () => {
   const { showSnackbar } = useSnackbar();
 
-  const initDB = async (): Promise<any> => {
+  const initDB = async (): Promise<null> => {
     const routePath = "/api/dev";
     const content = { command: "initialize-database" };
     const defaultErrorMessage = "Failed to initialize database";
@@ -20,7 +20,7 @@ export const useDEVService = () => {
     );
   };
 
-  const initMultiDB = async (): Promise<any> => {
+  const initMultiDB = async (): Promise<null> => {
     const routePath = "/api/dev";
     const content = { command: "initialize-multi-database" };
     const defaultErrorMessage = "Failed to initialize multi-database";
@@ -33,7 +33,7 @@ export const useDEVService = () => {
     );
   };
 
-  const populateMultiDB = async (): Promise<any> => {
+  const populateMultiDB = async (): Promise<null> => {
     const routePath = "/api/dev";
     const content = { command: "populate-multi-database" };
     const defaultErrorMessage = "Failed to populate multi-database";
@@ -46,7 +46,7 @@ export const useDEVService = () => {
     );
   };
 
-  const resetMultiDB = async (): Promise<any> => {
+  const resetMultiDB = async (): Promise<null> => {
     const routePath = "/api/dev";
     const content = { command: "reset-multi-database" };
     const defaultErrorMessage = "Failed to reset multi-database";
@@ -61,7 +61,7 @@ export const useDEVService = () => {
 
   const requestNotification = async (
     userid: UUIDTypes | null
-  ): Promise<any> => {
+  ): Promise<null> => {
     const routePath = "/api/dev";
     const content = { command: "request-notification", userid: userid };
     const defaultErrorMessage = "Failed to request notification";

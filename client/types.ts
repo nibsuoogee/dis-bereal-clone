@@ -7,7 +7,7 @@ export interface User {
   email: string;
   passwordhash: string;
   creationdate: Date | null;
-  database: string;
+  database: DatabaseOption;
 }
 
 export interface Friend {
