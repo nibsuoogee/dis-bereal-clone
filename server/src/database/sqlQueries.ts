@@ -60,7 +60,7 @@ CREATE TABLE "User" (
 CREATE TABLE Post (
     PostID SERIAL PRIMARY KEY,
     UserID INT NOT NULL,
-    Video BYTEA, -- To store binary data
+    Video BYTEA,
     IsLate BOOLEAN NOT NULL DEFAULT FALSE,
     Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   	LocationID INT,
