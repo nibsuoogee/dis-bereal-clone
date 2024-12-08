@@ -52,7 +52,7 @@ CREATE TABLE "User" (
     FullName VARCHAR(100) NOT NULL,
     Email VARCHAR(100) NOT NULL,
     PasswordHash TEXT NOT NULL,
-    Photo BYTEA, -- To store binary data
+    Photo BYTEA,
     CreationDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     Continent Continent NOT NULL
 );
