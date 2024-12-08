@@ -15,7 +15,10 @@ export const getPosts = async (req: Request, res: Response) => {
         []
       );
 
-      return { message: "Posts fetched successfully", data: result.rows };
+      return {
+        message: "Posts fetched successfully",
+        data: result.rows as Post[],
+      };
     },
     "getPosts"
   );
@@ -33,7 +36,10 @@ export const getUserPosts = async (req: Request, res: Response) => {
         [userid]
       );
 
-      return { message: "Posts fetched successfully", data: result.rows };
+      return {
+        message: "Posts fetched successfully",
+        data: result.rows as Post[],
+      };
     },
     "getPosts"
   );
@@ -84,7 +90,7 @@ export const uploadPost = async (req: Request, res: Response) => {
 
       return {
         message: "Post uploaded successfully",
-        data: { fileId: result.rows[0].postid },
+        data: null,
       };
     },
     "uploadPost"

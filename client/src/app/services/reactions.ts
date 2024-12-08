@@ -40,7 +40,7 @@ export const useReactionService = () => {
     );
   };
 
-  const postReaction = async (payload: DBPayload): Promise<string[]> => {
+  const postReaction = async (payload: DBPayload): Promise<null> => {
     const routePath = `/api/reactions`;
     const defaultErrorMessage = "Failed to upload reaction";
 

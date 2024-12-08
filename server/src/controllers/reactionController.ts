@@ -95,16 +95,16 @@ export const postReaction = async (req: Request, res: Response) => {
       }
 
       // and insert the reaction if it does not yet exists
-      const result2 = await queryMultiDB(
+      await queryMultiDB(
         database,
         `INSERT INTO reactions_${database} (postid, userid, type) \
-        VALUES ($1, $2, $3) RETURNING reactionid`,
+        VALUES ($1, $2, $3)`,
         [reaction.postid, reaction.userid, reaction.type]
       );
 
       return {
         message: "Reaction uploaded successfully",
-        data: result2.rows[0].reactionid,
+        data: null,
       };
     },
     "postReaction"

@@ -1,7 +1,7 @@
 import { handleControllerRequest } from "@controllers/handlers";
 import { Request, Response } from "express";
 import { queryDB, queryMultiDB } from "../database/db";
-import { DatabaseOption } from "@types";
+import { DatabaseOption, User } from "@types";
 
 export const getUsers = async (req: Request, res: Response) => {
   return handleControllerRequest(
@@ -13,7 +13,10 @@ export const getUsers = async (req: Request, res: Response) => {
         []
       );
 
-      return { message: "Users fetched successfully", data: result.rows };
+      return {
+        message: "Users fetched successfully",
+        data: result.rows as User[],
+      };
     },
     "getUsers"
   );
@@ -31,7 +34,10 @@ export const getUser = async (req: Request, res: Response) => {
         [userid]
       );
 
-      return { message: "User fetched successfully", data: result.rows[0] };
+      return {
+        message: "User fetched successfully",
+        data: result.rows[0] as User,
+      };
     },
     "getUser"
   );

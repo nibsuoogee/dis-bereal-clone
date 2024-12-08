@@ -37,7 +37,7 @@ export const usePostService = () => {
     );
   };
 
-  const uploadPost = async (payload: DBPayload): Promise<string[]> => {
+  const uploadPost = async (payload: DBPayload): Promise<null> => {
     const routePath = "/api/posts";
     const defaultErrorMessage = "Failed to upload post";
 
@@ -50,7 +50,7 @@ export const usePostService = () => {
     );
   };
 
-  const deletePost = async (postid: UUIDTypes | null): Promise<string[]> => {
+  const deletePost = async (postid: UUIDTypes | null): Promise<null> => {
     const routePath = `/api/posts/${postid}`;
     const defaultErrorMessage = "Failed to delete post";
 
