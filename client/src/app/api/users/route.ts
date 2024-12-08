@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
+  console.log("haloo", request);
   return postWrapper(request, body);
 }
 

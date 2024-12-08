@@ -1,7 +1,10 @@
 "use client";
 
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
-import { serviceGetRequest } from "@/app/services/requestHandlers";
+import {
+  serviceGetRequest,
+  servicePostRequest,
+} from "@/app/services/requestHandlers";
 
 export const useUserService = () => {
   const { showSnackbar } = useSnackbar();
@@ -17,5 +20,17 @@ export const useUserService = () => {
     );
   };
 
-  return { getUsers };
+  const login = async (userData: any): Promise<string[]> => {
+    const routePath = "/api/users/login";
+    const defaultErrorMessage = "Failed to login";
+    return await servicePostRequest(
+      routePath,
+      userData,
+      defaultErrorMessage,
+      showSnackbar,
+      true
+    );
+  };
+
+  return { getUsers, login };
 };

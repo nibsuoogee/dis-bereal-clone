@@ -27,8 +27,9 @@ export default function NavigationPanel() {
                 >
                   <Link href="/">Front page</Link>
                   <Link href="/views/dashboard">Dashboard</Link>
-                  <Link href="/views/login">login</Link>
-                  <Link href="/views/profile">profile</Link>
+                  <Link href="/views/login">Login</Link>
+                  <Link href="/views/register">Register</Link>
+                  <Link href="/views/profile">Profile</Link>
                   <Link href="/views/friends">Friends</Link>
                 </Stack>
               </AccordionDetails>

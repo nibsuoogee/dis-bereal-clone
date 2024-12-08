@@ -14,5 +14,8 @@
     "concurrently": "^9.1.0"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "dis-bereal-clone": "file:"
+  }
 }
