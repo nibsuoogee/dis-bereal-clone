@@ -91,7 +91,7 @@ export default function VideoCard({
               level="body-sm"
               sx={{ fontWeight: "lg", mt: { xs: 12, sm: 18 } }}
             >
-              {post.isLate ? "Posted late" : "Posted on time"}
+              {post.islate ? "Posted late" : "Posted on time"}
             </Typography>
             <ReactionArray
               post={post}

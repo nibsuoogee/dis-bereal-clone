@@ -1,5 +1,5 @@
 import { configDotenv } from "dotenv";
-import { DatabaseOption, TableOption, User } from "../../types";
+import { DatabaseOption, TableOption, User } from "@types";
 import { DB_NAME_PREFIX } from "src/config/constants";
 
 // Load environment variables
@@ -24,21 +24,21 @@ const TableSchemas = {
     username: "VARCHAR(255) NOT NULL",
     fullname: "VARCHAR(255) NOT NULL",
     email: "VARCHAR(255) NOT NULL",
-    passwordHash: "VARCHAR(255) NOT NULL",
+    passwordhash: "VARCHAR(255) NOT NULL",
     photo: "BYTEA",
-    creationDate: "DATE NOT NULL DEFAULT CURRENT_DATE",
+    creationdate: "DATE NOT NULL DEFAULT CURRENT_DATE",
     database: "VARCHAR(50) NOT NULL",
   },
   friends: {
     userid1: "UUID NOT NULL",
     userid2: "UUID NOT NULL",
-    friendSinceDate: "DATE NOT NULL",
+    friendsincedate: "DATE NOT NULL",
   },
   posts: {
     postid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
     userid: "UUID NOT NULL",
     video: "BYTEA",
-    isLate: "BOOLEAN NOT NULL",
+    islate: "BOOLEAN NOT NULL",
     timestamp: "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
     locationid: "UUID NOT NULL",
   },
@@ -64,8 +64,8 @@ const TableSchemas = {
   notifications: {
     notificationid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
     userid: "UUID NOT NULL",
-    sentTimestamp: "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
-    wasDismissed: "BOOLEAN NOT NULL",
+    senttimestamp: "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
+    wasdismissed: "BOOLEAN NOT NULL",
   },
 };
 
@@ -167,7 +167,7 @@ export function createViewsSQL() {
 }
 
 export function insertUserSQL(user: User) {
-  const { username, fullname, email, passwordHash, database } = user;
-  return `INSERT INTO users_${database} (username, fullname, email, passwordHash, database) VALUES \
-     ('${username}', '${fullname}', '${email}', '${passwordHash}', '${database}');`;
+  const { username, fullname, email, passwordhash, database } = user;
+  return `INSERT INTO users_${database} (username, fullname, email, passwordhash, database) VALUES \
+     ('${username}', '${fullname}', '${email}', '${passwordhash}', '${database}');`;
 }

@@ -5,22 +5,22 @@ export interface User {
   username: string;
   fullname: string;
   email: string;
-  passwordHash: string;
-  creationDate: Date | null;
+  passwordhash: string;
+  creationdate: Date | null;
   database: string;
 }
 
 export interface Friend {
   userid1: UUIDTypes;
   userid2: UUIDTypes;
-  friendSinceDate: Date;
+  friendsincedate: Date;
 }
 
 export interface Post {
   postid: UUIDTypes | null;
   userid: UUIDTypes;
   video: Buffer;
-  isLate: boolean;
+  islate: boolean | null;
   timestamp: Date | null;
   locationid: UUIDTypes | null;
 }
@@ -50,8 +50,8 @@ export interface Reaction {
 export interface Notification {
   notificationid: UUIDTypes;
   userid: UUIDTypes;
-  sentTimestamp: Date;
-  wasDismissed: boolean;
+  senttimestamp: Date;
+  wasdismissed: boolean;
 }
 
 export enum Continents {
@@ -75,12 +75,12 @@ export enum TableOption {
 }
 
 export enum DatabaseOption {
-  SouthAfrica = "za",
-  Brazil = "br",
-  UnitedStates = "us",
-  Japan = "jp",
-  UnitedKingdom = "uk",
-  Germany = "de",
+  "South Africa" = "za",
+  "Brazil" = "br",
+  "United States" = "us",
+  "Japan" = "jp",
+  "United Kingdom" = "uk",
+  "Germany" = "de",
 }
 
 export enum ReactionOption {

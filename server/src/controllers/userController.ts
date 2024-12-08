@@ -1,7 +1,7 @@
 import { handleControllerRequest } from "@controllers/handlers";
 import { Request, Response } from "express";
 import { queryDB, queryMultiDB } from "../database/db";
-import { DatabaseOption } from "../../types";
+import { DatabaseOption } from "@types";
 
 export const getUsers = async (req: Request, res: Response) => {
   return handleControllerRequest(

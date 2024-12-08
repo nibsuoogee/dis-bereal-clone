@@ -8,9 +8,9 @@ CREATE TABLE users(
 	username VARCHAR(255) NOT NULL,
 	fullname VARCHAR(255) NOT NULL,
 	email VARCHAR(255) NOT NULL,
-	passwordHash VARCHAR(255) NOT NULL,
+	passwordhash VARCHAR(255) NOT NULL,
 	photo BYTEA,
-	creationDate DATE NOT NULL,
+	creationdate DATE NOT NULL,
 	continent VARCHAR(255) NOT NULL
 )
     

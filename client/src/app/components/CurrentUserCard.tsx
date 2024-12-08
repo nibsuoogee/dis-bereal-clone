@@ -110,8 +110,8 @@ export default function CurrentUserCard() {
                     <ListItemDecorator>
                       <CalendarTodayIcon />
                     </ListItemDecorator>
-                    {currentUser.creationDate
-                      ? currentUser.creationDate.toLocaleDateString()
+                    {currentUser.creationdate
+                      ? currentUser.creationdate.toLocaleDateString()
                       : "No creation date"}
                   </ListItem>
                   <ListItem>

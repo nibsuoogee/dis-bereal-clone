@@ -1,4 +1,4 @@
-import { DatabaseOption, Notification } from "../../types";
+import { DatabaseOption, Notification } from "@types";
 import { queryMultiDB } from "../database/db";
 import { handleControllerRequest } from "./handlers";
 import { Request, Response } from "express";
@@ -13,7 +13,7 @@ export const getUserNotifications = async (req: Request, res: Response) => {
         "za" as DatabaseOption,
         "SELECT * FROM notifications \
         WHERE userid = $1 \
-        ORDER BY sentTimestamp DESC LIMIT 1;",
+        ORDER BY senttimestamp DESC LIMIT 1;",
         [userid]
       );
 

@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 import { configDotenv } from "dotenv";
-import { DatabaseOption } from "../../types";
+import { DatabaseOption } from "@types";
 import { DB_NAME_PREFIX } from "../config/constants";
 
 // Load environment variables

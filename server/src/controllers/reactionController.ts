@@ -7,7 +7,7 @@ import {
   Reaction,
   ReactionCounts,
   ReactionOption,
-} from "../../types";
+} from "@types";
 
 export const getReactions = async (req: Request, res: Response) => {
   return handleControllerRequest(

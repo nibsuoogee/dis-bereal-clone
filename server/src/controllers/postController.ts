@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { handleControllerRequest } from "@controllers/handlers";
 import { queryMultiDB } from "src/database/db";
 import { getErrorMessage, reportError } from "@utils/logger";
-import { DatabaseOption, DBPayload, Notification, Post } from "../../types";
+import { DatabaseOption, DBPayload, Notification, Post } from "@types";
 
 export const getPosts = async (req: Request, res: Response) => {
   return handleControllerRequest(
@@ -50,32 +50,33 @@ export const uploadPost = async (req: Request, res: Response) => {
       // Get the last notification timestamp
       const result = await queryMultiDB(
         database as DatabaseOption,
-        "SELECT (sentTimestamp) FROM notifications \
+        "SELECT * FROM notifications \
         WHERE userid = $1 \
-        ORDER BY sentTimestamp DESC LIMIT 1;",
+        ORDER BY senttimestamp DESC LIMIT 1;",
         [post.userid]
       );
 
-      const notification = result.rows[0] as Notification;
-      let isLate = false;
+      const notification = result.rows[0] as any;
+      let islate = false;
 
-      if (notification.sentTimestamp) {
-        const timestamp = new Date(notification?.sentTimestamp);
-        isLate = Date.now() - timestamp.getTime() > 120000;
+      if (notification.senttimestamp) {
+        const timestamp = new Date(notification?.senttimestamp);
+        islate = Date.now() - timestamp.getTime() > 120000;
       }
 
       await queryMultiDB(
         database,
-        `INSERT INTO posts_${database} (userid, video, isLate, locationid) \
+        `INSERT INTO posts_${database} (userid, video, islate, locationid) \
          VALUES ($1, $2, $3, $4) RETURNING postid`,
-        [post.userid, originalBuffer, isLate, post.userid]
+        [post.userid, originalBuffer, islate, post.userid]
       );
 
       if (notification.notificationid) {
         // Set the notification as dismissed
         await queryMultiDB(
           database as DatabaseOption,
-          "UPDATE notifications SET isDismissed = true WHERE notificationid = $1",
+          `UPDATE notifications_${database} 
+          SET wasdismissed = true WHERE notificationid = $1`,
           [notification.notificationid]
         );
       }

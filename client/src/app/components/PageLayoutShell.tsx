@@ -8,6 +8,7 @@ import { useNotificationService } from "../services/notifications";
 import { useEffect } from "react";
 import { useDataContext } from "../contexts/DataContext";
 import NotificationPanel from "./NotificationPanel";
+import { Notification } from "../../../types";
 
 export default function PageLayoutShell({
   children,
@@ -21,11 +22,13 @@ export default function PageLayoutShell({
     const notifications = (await getUserNotifications(
       false,
       currentUser?.userid
-    )) as any;
-    if (notifications.wasDismissed) {
+    )) as Notification[];
+
+    if (notifications[0]?.wasdismissed) {
       setNotificationTimestamp(null);
+    } else {
+      setNotificationTimestamp(notifications[0]?.senttimestamp);
     }
-    setNotificationTimestamp(notifications[0]?.senttimestamp);
   }
 
   useEffect(() => {

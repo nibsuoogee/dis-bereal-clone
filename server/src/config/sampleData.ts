@@ -1,4 +1,4 @@
-import { User } from "types";
+import { User } from "@types";
 
 // userid will actually be generated automatically by postgres
 const sampleUsers: User[] = [
@@ -7,8 +7,8 @@ const sampleUsers: User[] = [
     username: "user1_za",
     fullname: "John Smith",
     email: "john.smith@email.com",
-    passwordHash: "hash1",
-    creationDate: null,
+    passwordhash: "hash1",
+    creationdate: null,
     database: "za",
   },
   {
@@ -16,8 +16,8 @@ const sampleUsers: User[] = [
     username: "user2_br",
     fullname: "Maria Silva",
     email: "maria.silva@email.com",
-    passwordHash: "hash2",
-    creationDate: null,
+    passwordhash: "hash2",
+    creationdate: null,
     database: "br",
   },
   {
@@ -25,8 +25,8 @@ const sampleUsers: User[] = [
     username: "user3_us",
     fullname: "Mike Johnson",
     email: "mike.j@email.com",
-    passwordHash: "hash3",
-    creationDate: null,
+    passwordhash: "hash3",
+    creationdate: null,
     database: "us",
   },
   {
@@ -34,8 +34,8 @@ const sampleUsers: User[] = [
     username: "user4_jp",
     fullname: "Yuki Tanaka",
     email: "yuki.t@email.com",
-    passwordHash: "hash4",
-    creationDate: null,
+    passwordhash: "hash4",
+    creationdate: null,
     database: "jp",
   },
   {
@@ -43,8 +43,8 @@ const sampleUsers: User[] = [
     username: "user5_uk",
     fullname: "Emma Wilson",
     email: "emma.w@email.com",
-    passwordHash: "hash5",
-    creationDate: null,
+    passwordhash: "hash5",
+    creationdate: null,
     database: "uk",
   },
   {
@@ -52,8 +52,8 @@ const sampleUsers: User[] = [
     username: "user6_de",
     fullname: "Hans Mueller",
     email: "hans.m@email.com",
-    passwordHash: "hash6",
-    creationDate: null,
+    passwordhash: "hash6",
+    creationdate: null,
     database: "de",
   },
   {
@@ -61,8 +61,8 @@ const sampleUsers: User[] = [
     username: "user7_za",
     fullname: "Sarah Brown",
     email: "sarah.b@email.com",
-    passwordHash: "hash7",
-    creationDate: null,
+    passwordhash: "hash7",
+    creationdate: null,
     database: "za",
   },
   {
@@ -70,8 +70,8 @@ const sampleUsers: User[] = [
     username: "user8_br",
     fullname: "Pedro Santos",
     email: "pedro.s@email.com",
-    passwordHash: "hash8",
-    creationDate: null,
+    passwordhash: "hash8",
+    creationdate: null,
     database: "br",
   },
   {
@@ -79,8 +79,8 @@ const sampleUsers: User[] = [
     username: "user9_us",
     fullname: "Lisa Davis",
     email: "lisa.d@email.com",
-    passwordHash: "hash9",
-    creationDate: null,
+    passwordhash: "hash9",
+    creationdate: null,
     database: "us",
   },
   {
@@ -88,8 +88,8 @@ const sampleUsers: User[] = [
     username: "user10_jp",
     fullname: "Kenji Sato",
     email: "kenji.s@email.com",
-    passwordHash: "hash10",
-    creationDate: null,
+    passwordhash: "hash10",
+    creationdate: null,
     database: "jp",
   },
   {
@@ -97,8 +97,8 @@ const sampleUsers: User[] = [
     username: "user11_uk",
     fullname: "James Taylor",
     email: "james.t@email.com",
-    passwordHash: "hash11",
-    creationDate: null,
+    passwordhash: "hash11",
+    creationdate: null,
     database: "uk",
   },
   {
@@ -106,8 +106,8 @@ const sampleUsers: User[] = [
     username: "user12_de",
     fullname: "Anna Schmidt",
     email: "anna.s@email.com",
-    passwordHash: "hash12",
-    creationDate: null,
+    passwordhash: "hash12",
+    creationdate: null,
     database: "de",
   },
   {
@@ -115,8 +115,8 @@ const sampleUsers: User[] = [
     username: "user13_za",
     fullname: "David Green",
     email: "david.g@email.com",
-    passwordHash: "hash13",
-    creationDate: null,
+    passwordhash: "hash13",
+    creationdate: null,
     database: "za",
   },
   {
@@ -124,8 +124,8 @@ const sampleUsers: User[] = [
     username: "user14_br",
     fullname: "Ana Costa",
     email: "ana.c@email.com",
-    passwordHash: "hash14",
-    creationDate: null,
+    passwordhash: "hash14",
+    creationdate: null,
     database: "br",
   },
   {
@@ -133,8 +133,8 @@ const sampleUsers: User[] = [
     username: "user15_us",
     fullname: "Tom Wilson",
     email: "tom.w@email.com",
-    passwordHash: "hash15",
-    creationDate: null,
+    passwordhash: "hash15",
+    creationdate: null,
     database: "us",
   },
   {
@@ -142,8 +142,8 @@ const sampleUsers: User[] = [
     username: "user16_jp",
     fullname: "Hiro Yamamoto",
     email: "hiro.y@email.com",
-    passwordHash: "hash16",
-    creationDate: null,
+    passwordhash: "hash16",
+    creationdate: null,
     database: "jp",
   },
   {
@@ -151,8 +151,8 @@ const sampleUsers: User[] = [
     username: "user17_uk",
     fullname: "Oliver Brown",
     email: "oliver.b@email.com",
-    passwordHash: "hash17",
-    creationDate: null,
+    passwordhash: "hash17",
+    creationdate: null,
     database: "uk",
   },
   {
@@ -160,8 +160,8 @@ const sampleUsers: User[] = [
     username: "user18_de",
     fullname: "Laura Weber",
     email: "laura.w@email.com",
-    passwordHash: "hash18",
-    creationDate: null,
+    passwordhash: "hash18",
+    creationdate: null,
     database: "de",
   },
 ];

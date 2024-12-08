@@ -5,10 +5,13 @@ import { useEffect, useState } from "react";
 export default function NotificationPanel() {
   const { notificationTimestamp } = useDataContext();
   const MAX_TIME = 120;
-  const [secondsLeft, setSecondsLeft] = useState(MAX_TIME);
+  const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
 
   useEffect(() => {
-    if (notificationTimestamp === null) return;
+    if (notificationTimestamp === null) {
+      setSecondsLeft(null);
+      return;
+    }
 
     const timer = setInterval(() => {
       const timestamp = new Date(notificationTimestamp);
@@ -27,7 +30,7 @@ export default function NotificationPanel() {
 
   return (
     <>
-      {notificationTimestamp ? (
+      {secondsLeft ? (
         <Card variant="soft" size="sm">
           <LinearProgress
             determinate
@@ -42,9 +45,9 @@ export default function NotificationPanel() {
             }}
           >
             <Typography
-              level="body-xs"
+              level="body-md"
               textColor="common.white"
-              sx={{ fontWeight: "xl", mixBlendMode: "difference" }}
+              sx={{ mixBlendMode: "difference" }}
             >
               {`Time to BeReal ${secondsLeft} s`}
             </Typography>

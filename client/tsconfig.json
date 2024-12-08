@@ -20,7 +20,11 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@config/*": ["./src/app/config/*"],
       "@contexts/*": ["./src/app/contexts/*"],
+      "@lib/*": ["./src/app/lib/*"],
+      "@services/*": ["./src/app/services/*"],
+      "@utils/*": ["./src/app/utils/*"],
       "@types": ["./src/app/types"]
     },
     "baseUrl": "."

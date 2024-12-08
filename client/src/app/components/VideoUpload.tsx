@@ -2,7 +2,7 @@ import { Button, Stack } from "@mui/joy";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { usePostService } from "@/app/services/posts";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useDataContext } from "../contexts/DataContext";
 import { DatabaseOption, DBPayload, Post } from "../../../types";
 
@@ -11,20 +11,19 @@ export default function VideoUpload({
 }: {
   handleGetPosts: () => void;
 }) {
-  const { currentUser } = useDataContext();
+  const { currentUser, setNotificationTimestamp } = useDataContext();
   const { uploadPost } = usePostService();
   const [file, setFile] = useState<File | null>(null);
 
-  async function handleSetFile(event: any) {
+  async function handleSetFile(event: ChangeEvent<HTMLInputElement>) {
     event.preventDefault();
 
-    if (event.target.files?.length > 0) {
+    if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
 
       setFile(file);
     }
   }
-
   async function handleVideoUpload() {
     if (!file) return;
 
@@ -35,7 +34,7 @@ export default function VideoUpload({
       postid: null,
       userid: currentUser.userid,
       video: fileBuffer,
-      isLate: false,
+      islate: null,
       timestamp: null,
       locationid: null,
     };
@@ -46,6 +45,7 @@ export default function VideoUpload({
 
     await uploadPost(payload);
     handleGetPosts();
+    setNotificationTimestamp(null);
   }
 
   return (
