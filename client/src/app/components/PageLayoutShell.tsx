@@ -4,38 +4,13 @@ import FooterWithLinks from "./FooterWithLinks";
 import CurrentUserCard from "@/app/components/CurrentUserCard";
 import DEVChangeUser from "./DEVChangeUser";
 import DEVRequestNotification from "./DEVRequestNotification";
-import { useNotificationService } from "../services/notifications";
-import { useEffect } from "react";
-import { useDataContext } from "../contexts/DataContext";
 import NotificationPanel from "./NotificationPanel";
-import { Notification } from "../../../types";
 
 export default function PageLayoutShell({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { currentUser, setNotificationTimestamp } = useDataContext();
-  const { getUserNotifications } = useNotificationService();
-
-  async function handleGetNotification() {
-    const notifications = (await getUserNotifications(
-      false,
-      currentUser?.userid
-    )) as Notification[];
-
-    if (notifications[0]?.wasdismissed) {
-      setNotificationTimestamp(null);
-    } else {
-      setNotificationTimestamp(notifications[0]?.senttimestamp);
-    }
-  }
-
-  useEffect(() => {
-    if (!currentUser?.userid) return;
-    handleGetNotification();
-  }, []);
-
   return (
     <div className="grid grid-rows-[40px_1fr_80px] items-start justify-items-center min-h-screen p-8 pb-20 gap-16 font-[family-name:var(--font-geist-sans)]">
       <header className="flex justify-center row-start-1 w-full">

@@ -4,11 +4,34 @@ import { Card, LinearProgress, Typography } from "@mui/joy";
 import { useDataContext } from "../contexts/DataContext";
 import { useEffect, useState } from "react";
 import { TIME_TO_BEREAL_MS, TIME_TO_BEREAL_S } from "../config/constants";
+import { useNotificationService } from "../services/notifications";
+import { Notification } from "@types";
 
 export default function NotificationPanel() {
-  const { notificationTimestamp } = useDataContext();
+  const { currentUser, notificationTimestamp, setNotificationTimestamp } =
+    useDataContext();
+  const { getUserNotifications } = useNotificationService();
+
   const MAX_TIME = TIME_TO_BEREAL_S;
   const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
+
+  async function handleGetNotification() {
+    const notifications = (await getUserNotifications(
+      false,
+      currentUser?.userid
+    )) as Notification[];
+
+    if (notifications[0]?.wasdismissed) {
+      setNotificationTimestamp(null);
+    } else {
+      setNotificationTimestamp(notifications[0]?.senttimestamp);
+    }
+  }
+
+  useEffect(() => {
+    if (!currentUser?.userid) return;
+    handleGetNotification();
+  }, []);
 
   useEffect(() => {
     if (notificationTimestamp === null) {

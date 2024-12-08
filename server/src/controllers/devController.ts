@@ -84,84 +84,95 @@ async function populateMultiDB() {
 /**
  * 1) Drop all views
  * 2) Drop all subscriptions
- * 3) Drop all replication slots
- * 4) Drop all publications
+ * 3) Drop all publications
+ * 4) Drop all replication slots
  * 5) Drop all tables
  */
 async function resetMultiDB() {
   // Loop through each database connection
   Object.entries(DatabaseOption).map(async ([dbKey, dbValue], index) => {
+    // 1)
+    const resultViews = await queryMultiDB(
+      dbValue,
+      "SELECT viewname FROM pg_views WHERE schemaname = 'public';",
+      []
+    );
+    resultViews.rows.map(async (row) => {
+      const viewName = row.viewname;
+      const dropViewSQL = `DROP VIEW ${viewName};`;
+      await queryMultiDB(dbValue, dropViewSQL, []);
+    });
+
     // 2)
-    const result = await queryMultiDB(
+    const resultSubscriptions = await queryMultiDB(
       dbValue,
       "SELECT subname FROM pg_subscription;",
       []
     );
-    console.log("result.rows", result.rows);
-    /*
-    result.rows.map(async (row) => {
-      if (!row.subname.includes(`sub_${dbValue.toLocaleLowerCase()}`)) return;
-      const subscriptionName = row.subname;
-      const disableSubscriptionSQL = `ALTER SUBSCRIPTION ${subscriptionName} DISABLE;`;
+    resultSubscriptions.rows.map(async (row) => {
+      if (!row.subname.includes(`from_${dbValue}`)) return;
+
+      // Disable subscription first
+      const disableSubscriptionSQL = `ALTER SUBSCRIPTION ${row.subname} DISABLE;`;
       await queryMultiDB(dbValue, disableSubscriptionSQL, []);
 
-      const slotNoneSubscriptionSQL = `ALTER SUBSCRIPTION ${subscriptionName} SET (slot_name = NONE);`;
-      await queryMultiDB(dbValue, slotNoneSubscriptionSQL, []);
-    });
-    
-    result.rows.map(async (row) => {
-      console.log("");
+      // Then alter subscription slot
+      const alterSubscriptionSQL = `ALTER SUBSCRIPTION ${row.subname} set (slot_name=none);`;
+      await queryMultiDB(dbValue, alterSubscriptionSQL, []);
+
       console.log("row.subname", row.subname);
-      console.log("sub_${dbValue}: ", `sub_${dbValue.toLocaleLowerCase()}`);
-
-      if (!row.subname.includes(`sub_${dbValue.toLocaleLowerCase()}`)) return;
-      console.log("THROUGH %%%%%%%%%%%%");
-
+      console.log("dbValue", dbValue);
+      console.log(" ");
+      // Finally drop the subscription
       const subscriptionName = row.subname;
       const dropSubscriptionSQL = `DROP SUBSCRIPTION ${subscriptionName};`;
       await queryMultiDB(dbValue, dropSubscriptionSQL, []);
     });
-    
-    // 3)
-    const result2 = await queryMultiDB(
-      dbValue,
-      "SELECT slot_name FROM pg_replication_slots;",
-      []
-    );
-    console.log("result2.rows", result2.rows);
-    result2.rows.map(async (row) => {
-      const slotName = row.slot_name;
-      const dropReplicationSlotSQL = `DROP SUBSCRIPTION IF EXISTS ${slotName};`;
-      await queryMultiDB(dbValue, dropReplicationSlotSQL, []);
-    });
 
-    // 4)
-    const result3 = await queryMultiDB(
+    // 3)
+    const resultPublications = await queryMultiDB(
       dbValue,
       "SELECT pubname FROM pg_publication;",
       []
     );
-    console.log("result3.rows", result3.rows);
-
-    result3.rows.map(async (row) => {
+    resultPublications.rows.map(async (row) => {
       const publicationName = row.pubname;
-      const dropPublicationSQL = `DROP PUBLICATION IF EXISTS ${publicationName};`;
-      await queryMultiDB(dbValue, dropPublicationSQL, []);
+      const dropSubscriptionSQL = `DROP PUBLICATION ${publicationName};`;
+      await queryMultiDB(dbValue, dropSubscriptionSQL, []);
+    });
+
+    // 4)
+    const resultSlots = await queryMultiDB(
+      dbValue,
+      "SELECT slot_name, active_pid  FROM pg_replication_slots;",
+      []
+    );
+    resultSlots.rows.map(async (row) => {
+      if (!row.slot_name.includes(`for_${dbValue}`)) return;
+      console.log("row.slot_name: ", row.slot_name);
+      console.log("row.active_pid: ", row.active_pid);
+      // First terminate the active wal sender using the pid
+      const dropSlotSQL = `SELECT pg_terminate_backend(${row.active_pid});`;
+      await queryMultiDB(dbValue, dropSlotSQL, []);
+    });
+    resultSlots.rows.map(async (row) => {
+      if (!row.slot_name.includes(`for_${dbValue}`)) return;
+      // Then drop the replication slot
+      const dropSlotSQL = `SELECT pg_drop_replication_slot('${row.slot_name}');`;
+      await queryMultiDB(dbValue, dropSlotSQL, []);
     });
 
     // 5)
-    const result4 = await queryMultiDB(
+    const resultTables = await queryMultiDB(
       dbValue,
       "SELECT tablename FROM pg_tables WHERE schemaname = 'public';",
       []
     );
-    console.log("result4.rows", result4.rows);
-
-    result4.rows.map(async (row) => {
+    resultTables.rows.map(async (row) => {
       const tableName = row.tablename;
-      const dropTableSQL = `DROP TABLE IF EXISTS ${tableName};`;
+      const dropTableSQL = `DROP TABLE ${tableName} CASCADE;`;
       await queryMultiDB(dbValue, dropTableSQL, []);
-    });*/
+    });
   });
 
   return { message: "Multi database reset", data: null };
