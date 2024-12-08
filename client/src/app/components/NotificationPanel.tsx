@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, LinearProgress, Typography } from "@mui/joy";
 import { useDataContext } from "../contexts/DataContext";
 import { useEffect, useState } from "react";

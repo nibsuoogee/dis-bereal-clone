@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return postWrapper(request, payload);
+    return postWrapper(request, JSON.stringify(payload));
   } catch (err) {
     const errorMessage = `Error in /api/posts route: ${getErrorMessage(err)}`;
     reportError({

@@ -41,44 +41,6 @@ export async function servicePostRequest(
 }
 
 /**
- * Make a POST request the the Next.js API route (client/src/app/api/...)
- * with form data as the body
- * @param routePath The path to the API route
- * @param content what to stringify and send in the body
- * @param defaultErrorMessage An error message to display if the request fails
- * @param showSnackbar The function to show a snackbar in the UI
- * @param showResponseSnackbar Whether to show the snackbar (if no error occurs)
- * @returns data from the API
- */
-export async function servicePostRequestFormData(
-  routePath: string,
-  formData: any,
-  defaultErrorMessage: string,
-  showSnackbar: (message: string) => void,
-  showResponseSnackbar: boolean
-) {
-  try {
-    const response = await fetch(routePath, {
-      method: "POST",
-      body: formData,
-    });
-    const { message, data } = await response.json();
-
-    if (!response.ok) {
-      throw new Error(message ?? defaultErrorMessage);
-    }
-
-    if (showResponseSnackbar) {
-      showSnackbar(message);
-    }
-
-    return data;
-  } catch (err) {
-    showSnackbar(getErrorMessage(err));
-  }
-}
-
-/**
  * Make a GET request the the Next.js API route (client/src/app/api/...)
  * @param routePath The path to the API route
  * @param defaultErrorMessage An error message to display if the request fails

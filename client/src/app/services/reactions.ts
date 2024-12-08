@@ -6,7 +6,7 @@ import {
   servicePostRequest,
 } from "@/app/services/requestHandlers";
 import { UUIDTypes } from "uuid";
-import { ReactionCounts } from "../../../types";
+import { DBPayload, ReactionCounts } from "@types";
 
 export const useReactionService = () => {
   const { showSnackbar } = useSnackbar();
@@ -40,13 +40,13 @@ export const useReactionService = () => {
     );
   };
 
-  const postReaction = async (content: any): Promise<string[]> => {
+  const postReaction = async (payload: DBPayload): Promise<string[]> => {
     const routePath = `/api/reactions`;
     const defaultErrorMessage = "Failed to upload reaction";
 
     return await servicePostRequest(
       routePath,
-      content,
+      payload,
       defaultErrorMessage,
       showSnackbar,
       true

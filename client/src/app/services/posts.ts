@@ -7,7 +7,7 @@ import {
   servicePostRequest,
 } from "@/app/services/requestHandlers";
 import { UUIDTypes } from "uuid";
-import { Post } from "../../../types";
+import { DBPayload, Post } from "@types";
 
 export const usePostService = () => {
   const { showSnackbar } = useSnackbar();
@@ -37,13 +37,13 @@ export const usePostService = () => {
     );
   };
 
-  const uploadPost = async (content: any): Promise<string[]> => {
+  const uploadPost = async (payload: DBPayload): Promise<string[]> => {
     const routePath = "/api/posts";
     const defaultErrorMessage = "Failed to upload post";
 
     return await servicePostRequest(
       routePath,
-      content,
+      payload,
       defaultErrorMessage,
       showSnackbar,
       true

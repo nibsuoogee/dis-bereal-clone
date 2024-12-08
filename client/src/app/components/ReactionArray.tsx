@@ -1,5 +1,4 @@
 import { Stack } from "@mui/joy";
-import { Post } from "../../../../server/types";
 import {
   FavoriteBorder,
   ThumbUpOffAlt,
@@ -16,12 +15,13 @@ import ReactionButton from "./ReactionButton";
 import { useReactionService } from "../services/reactions";
 import { useEffect, useState } from "react";
 import {
+  Post,
   DatabaseOption,
   DBPayload,
   Reaction,
   ReactionCounts,
   ReactionOption,
-} from "../../../types";
+} from "@types";
 import { useDataContext } from "../contexts/DataContext";
 
 /**

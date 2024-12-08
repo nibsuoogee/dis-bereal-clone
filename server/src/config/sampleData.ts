@@ -1,4 +1,4 @@
-import { User } from "@types";
+import { DatabaseOption, User } from "@types";
 
 // userid will actually be generated automatically by postgres
 const sampleUsers: User[] = [
@@ -9,7 +9,7 @@ const sampleUsers: User[] = [
     email: "john.smith@email.com",
     passwordhash: "hash1",
     creationdate: null,
-    database: "za",
+    database: "za" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440001",
@@ -18,7 +18,7 @@ const sampleUsers: User[] = [
     email: "maria.silva@email.com",
     passwordhash: "hash2",
     creationdate: null,
-    database: "br",
+    database: "br" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440002",
@@ -27,7 +27,7 @@ const sampleUsers: User[] = [
     email: "mike.j@email.com",
     passwordhash: "hash3",
     creationdate: null,
-    database: "us",
+    database: "us" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440003",
@@ -36,7 +36,7 @@ const sampleUsers: User[] = [
     email: "yuki.t@email.com",
     passwordhash: "hash4",
     creationdate: null,
-    database: "jp",
+    database: "jp" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440004",
@@ -45,7 +45,7 @@ const sampleUsers: User[] = [
     email: "emma.w@email.com",
     passwordhash: "hash5",
     creationdate: null,
-    database: "uk",
+    database: "uk" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440005",
@@ -54,7 +54,7 @@ const sampleUsers: User[] = [
     email: "hans.m@email.com",
     passwordhash: "hash6",
     creationdate: null,
-    database: "de",
+    database: "de" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440006",
@@ -63,7 +63,7 @@ const sampleUsers: User[] = [
     email: "sarah.b@email.com",
     passwordhash: "hash7",
     creationdate: null,
-    database: "za",
+    database: "za" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440007",
@@ -72,7 +72,7 @@ const sampleUsers: User[] = [
     email: "pedro.s@email.com",
     passwordhash: "hash8",
     creationdate: null,
-    database: "br",
+    database: "br" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440008",
@@ -81,7 +81,7 @@ const sampleUsers: User[] = [
     email: "lisa.d@email.com",
     passwordhash: "hash9",
     creationdate: null,
-    database: "us",
+    database: "us" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440009",
@@ -90,7 +90,7 @@ const sampleUsers: User[] = [
     email: "kenji.s@email.com",
     passwordhash: "hash10",
     creationdate: null,
-    database: "jp",
+    database: "jp" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440010",
@@ -99,7 +99,7 @@ const sampleUsers: User[] = [
     email: "james.t@email.com",
     passwordhash: "hash11",
     creationdate: null,
-    database: "uk",
+    database: "uk" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440011",
@@ -108,7 +108,7 @@ const sampleUsers: User[] = [
     email: "anna.s@email.com",
     passwordhash: "hash12",
     creationdate: null,
-    database: "de",
+    database: "de" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440012",
@@ -117,7 +117,7 @@ const sampleUsers: User[] = [
     email: "david.g@email.com",
     passwordhash: "hash13",
     creationdate: null,
-    database: "za",
+    database: "za" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440013",
@@ -126,7 +126,7 @@ const sampleUsers: User[] = [
     email: "ana.c@email.com",
     passwordhash: "hash14",
     creationdate: null,
-    database: "br",
+    database: "br" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440014",
@@ -135,7 +135,7 @@ const sampleUsers: User[] = [
     email: "tom.w@email.com",
     passwordhash: "hash15",
     creationdate: null,
-    database: "us",
+    database: "us" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440015",
@@ -144,7 +144,7 @@ const sampleUsers: User[] = [
     email: "hiro.y@email.com",
     passwordhash: "hash16",
     creationdate: null,
-    database: "jp",
+    database: "jp" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440016",
@@ -153,7 +153,7 @@ const sampleUsers: User[] = [
     email: "oliver.b@email.com",
     passwordhash: "hash17",
     creationdate: null,
-    database: "uk",
+    database: "uk" as DatabaseOption,
   },
   {
     userid: "550e8400-e29b-41d4-a716-446655440017",
@@ -162,7 +162,7 @@ const sampleUsers: User[] = [
     email: "laura.w@email.com",
     passwordhash: "hash18",
     creationdate: null,
-    database: "de",
+    database: "de" as DatabaseOption,
   },
 ];
 

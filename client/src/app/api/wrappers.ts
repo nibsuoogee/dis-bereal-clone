@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
  * @param body what to stringify and send in the body
  * @returns message, data
  */
-export async function postWrapper(request: NextRequest, body: any) {
+export async function postWrapper(request: NextRequest, body: string) {
   let urlPathName = "";
   try {
     urlPathName = new URL(request.url).pathname;
@@ -17,7 +17,7 @@ export async function postWrapper(request: NextRequest, body: any) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body: body,
     });
     const { message, data } = await response.json();
 

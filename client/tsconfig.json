@@ -25,7 +25,7 @@
       "@lib/*": ["./src/app/lib/*"],
       "@services/*": ["./src/app/services/*"],
       "@utils/*": ["./src/app/utils/*"],
-      "@types": ["./src/app/types"]
+      "@types": ["types.ts"]
     },
     "baseUrl": "."
   },
