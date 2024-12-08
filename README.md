@@ -14,12 +14,13 @@ To install node dependencies in the root directory and then the client and serve
 npm install
 npm run install:all
 ```
+### Database setup 📦
 
-### Install PostgreSQL 🐘
+#### Install PostgreSQL 🐘
 
 For local development, download and install PostgreSQL from the [official website](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads).
 
-### Set up environment variables 📝
+#### Set up environment variables 📝
 
 The following environment variables should be set in a .env file in the server directory so that you may access your local PostgreSQL database:
 
@@ -30,6 +31,20 @@ DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=postgres
 ```
+
+#### Modify `postgresql.conf` 📝
+
+The file is located in your local PostgreSQL files `c:\Program Files\PostgreSQL\17\data` on Windows by default. Uncomment/change the following lines to allow replication for multiple databases.
+
+```
+max_worker_processes = 64
+max_logical_replication_workers = 64
+wal_level = logical
+max_replication_slots = 64
+max_wal_senders = 64
+```
+
+#### Create regional database
 
 ### Run the app 🏃‍♂️
 
