@@ -34,7 +34,7 @@ DB_NAME=postgres
 
 #### Modify `postgresql.conf` 📝
 
-The file is located in your local PostgreSQL files `c:\Program Files\PostgreSQL\17\data` on Windows by default. Uncomment/change the following lines to allow replication for multiple databases.
+The file is located in your local PostgreSQL files `C:\Program Files\PostgreSQL\17\data` on Windows by default. Uncomment/change the following lines to allow replication for multiple databases.
 
 ```
 max_worker_processes = 64
@@ -44,7 +44,26 @@ max_replication_slots = 64
 max_wal_senders = 64
 ```
 
+To apply these changes, restart the PostgreSQL service. Navigate to your PostgreSQL binaries folder. 
+```
+cd "C:\Program Files\PostgreSQL\17\bin"
+```
+
+Stop the PostgreSQL server:
+```
+pg_ctl stop -D "C:\Program Files\PostgreSQL\17\data" -m fast
+```
+
+Then start the PostgreSQL server again:
+```
+pg_ctl start -D "C:\Program Files\PostgreSQL\17\data" -l "C:\Program Files\PostgreSQL\17\data\server.log"
+```
+
 #### Create regional database
+
+`\server\src\config\constants.ts` contains `DB_NAME_PREFIX`. Create databases in your local PostgreSQL cluster for each region defined in the `DatabaseOption` enum.
+
+For example: `bereal_clone_db_za`.
 
 ### Run the app 🏃‍♂️
 
