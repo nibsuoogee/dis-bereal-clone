@@ -120,7 +120,7 @@ git pull
 ```
 git add -A
 git commit -m "commit message"
-git push origin feature-< issue number >
+git push origin -u feature-< issue number >
 ```
 
 6. Create a pull request on GitHub from the feature branch to the main branch then merge the pull request.

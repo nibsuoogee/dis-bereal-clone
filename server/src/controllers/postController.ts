@@ -71,7 +71,7 @@ export const uploadPost = async (req: Request, res: Response) => {
         islate = Date.now() - timestamp.getTime() > TIME_TO_BEREAL_MS;
       }
 
-      await queryMultiDB(
+      const postResult = await queryMultiDB(
         database,
         `INSERT INTO posts_${database} (userid, video, islate, locationid) \
          VALUES ($1, $2, $3, $4) RETURNING postid`,
@@ -87,6 +87,17 @@ export const uploadPost = async (req: Request, res: Response) => {
           [notification.notificationid]
         );
       }
+
+      const postid = postResult.rows[0].postid;
+
+      const latitude = (Math.random() * 180 - 90).toFixed(6);
+      const longitude = (Math.random() * 360 - 180).toFixed(6);
+
+      await queryMultiDB(
+        database,
+        `INSERT INTO locations_${database} (latitude, longitude, postid) VALUES ($1, $2, $3)`,
+        [latitude, longitude, postid]
+      );
 
       return {
         message: "Post uploaded successfully",
