@@ -1,56 +1,57 @@
+import { UUIDTypes } from "uuid";
+
 export interface User {
-  userid: number;
+  userid: UUIDTypes;
   username: string;
   fullname: string;
   email: string;
-  passwordHash: string;
-  photo: Buffer;
-  creationDate: Date;
-  continent: string;
+  passwordhash: string;
+  creationdate: Date | null;
+  database: DatabaseOption;
 }
 
 export interface Friend {
-  userid1: number;
-  userid2: number;
-  friendSinceDate: Date;
+  userid1: UUIDTypes;
+  userid2: UUIDTypes;
+  friendsincedate: Date;
 }
 
 export interface Post {
-  postid: number;
-  userid: number;
+  postid: UUIDTypes | null;
+  userid: UUIDTypes;
   video: Buffer;
-  isLate: boolean;
-  timestamp: Date;
+  islate: boolean | null;
+  timestamp: Date | null;
+  locationid: UUIDTypes | null;
 }
 
 export interface Location {
-  locationid: number;
+  locationid: UUIDTypes;
   latitude: number;
   longitude: number;
-  postid: number; 
 }
 
 export interface Comment {
-  commentid: number;
-  postid: number;
-  userid: number;
+  commentid: UUIDTypes;
+  postid: UUIDTypes;
+  userid: UUIDTypes;
   text: string;
   timestamp: Date;
 }
 
 export interface Reaction {
-  reactionid: number;
-  postid: number;
-  userid: number;
-  type: ReactionType;
-  timestamp: Date;
+  reactionid: UUIDTypes | null;
+  postid: UUIDTypes | null;
+  userid: UUIDTypes;
+  type: ReactionOption;
+  timestamp: Date | null;
 }
 
 export interface Notification {
-  notificationid: number;
-  userid: number;
-  sentTimestamp: Date;
-  wasDismissed: boolean;
+  notificationid: UUIDTypes;
+  userid: UUIDTypes;
+  senttimestamp: Date;
+  wasdismissed: boolean;
 }
 
 export enum Continents {
@@ -63,11 +64,38 @@ export enum Continents {
   SouthAmerica = "South America",
 }
 
-export enum ReactionType {
-  Like = "Like",
-  Love = "Love",
-  Haha = "Haha",
-  Wow = "Wow",
-  Sad = "Sad",
-  Angry = "Angry",
+export enum TableOption {
+  users = "users",
+  friends = "friends",
+  posts = "posts",
+  locations = "locations",
+  comments = "comments",
+  reactions = "reactions",
+  notifications = "notifications",
+}
+
+export enum DatabaseOption {
+  "South Africa" = "za",
+  "Brazil" = "br",
+  "United States" = "us",
+  "Japan" = "jp",
+  "United Kingdom" = "uk",
+  "Germany" = "de",
+}
+
+export enum ReactionOption {
+  love = "love",
+  like = "like",
+  haha = "haha",
+  wow = "wow",
+  angry = "angry",
+}
+
+export type ReactionCounts = {
+  [key in ReactionOption]: number;
+};
+
+export interface DBPayload {
+  database: DatabaseOption;
+  obj: unknown;
 }

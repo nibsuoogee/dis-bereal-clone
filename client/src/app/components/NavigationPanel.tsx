@@ -1,19 +1,22 @@
+import { Card, CardContent, Stack } from "@mui/joy";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionGroup,
-  AccordionSummary,
-  Card,
-  CardContent,
-  Stack,
-} from "@mui/joy";
-import Link from "next/link";
+  HomeOutlined,
+  DashboardOutlined,
+  LoginOutlined,
+  AccountCircleOutlined,
+  GroupsOutlined,
+} from "@mui/icons-material";
+import LinkIconButton from "./LinkIconButton";
 
+/**
+ * A navigation panel that displays a list of links to app pages.
+ */
 export default function NavigationPanel() {
   return (
     <>
       <Card variant="soft">
         <CardContent orientation="horizontal">
+<<<<<<< HEAD
           <AccordionGroup sx={{ maxWidth: "200px" }}>
             <Accordion>
               <AccordionSummary>Navigation panel</AccordionSummary>
@@ -35,6 +38,32 @@ export default function NavigationPanel() {
               </AccordionDetails>
             </Accordion>
           </AccordionGroup>
+=======
+          <Stack
+            spacing={1}
+            direction={"row"}
+            sx={{
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+            }}
+          >
+            <LinkIconButton linkPath="/" tooltipText="Home page">
+              <HomeOutlined />
+            </LinkIconButton>
+            <LinkIconButton linkPath="/views/dashboard" tooltipText="Dashboard">
+              <DashboardOutlined />
+            </LinkIconButton>
+            <LinkIconButton linkPath="/views/login" tooltipText="login">
+              <LoginOutlined />
+            </LinkIconButton>
+            <LinkIconButton linkPath="/views/profile" tooltipText="Profile">
+              <AccountCircleOutlined />
+            </LinkIconButton>
+            <LinkIconButton linkPath="/views/friends" tooltipText="Friends">
+              <GroupsOutlined />
+            </LinkIconButton>
+          </Stack>
+>>>>>>> main
         </CardContent>
       </Card>
     </>

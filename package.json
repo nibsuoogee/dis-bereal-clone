@@ -16,6 +16,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dis-bereal-clone": "file:"
+    "uuid": "^11.0.3"
   }
 }

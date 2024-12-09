@@ -14,12 +14,13 @@ To install node dependencies in the root directory and then the client and serve
 npm install
 npm run install:all
 ```
+### Database setup 📦
 
-### Install PostgreSQL 🐘
+#### Install PostgreSQL 🐘
 
 For local development, download and install PostgreSQL from the [official website](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads).
 
-### Set up environment variables 📝
+#### Set up environment variables 📝
 
 The following environment variables should be set in a .env file in the server directory so that you may access your local PostgreSQL database:
 
@@ -29,6 +30,52 @@ DB_PASSWORD=< your_password >
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=postgres
+```
+
+#### Modify `postgresql.conf` 📝
+
+The file is located in your local PostgreSQL files `C:\Program Files\PostgreSQL\17\data` on Windows by default. Uncomment/change the following lines to allow replication for multiple databases.
+
+```
+max_worker_processes = 64
+max_logical_replication_workers = 64
+wal_level = logical
+max_replication_slots = 64
+max_wal_senders = 64
+```
+
+To apply these changes, restart the PostgreSQL service. Navigate to your PostgreSQL binaries folder. 
+```
+cd "C:\Program Files\PostgreSQL\17\bin"
+```
+
+Stop the PostgreSQL server:
+```
+pg_ctl stop -D "C:\Program Files\PostgreSQL\17\data" -m fast
+```
+
+Then start the PostgreSQL server again:
+```
+pg_ctl start -D "C:\Program Files\PostgreSQL\17\data" -l "C:\Program Files\PostgreSQL\17\data\server.log"
+```
+
+#### Create regional database
+
+`\server\src\config\constants.ts` contains `DB_NAME_PREFIX`. Create databases in your local PostgreSQL cluster for each region defined in the `DatabaseOption` enum, named using the prefix and then the database option.
+
+For example: `bereal_clone_db_za`, `bereal_clone_db_br`, etc.
+
+#### Monitoring replication
+
+After you have launched the app, you can initialize the databases you have created in your local cluster using the DEV button in the UI. Next, you can monitor replication related details using the following commands.
+
+```
+--SELECT * FROM pg_subscription;
+--SELECT * FROM pg_stat_subscription;
+--SELECT * FROM pg_publication;
+--SELECT * FROM pg_publication_tables;
+--SELECT * FROM pg_stat_replication;
+--SELECT * FROM pg_replication_slots;
 ```
 
 ### Run the app 🏃‍♂️

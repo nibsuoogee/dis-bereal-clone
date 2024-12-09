@@ -1,15 +1,45 @@
-import { Request, Response } from "express"; // Importing Request and Response types
+import { Request, Response } from "express";
 import { handleControllerRequest } from "@controllers/handlers";
-import { queryDB } from "src/database/db";
-import { getErrorMessage } from "@utils/logger";
+import { queryMultiDB } from "@database/db";
+import { getErrorMessage, reportError } from "@utils/logger";
+import { DatabaseOption, DBPayload, Notification, Post, User } from "@types";
+import { TIME_TO_BEREAL_MS } from "@config/constants";
 
 export const getPosts = async (req: Request, res: Response) => {
   return handleControllerRequest(
     res,
     async () => {
-      const result = await queryDB("SELECT * FROM posts", []);
+      const result = await queryMultiDB(
+        "za" as DatabaseOption,
+        "SELECT * FROM posts",
+        []
+      );
 
-      return { message: "Posts fetched successfully", data: result.rows };
+      return {
+        message: "Posts fetched successfully",
+        data: result.rows as Post[],
+      };
+    },
+    "getPosts"
+  );
+};
+
+export const getUserPosts = async (req: Request, res: Response) => {
+  return handleControllerRequest(
+    res,
+    async () => {
+      const { userid } = req.params;
+
+      const result = await queryMultiDB(
+        "za" as DatabaseOption,
+        "SELECT * FROM posts WHERE userid = $1",
+        [userid]
+      );
+
+      return {
+        message: "Posts fetched successfully",
+        data: result.rows as Post[],
+      };
     },
     "getPosts"
   );
@@ -19,29 +49,59 @@ export const uploadPost = async (req: Request, res: Response) => {
   return handleControllerRequest(
     res,
     async () => {
-      const { content } = req.body;
+      const payload = req.body as DBPayload;
+      const post = payload.obj as Post;
+      const originalBuffer = Buffer.from(post.video);
+      const database = payload.database;
 
-      // Decode the Base64 content back to a buffer
-      const fileBuffer = Buffer.from(content, "base64");
-
-      const postResult = await queryDB(
-        "INSERT INTO posts (content) VALUES ($1) RETURNING postid",
-        [fileBuffer]
+      // Get the last notification timestamp
+      const result = await queryMultiDB(
+        database as DatabaseOption,
+        "SELECT * FROM notifications \
+        WHERE userid = $1 \
+        ORDER BY senttimestamp DESC LIMIT 1;",
+        [post.userid]
       );
+
+      const notification = result.rows[0] as Notification;
+      let islate = false;
+
+      if (notification?.senttimestamp) {
+        const timestamp = new Date(notification.senttimestamp);
+        islate = Date.now() - timestamp.getTime() > TIME_TO_BEREAL_MS;
+      }
+
+      const postResult = await queryMultiDB(
+        database,
+        `INSERT INTO posts_${database} (userid, video, islate, locationid) \
+         VALUES ($1, $2, $3, $4) RETURNING postid`,
+        [post.userid, originalBuffer, islate, post.userid]
+      );
+
+      if (notification?.notificationid) {
+        // Set the notification as dismissed
+        await queryMultiDB(
+          database as DatabaseOption,
+          `UPDATE notifications_${database} 
+          SET wasdismissed = true WHERE notificationid = $1`,
+          [notification.notificationid]
+        );
+      }
 
       const postid = postResult.rows[0].postid;
 
-      const latitude = (Math.random() * 180 - 90).toFixed(6)
-      const longitude = (Math.random() * 360 - 180).toFixed(6)
+      const latitude = (Math.random() * 180 - 90).toFixed(6);
+      const longitude = (Math.random() * 360 - 180).toFixed(6);
 
-      const locationResult = await queryDB(
-        "INSERT INTO location (latitude, longitude, postid) VALUES ($1, $2, $3) RETURNING locationid", 
+      await queryMultiDB(
+        database,
+        `INSERT INTO locations_${database} (latitude, longitude, postid) VALUES ($1, $2, $3)`,
         [latitude, longitude, postid]
       );
 
       return {
         message: "Post uploaded successfully",
-        data: { fileId: postid },
+        data: null,
       };
     },
     "uploadPost"
@@ -50,12 +110,13 @@ export const uploadPost = async (req: Request, res: Response) => {
 
 export const getVideo = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { postid } = req.params;
 
     // Query the database for the video
-    const result = await queryDB(
-      "SELECT content FROM posts WHERE postid = $1",
-      [id]
+    const result = await queryMultiDB(
+      "za" as DatabaseOption,
+      "SELECT video FROM posts WHERE postid = $1",
+      [postid]
     );
 
     if (result.rows.length === 0) {
@@ -63,9 +124,8 @@ export const getVideo = async (req: Request, res: Response) => {
         message: "Video not found",
       });
     }
-    const videoBuffer = result.rows[0].content;
+    const videoBuffer = result.rows[0].video;
     const videoSize = videoBuffer.length;
-
     const range = req.headers.range;
 
     if (!range) {
@@ -105,9 +165,6 @@ export const getVideo = async (req: Request, res: Response) => {
     });
     res.status(500).json({ message: errorMessage });
   }
-  /*},
-    "handleDevRequest"
-  );*/
 };
 
 export const deletePost = async (req: Request, res: Response) => {
@@ -116,9 +173,28 @@ export const deletePost = async (req: Request, res: Response) => {
     async () => {
       const { id } = req.params;
 
-      await queryDB("DELETE FROM posts WHERE postid = $1 RETURNING postid", [
-        id,
-      ]);
+      // Get the database based on the user behind of the post
+      const result = await queryMultiDB(
+        "za" as DatabaseOption,
+        "SELECT userid FROM posts WHERE postid = $1",
+        [id]
+      );
+      const user = result.rows[0] as User;
+      const userid = user?.userid;
+
+      const result2 = await queryMultiDB(
+        "za" as DatabaseOption,
+        "SELECT database FROM users WHERE userid = $1",
+        [userid]
+      );
+      const user2 = result2.rows[0] as User;
+      const database = user2?.database;
+
+      await queryMultiDB(
+        database,
+        `DELETE FROM posts_${database} WHERE postid = $1`,
+        [id]
+      );
 
       return {
         message: "Post deleted successfully",

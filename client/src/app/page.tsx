@@ -1,3 +1,5 @@
+"use client";
+
 import { Typography } from "@mui/joy";
 import PageLayoutShell from "./components/PageLayoutShell";
 
