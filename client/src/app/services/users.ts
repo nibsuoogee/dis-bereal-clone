@@ -1,16 +1,12 @@
 "use client";
 
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
-<<<<<<< HEAD
 import {
   serviceGetRequest,
   servicePostRequest,
 } from "@/app/services/requestHandlers";
-=======
-import { serviceGetRequest } from "@/app/services/requestHandlers";
 import { User } from "@types";
 import { UUIDTypes } from "uuid";
->>>>>>> main
 
 export const useUserService = () => {
   const { showSnackbar } = useSnackbar();
@@ -26,21 +22,6 @@ export const useUserService = () => {
     );
   };
 
-<<<<<<< HEAD
-  const login = async (userData: any): Promise<string[]> => {
-    const routePath = "/api/users/login";
-    const defaultErrorMessage = "Failed to login";
-    return await servicePostRequest(
-      routePath,
-      userData,
-      defaultErrorMessage,
-      showSnackbar,
-      true
-    );
-  };
-
-  return { getUsers, login };
-=======
   const getUser = async (
     showResponseSnackbar: boolean,
     userid: UUIDTypes | null
@@ -55,6 +36,17 @@ export const useUserService = () => {
     );
   };
 
-  return { getUsers, getUser };
->>>>>>> main
+  async function login(userData: any): Promise<User> {
+    const routePath = "/api/users/login";
+    const defaultErrorMessage = "Failed to login";
+    return await servicePostRequest(
+      routePath,
+      userData,
+      defaultErrorMessage,
+      showSnackbar,
+      true
+    );
+  }
+
+  return { getUsers, getUser, login };
 };

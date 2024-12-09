@@ -47,7 +47,7 @@ export const addUser = async (req: Request, res: Response) => {
   return handleControllerRequest(
     res,
     async () => {
-      const { username, fullname, email, passwordhash, continent } = req.body;
+      const { username, fullname, email, passwordhash, database } = req.body;
 
       const existingUser = await queryMultiDB(
         "za" as DatabaseOption,
@@ -64,7 +64,7 @@ export const addUser = async (req: Request, res: Response) => {
       await queryMultiDB(
         "za" as DatabaseOption,
         "INSERT INTO users (username, fullname, email, passwordhash, creationDate, continent) VALUES ($1, $2, $3, $4, $5, $6)",
-        [username, fullname, email, passwordhash, creationDate, continent]
+        [username, fullname, email, passwordhash, creationDate, database]
       );
 
       return { message: "Registration successful", data: null };
@@ -78,7 +78,6 @@ export const login = async (req: Request, res: Response) => {
     res,
     async () => {
       const { username, passwordHash } = req.body;
-      console.log(username, passwordHash);
 
       const userResult = await queryMultiDB(
         "za" as DatabaseOption,
@@ -86,9 +85,25 @@ export const login = async (req: Request, res: Response) => {
         [username, passwordHash]
       );
 
+      if (userResult.rowCount == 0) {
+        throw new Error("Username or e-mail incorrect");
+      }
+
+      const row = userResult.rows[0];
+
+      const user: User = {
+        userid: row.userid,
+        username: row.username,
+        fullname: row.fullname,
+        email: row.email,
+        passwordhash: row.passwordHash,
+        creationdate: row.creationdate,
+        database: row.database,
+      };
+
       return {
-        message: "Registration successful",
-        data: userResult.rows[0].username,
+        message: "Login successful",
+        data: user,
       };
     },
     "addUser"

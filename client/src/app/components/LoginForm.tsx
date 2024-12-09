@@ -3,9 +3,12 @@
 import { Input, Button, Stack } from "@mui/joy";
 import { useState } from "react";
 import { useUserService } from "@/app/services/users";
+import { useDataContext } from "../contexts/DataContext";
 
 export default function RegisterForm() {
   const { login } = useUserService();
+  const { setCurrentUser } = useDataContext();
+
   const [userdata, setUserdata] = useState({ username: "", passwordHash: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +24,8 @@ export default function RegisterForm() {
       return;
     }
 
-    await login(userdata);
+    let user = await login(userdata);
+    setCurrentUser(user);
   }
 
   return (
@@ -46,6 +50,7 @@ export default function RegisterForm() {
           value={userdata.passwordHash}
           onChange={handleChange}
           required
+          type="password"
         />
 
         <Button type="submit" onClick={handleSubmit}>
