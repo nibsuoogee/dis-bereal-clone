@@ -7,19 +7,6 @@ import { UUIDTypes } from "uuid";
 export const useDEVService = () => {
   const { showSnackbar } = useSnackbar();
 
-  const initDB = async (): Promise<null> => {
-    const routePath = "/api/dev";
-    const content = { command: "initialize-database" };
-    const defaultErrorMessage = "Failed to initialize database";
-    return await servicePostRequest(
-      routePath,
-      content,
-      defaultErrorMessage,
-      showSnackbar,
-      true
-    );
-  };
-
   const initMultiDB = async (): Promise<null> => {
     const routePath = "/api/dev";
     const content = { command: "initialize-multi-database" };
@@ -75,7 +62,6 @@ export const useDEVService = () => {
   };
 
   return {
-    initDB,
     initMultiDB,
     populateMultiDB,
     resetMultiDB,

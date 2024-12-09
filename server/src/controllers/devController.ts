@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { queryDB, queryMultiDB } from "../database/db";
-import { initDBQuery } from "../database/sqlQueries";
+import { queryMultiDB } from "../database/db";
 import { handleControllerRequest } from "@controllers/handlers";
 import {
   createAllRegionsAllTablesSQL,
@@ -13,14 +12,6 @@ import {
 import { DatabaseOption, User } from "@types";
 import sampleUsers from "../config/sampleData";
 import { UUIDTypes } from "uuid";
-
-/**
- * Run queries to create tables and insert sample data based on config settings.
- */
-async function initDB() {
-  await queryDB(initDBQuery, []);
-  return { message: "Database initialized", data: null };
-}
 
 /**
  * Perform an operation on each database, waiting for all to finish.
@@ -217,8 +208,6 @@ export const handleDevRequest = async (req: Request, res: Response) => {
       const { command, userid } = req.body;
 
       switch (command) {
-        case "initialize-database":
-          return await initDB();
         case "initialize-multi-database":
           return await initMultiDB();
         case "populate-multi-database":

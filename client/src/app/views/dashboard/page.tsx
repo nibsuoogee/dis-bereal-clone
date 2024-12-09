@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import VideoCard from "../../components/VideoCard";
 import { usePostService } from "@/app/services/posts";
 import VideoUpload from "@/app/components/VideoUpload";
-import { Post } from "../../../../../server/types";
+import { Post } from "@types";
 import { useDataContext } from "../../contexts/DataContext";
 
 export default function Dashboard() {

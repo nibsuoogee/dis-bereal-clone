@@ -66,8 +66,8 @@ export const uploadPost = async (req: Request, res: Response) => {
       const notification = result.rows[0] as Notification;
       let islate = false;
 
-      if (notification.senttimestamp) {
-        const timestamp = new Date(notification?.senttimestamp);
+      if (notification?.senttimestamp) {
+        const timestamp = new Date(notification.senttimestamp);
         islate = Date.now() - timestamp.getTime() > TIME_TO_BEREAL_MS;
       }
 
@@ -78,7 +78,7 @@ export const uploadPost = async (req: Request, res: Response) => {
         [post.userid, originalBuffer, islate, post.userid]
       );
 
-      if (notification.notificationid) {
+      if (notification?.notificationid) {
         // Set the notification as dismissed
         await queryMultiDB(
           database as DatabaseOption,

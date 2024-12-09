@@ -3,7 +3,7 @@
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
 import { serviceGetRequest } from "@/app/services/requestHandlers";
 import { UUIDTypes } from "uuid";
-import { Notification } from "../../../types";
+import { Notification } from "@types";
 
 export const useNotificationService = () => {
   const { showSnackbar } = useSnackbar();

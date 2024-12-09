@@ -13,8 +13,7 @@ import Image from "next/image";
 import { useDEVService } from "../services/DEV";
 
 export default function FooterWithLinks() {
-  const { initDB, initMultiDB, populateMultiDB, resetMultiDB } =
-    useDEVService();
+  const { initMultiDB, populateMultiDB, resetMultiDB } = useDEVService();
   return (
     <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
       <Stack spacing={1}>
@@ -88,17 +87,12 @@ export default function FooterWithLinks() {
           }}
         >
           <Grid>
-            <Button onClick={() => initDB()} variant="outlined" color="neutral">
-              DEV: Initialize database
-            </Button>
-          </Grid>
-          <Grid>
             <Button
               onClick={() => initMultiDB()}
               variant="outlined"
               color="neutral"
             >
-              DEV: Initialize multi-database with replication
+              DEV: Initialize multi-database
             </Button>
           </Grid>
           <Grid>

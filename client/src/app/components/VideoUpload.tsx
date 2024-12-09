@@ -4,7 +4,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { usePostService } from "@/app/services/posts";
 import { ChangeEvent, useState } from "react";
 import { useDataContext } from "../contexts/DataContext";
-import { DatabaseOption, DBPayload, Post } from "../../../types";
+import { DatabaseOption, DBPayload, Post } from "@types";
 
 export default function VideoUpload({
   handleGetPosts,

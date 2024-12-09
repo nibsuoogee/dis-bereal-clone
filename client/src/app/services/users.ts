@@ -2,7 +2,7 @@
 
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
 import { serviceGetRequest } from "@/app/services/requestHandlers";
-import { User } from "../../../types";
+import { User } from "@types";
 import { UUIDTypes } from "uuid";
 
 export const useUserService = () => {

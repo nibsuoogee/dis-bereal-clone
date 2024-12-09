@@ -26,7 +26,7 @@ CREATE TABLE location(
 
     
 `;
-
+/*
 CREATE TYPE Continent AS ENUM (
     'Africa',
     'Antarctica',
@@ -115,3 +115,4 @@ CREATE TABLE Notification (
     WasDismissed BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (UserID) REFERENCES "User"(UserID) ON DELETE CASCADE
 );
+*/

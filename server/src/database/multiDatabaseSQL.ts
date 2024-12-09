@@ -44,6 +44,7 @@ const TableSchemas = {
   },
   locations: {
     locationid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
+    postid: "UUID NOT NULL",
     latitude: "DECIMAL(9,6) NOT NULL",
     longitude: "DECIMAL(9,6) NOT NULL",
   },

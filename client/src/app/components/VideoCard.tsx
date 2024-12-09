@@ -7,7 +7,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/joy";
-import { Post } from "../../../../server/types";
+import { Post } from "@types";
 import { API_CONFIG } from "@/app/config/api";
 import ClearIcon from "@mui/icons-material/Clear";
 import { usePostService } from "@/app/services/posts";
