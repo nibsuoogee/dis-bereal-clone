@@ -5,9 +5,9 @@ CREATE TABLE users(
 	username VARCHAR(255) NOT NULL,
 	fullname VARCHAR(255) NOT NULL,
 	email VARCHAR(255) NOT NULL,
-	passwordHash VARCHAR(255) NOT NULL,
+	passwordhash VARCHAR(255) NOT NULL,
 	photo BYTEA,
-	creationDate DATE NOT NULL,
+	creationdate DATE NOT NULL,
 	continent VARCHAR(255) NOT NULL
 );
 
@@ -26,7 +26,7 @@ CREATE TABLE location(
 
     
 `;
-
+/*
 CREATE TYPE Continent AS ENUM (
     'Africa',
     'Antarctica',
@@ -115,3 +115,4 @@ CREATE TABLE Notification (
     WasDismissed BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (UserID) REFERENCES "User"(UserID) ON DELETE CASCADE
 );
+*/

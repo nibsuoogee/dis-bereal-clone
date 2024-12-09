@@ -1,6 +1,7 @@
 import {
   deletePost,
   getPosts,
+  getUserPosts,
   getVideo,
   uploadPost,
 } from "@controllers/postController";
@@ -9,7 +10,8 @@ import express from "express";
 export const router = express.Router();
 
 router.get("/", getPosts);
-router.get("/:id", getVideo);
+router.get("/:userid", getUserPosts);
+router.get("/video/:postid", getVideo);
 
 router.post("/", uploadPost);
 

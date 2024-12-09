@@ -1,13 +1,13 @@
 "use client";
 
-import { Post } from "../../../../shared/types.js";
-
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
 import {
   serviceDeleteRequest,
   serviceGetRequest,
-  servicePostRequestFormData,
+  servicePostRequest,
 } from "@/app/services/requestHandlers";
+import { UUIDTypes } from "uuid";
+import { DBPayload, Post } from "@types";
 
 export const usePostService = () => {
   const { showSnackbar } = useSnackbar();
@@ -23,21 +23,35 @@ export const usePostService = () => {
     );
   };
 
-  const uploadPost = async (formData: any): Promise<string[]> => {
+  const getUserPosts = async (
+    showResponseSnackbar: boolean,
+    userid: UUIDTypes | null
+  ): Promise<Post[]> => {
+    const routePath = `/api/posts/${userid}`;
+    const defaultErrorMessage = "Failed to fetch user posts";
+    return await serviceGetRequest(
+      routePath,
+      defaultErrorMessage,
+      showSnackbar,
+      showResponseSnackbar
+    );
+  };
+
+  const uploadPost = async (payload: DBPayload): Promise<null> => {
     const routePath = "/api/posts";
     const defaultErrorMessage = "Failed to upload post";
 
-    return await servicePostRequestFormData(
+    return await servicePostRequest(
       routePath,
-      formData,
+      payload,
       defaultErrorMessage,
       showSnackbar,
       true
     );
   };
 
-  const deletePost = async (id: number): Promise<string[]> => {
-    const routePath = `/api/posts/${id}`;
+  const deletePost = async (postid: UUIDTypes | null): Promise<null> => {
+    const routePath = `/api/posts/${postid}`;
     const defaultErrorMessage = "Failed to delete post";
 
     return await serviceDeleteRequest(
@@ -48,5 +62,5 @@ export const usePostService = () => {
     );
   };
 
-  return { getPosts, uploadPost, deletePost };
+  return { getPosts, getUserPosts, uploadPost, deletePost };
 };

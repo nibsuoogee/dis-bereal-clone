@@ -20,9 +20,21 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@contexts/*": ["./src/app/contexts/*"]
-    }
+      "@config/*": ["./src/app/config/*"],
+      "@contexts/*": ["./src/app/contexts/*"],
+      "@lib/*": ["./src/app/lib/*"],
+      "@services/*": ["./src/app/services/*"],
+      "@utils/*": ["./src/app/utils/*"],
+      "@types": ["types.ts"]
+    },
+    "baseUrl": "."
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "../next.config.ts"
+, "next.config.mjs"  ],
   "exclude": ["node_modules"]
 }

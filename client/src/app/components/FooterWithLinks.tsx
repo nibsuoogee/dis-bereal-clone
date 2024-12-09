@@ -6,22 +6,18 @@ import {
   AccordionGroup,
   AccordionSummary,
   Button,
+  Grid,
   Stack,
 } from "@mui/joy";
 import Image from "next/image";
 import { useDEVService } from "../services/DEV";
 
 export default function FooterWithLinks() {
-  const { initDB } = useDEVService();
+  const { initMultiDB, populateMultiDB, resetMultiDB } = useDEVService();
   return (
     <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-      <Stack
-        spacing={1}
-        sx={{
-          direction: "row",
-        }}
-      >
-        <AccordionGroup sx={{ maxWidth: 400 }}>
+      <Stack spacing={1}>
+        <AccordionGroup sx={{}}>
           <Accordion>
             <AccordionSummary>Development links</AccordionSummary>
             <AccordionDetails>
@@ -81,9 +77,43 @@ export default function FooterWithLinks() {
             </AccordionDetails>
           </Accordion>
         </AccordionGroup>
-        <Button onClick={() => initDB()} variant="outlined" color="neutral">
-          DEV: Initialize database
-        </Button>
+
+        <Grid
+          container
+          spacing={1}
+          sx={{
+            justifyContent: "flex-center",
+            alignItems: "center",
+          }}
+        >
+          <Grid>
+            <Button
+              onClick={() => initMultiDB()}
+              variant="outlined"
+              color="neutral"
+            >
+              DEV: Initialize multi-database
+            </Button>
+          </Grid>
+          <Grid>
+            <Button
+              onClick={() => populateMultiDB()}
+              variant="outlined"
+              color="neutral"
+            >
+              DEV: Populate multi-database
+            </Button>
+          </Grid>
+          <Grid>
+            <Button
+              onClick={() => resetMultiDB()}
+              variant="outlined"
+              color="neutral"
+            >
+              DEV: Reset multi-database
+            </Button>
+          </Grid>{" "}
+        </Grid>
       </Stack>
     </footer>
   );

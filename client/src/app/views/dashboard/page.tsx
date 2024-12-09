@@ -1,28 +1,37 @@
 "use client";
 
-import { CircularProgress, Grid, Stack, Typography } from "@mui/joy";
+import {
+  Button,
+  ButtonGroup,
+  CircularProgress,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/joy";
 import PageLayoutShell from "../../components/PageLayoutShell";
 import { useEffect, useState } from "react";
 import VideoCard from "../../components/VideoCard";
 import { usePostService } from "@/app/services/posts";
 import VideoUpload from "@/app/components/VideoUpload";
-import { Post } from "../../../../../shared/types";
+import { Post } from "@types";
+import { useDataContext } from "../../contexts/DataContext";
 
 export default function Dashboard() {
-  const { getPosts } = usePostService();
+  const { currentUser } = useDataContext();
+  const { getPosts, getUserPosts } = usePostService();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  async function handleGetPosts(showResponseSnackbar: boolean) {
+  async function handleGetPosts(getFunction: Promise<Post[]>) {
     setIsLoading(true);
-    const newPosts = await getPosts(showResponseSnackbar);
+    const newPosts = await getFunction;
 
     setPosts(newPosts);
     setIsLoading(false);
   }
 
   useEffect(() => {
-    handleGetPosts(true);
+    handleGetPosts(getPosts(true));
   }, []);
 
   return (
@@ -41,7 +50,21 @@ export default function Dashboard() {
         )}
       </Stack>
 
-      <Typography level="title-md">Posts</Typography>
+      <VideoUpload
+        handleGetPosts={() => handleGetPosts(getPosts(false))}
+      ></VideoUpload>
+
+      <ButtonGroup
+        aria-label="radius button group"
+        sx={{ "--ButtonGroup-radius": "40px" }}
+      >
+        <Button onClick={() => handleGetPosts(getPosts(true))}>For you</Button>
+        <Button
+          onClick={() => handleGetPosts(getUserPosts(true, currentUser.userid))}
+        >
+          Your posts
+        </Button>
+      </ButtonGroup>
 
       <Grid
         container
@@ -52,16 +75,14 @@ export default function Dashboard() {
           alignItems: "center",
         }}
       >
-        {posts.map((post) => (
+        {posts.map((post, index) => (
           <VideoCard
-            key={post.postid}
+            key={index}
             post={post}
-            handleGetPosts={() => handleGetPosts(false)}
+            handleGetPosts={() => handleGetPosts(getPosts(false))}
           />
         ))}
       </Grid>
-
-      <VideoUpload handleGetPosts={() => handleGetPosts(false)}></VideoUpload>
     </PageLayoutShell>
   );
 }

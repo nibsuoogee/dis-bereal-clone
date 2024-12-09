@@ -20,12 +20,19 @@ import ContactsIcon from "@mui/icons-material/Contacts";
 import BadgeIcon from "@mui/icons-material/Badge";
 import PublicIcon from "@mui/icons-material/Public";
 import PasswordIcon from "@mui/icons-material/Password";
-import PhotoIcon from "@mui/icons-material/Photo";
 import { useState } from "react";
+import { DatabaseOption } from "types";
+import { timestampToReadableDate } from "../lib/conversions";
 
 export default function CurrentUserCard() {
   const { currentUser } = useDataContext();
   const [showDetails, setShowDetails] = useState(false);
+  function getDatabaseName(database: DatabaseOption) {
+    return Object.keys(DatabaseOption)[
+      Object.values(DatabaseOption).indexOf(database)
+    ];
+  }
+
   return (
     <>
       <Card variant="soft">
@@ -102,23 +109,18 @@ export default function CurrentUserCard() {
                   </ListItem>
                   <ListItem>
                     <ListItemDecorator>
-                      <PhotoIcon />
-                    </ListItemDecorator>{" "}
-                    {currentUser.photo ? "Photo exists" : "No photo"}
-                  </ListItem>
-                  <ListItem>
-                    <ListItemDecorator>
                       <CalendarTodayIcon />
                     </ListItemDecorator>
-                    {currentUser.creationDate
-                      ? currentUser.creationDate.toLocaleDateString()
+                    {currentUser.creationdate
+                      ? timestampToReadableDate(currentUser.creationdate)
                       : "No creation date"}
                   </ListItem>
                   <ListItem>
                     <ListItemDecorator>
                       <PublicIcon />
                     </ListItemDecorator>{" "}
-                    {currentUser.continent ?? "No continent"}
+                    {getDatabaseName(currentUser.database as DatabaseOption) ??
+                      "No database"}
                   </ListItem>
                 </List>
               </AccordionDetails>
