@@ -5,6 +5,7 @@ import {
   serviceGetRequest,
   servicePostRequest,
 } from "@/app/services/requestHandlers";
+import { User } from "../../../types";
 
 export const useUserService = () => {
   const { showSnackbar } = useSnackbar();
@@ -20,7 +21,7 @@ export const useUserService = () => {
     );
   };
 
-  const login = async (userData: any): Promise<string[]> => {
+  async function login(userData: any): Promise<User> {
     const routePath = "/api/users/login";
     const defaultErrorMessage = "Failed to login";
     return await servicePostRequest(
@@ -30,7 +31,7 @@ export const useUserService = () => {
       showSnackbar,
       true
     );
-  };
+  }
 
   return { getUsers, login };
 };

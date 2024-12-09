@@ -1,6 +1,7 @@
 import { handleControllerRequest } from "@controllers/handlers";
 import { Request, Response } from "express"; // Importing Request and Response types
 import { queryDB } from "../database/db";
+import { User } from "../../../client/types";
 
 export const getUsers = async (req: Request, res: Response) => {
   return handleControllerRequest(
@@ -47,16 +48,32 @@ export const login = async (req: Request, res: Response) => {
     res,
     async () => {
       const { username, passwordHash } = req.body;
-      console.log(username, passwordHash);
 
       const userResult = await queryDB(
-        "SELECT userid FROM users WHERE username = $1 AND passwordHash = $2 RETURNING username",
+        "SELECT * FROM users WHERE username = $1 AND passwordHash = $2",
         [username, passwordHash]
       );
 
+      if (userResult.rowCount == 0) {
+        throw new Error("Username or e-mail incorrect");
+      }
+
+      const row = userResult.rows[0];
+
+      const user: User = {
+        userid: row.userid,
+        username: row.username,
+        fullname: row.fullname,
+        email: row.email,
+        passwordHash: row.passwordHash,
+        photo: row.photo,
+        creationDate: row.creationdate,
+        continent: row.continent,
+      };
+
       return {
-        message: "Registration successful",
-        data: userResult.rows[0].username,
+        message: "Login successful",
+        data: user,
       };
     },
     "addUser"
