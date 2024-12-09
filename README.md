@@ -61,9 +61,22 @@ pg_ctl start -D "C:\Program Files\PostgreSQL\17\data" -l "C:\Program Files\Postg
 
 #### Create regional database
 
-`\server\src\config\constants.ts` contains `DB_NAME_PREFIX`. Create databases in your local PostgreSQL cluster for each region defined in the `DatabaseOption` enum.
+`\server\src\config\constants.ts` contains `DB_NAME_PREFIX`. Create databases in your local PostgreSQL cluster for each region defined in the `DatabaseOption` enum, named using the prefix and then the database option.
 
-For example: `bereal_clone_db_za`.
+For example: `bereal_clone_db_za`, `bereal_clone_db_br`, etc.
+
+#### Monitoring replication
+
+After you have launched the app, you can initialize the databases you have created in your local cluster using the DEV button in the UI. Next, you can monitor replication related details using the following commands.
+
+```
+--SELECT * FROM pg_subscription;
+--SELECT * FROM pg_stat_subscription;
+--SELECT * FROM pg_publication;
+--SELECT * FROM pg_publication_tables;
+--SELECT * FROM pg_stat_replication;
+--SELECT * FROM pg_replication_slots;
+```
 
 ### Run the app 🏃‍♂️
 
