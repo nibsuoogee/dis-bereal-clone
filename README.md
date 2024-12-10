@@ -44,7 +44,7 @@ max_replication_slots = 64
 max_wal_senders = 64
 ```
 
-To apply these changes, restart the PostgreSQL service. Navigate to your PostgreSQL binaries folder. 
+To apply these changes, restart the PostgreSQL service. Navigate to your PostgreSQL binaries folder (using Windows cmd as **administrator**). 
 ```
 cd "C:\Program Files\PostgreSQL\17\bin"
 ```
