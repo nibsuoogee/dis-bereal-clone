@@ -1,5 +1,5 @@
 import { Input, Select, Option, Button, Stack } from "@mui/joy";
-import { Continents, User } from "../../../types";
+import { DatabaseOption, User } from "../../../types";
 import { useState } from "react";
 import { useRegisterService } from "@/app/services/register";
 
@@ -11,8 +11,8 @@ export default function RegisterForm() {
     username: "",
     fullname: "",
     email: "",
-    passwordHash: "",
-    continent: "",
+    passwordhash: "",
+    database: undefined as DatabaseOption | undefined,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +29,7 @@ export default function RegisterForm() {
   ) => {
     setUserdata((prevValues) => ({
       ...prevValues,
-      continent: value || "",
+      database: value as DatabaseOption,
     }));
   };
 
@@ -38,12 +38,11 @@ export default function RegisterForm() {
       !userdata.username ||
       !userdata.fullname ||
       !userdata.email ||
-      !userdata.passwordHash ||
-      !userdata.continent
+      !userdata.passwordhash ||
+      !userdata.database
     ) {
       return;
     }
-
     await register(userdata);
   }
 
@@ -79,22 +78,22 @@ export default function RegisterForm() {
         />
         <Input
           placeholder="password"
-          name="passwordHash"
-          value={userdata.passwordHash}
+          name="passwordhash"
+          value={userdata.passwordhash}
           onChange={handleChange}
           required
         />
 
         <Select
-          placeholder="Choose continent"
-          name="constinent"
-          value={userdata.continent}
+          placeholder="Choose database"
+          name="database"
+          value={userdata.database || ""}
           onChange={handleSelectChange}
           required
         >
-          {Object.values(Continents).map((continent) => (
-            <Option key={continent} value={continent}>
-              {continent}
+          {Object.entries(DatabaseOption).map(([name, code]) => (
+            <Option key={code} value={code}>
+              {name}
             </Option>
           ))}
         </Select>

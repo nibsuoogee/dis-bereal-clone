@@ -25,7 +25,9 @@ export default function RegisterForm() {
     }
 
     let user = await login(userdata);
-    setCurrentUser(user);
+    if (user) {
+      setCurrentUser(user);
+    }
   }
 
   return (

@@ -50,7 +50,7 @@ export const addUser = async (req: Request, res: Response) => {
       const { username, fullname, email, passwordhash, database } = req.body;
 
       const existingUser = await queryMultiDB(
-        "za" as DatabaseOption,
+        database as DatabaseOption,
         "SELECT userid FROM users WHERE username = $1 OR email = $2",
         [username, email]
       );
@@ -60,12 +60,17 @@ export const addUser = async (req: Request, res: Response) => {
       }
 
       const creationDate = new Date();
+      let dbname = `users_${database}`;
+      const query = `INSERT INTO ${dbname} (username, fullname, email, passwordhash, creationDate, database) VALUES ($1, $2, $3, $4, $5, $6)`;
 
-      await queryMultiDB(
-        "za" as DatabaseOption,
-        "INSERT INTO users (username, fullname, email, passwordhash, creationDate, continent) VALUES ($1, $2, $3, $4, $5, $6)",
-        [username, fullname, email, passwordhash, creationDate, database]
-      );
+      await queryMultiDB(database as DatabaseOption, query, [
+        username,
+        fullname,
+        email,
+        passwordhash,
+        creationDate,
+        database,
+      ]);
 
       return { message: "Registration successful", data: null };
     },
@@ -81,7 +86,7 @@ export const login = async (req: Request, res: Response) => {
 
       const userResult = await queryMultiDB(
         "za" as DatabaseOption,
-        "SELECT userid FROM users WHERE username = $1 AND passwordhash = $2 RETURNING username",
+        "SELECT * FROM users WHERE username = $1 AND passwordhash = $2",
         [username, passwordHash]
       );
 

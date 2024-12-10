@@ -15,6 +15,7 @@
     "@mui/joy": "^5.0.0-beta.48",
     "@mui/material": "^6.1.9",
     "client": "file:",
+    "dis-bereal-clone": "file:..",
     "next": "^14.2.20",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -5,6 +5,7 @@ import {
   LoginOutlined,
   AccountCircleOutlined,
   GroupsOutlined,
+  HowToReg,
 } from "@mui/icons-material";
 import LinkIconButton from "./LinkIconButton";
 
@@ -16,29 +17,6 @@ export default function NavigationPanel() {
     <>
       <Card variant="soft">
         <CardContent orientation="horizontal">
-<<<<<<< HEAD
-          <AccordionGroup sx={{ maxWidth: "200px" }}>
-            <Accordion>
-              <AccordionSummary>Navigation panel</AccordionSummary>
-              <AccordionDetails sx={{ bgcolor: "background.level1" }}>
-                <Stack
-                  spacing={1}
-                  sx={{
-                    justifyContent: "flex-start",
-                    alignItems: "flex-start",
-                  }}
-                >
-                  <Link href="/">Front page</Link>
-                  <Link href="/views/dashboard">Dashboard</Link>
-                  <Link href="/views/login">Login</Link>
-                  <Link href="/views/register">Register</Link>
-                  <Link href="/views/profile">Profile</Link>
-                  <Link href="/views/friends">Friends</Link>
-                </Stack>
-              </AccordionDetails>
-            </Accordion>
-          </AccordionGroup>
-=======
           <Stack
             spacing={1}
             direction={"row"}
@@ -62,8 +40,10 @@ export default function NavigationPanel() {
             <LinkIconButton linkPath="/views/friends" tooltipText="Friends">
               <GroupsOutlined />
             </LinkIconButton>
+            <LinkIconButton linkPath="/views/register" tooltipText="Register">
+              <HowToReg />
+            </LinkIconButton>
           </Stack>
->>>>>>> main
         </CardContent>
       </Card>
     </>
