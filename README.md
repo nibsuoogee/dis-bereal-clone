@@ -1,4 +1,4 @@
-# Data-Intensive Systems - BeReal Clone
+# Data-Intensive Systems - BeReal Clone 🎥
 
 ## Development
 
