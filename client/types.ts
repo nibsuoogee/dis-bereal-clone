@@ -67,10 +67,23 @@ export enum Continents {
 export enum TableOption {
   users = "users",
   friends = "friends",
+  notifications = "notifications",
   posts = "posts",
   locations = "locations",
   comments = "comments",
   reactions = "reactions",
+}
+
+export enum TableOptionReplicate {
+  posts = "posts",
+  locations = "locations",
+  comments = "comments",
+  reactions = "reactions",
+}
+
+export enum TableOptionNoReplicate {
+  users = "users",
+  friends = "friends",
   notifications = "notifications",
 }
 

@@ -4,6 +4,8 @@ import { queryMultiDB } from "@database/db";
 import { getErrorMessage, reportError } from "@utils/logger";
 import { DatabaseOption, DBPayload, Notification, Post, User } from "@types";
 import { TIME_TO_BEREAL_MS } from "@config/constants";
+import { promiseMapDatabaseOptions } from "@controllers/devController";
+import { QueryResult } from "pg";
 
 export const getPosts = async (req: Request, res: Response) => {
   return handleControllerRequest(
@@ -57,9 +59,9 @@ export const uploadPost = async (req: Request, res: Response) => {
       // Get the last notification timestamp
       const result = await queryMultiDB(
         database as DatabaseOption,
-        "SELECT * FROM notifications \
+        `SELECT * FROM notifications_${database} \
         WHERE userid = $1 \
-        ORDER BY senttimestamp DESC LIMIT 1;",
+        ORDER BY senttimestamp DESC LIMIT 1;`,
         [post.userid]
       );
 
@@ -182,13 +184,19 @@ export const deletePost = async (req: Request, res: Response) => {
       const user = result.rows[0] as User;
       const userid = user?.userid;
 
-      const result2 = await queryMultiDB(
-        "za" as DatabaseOption,
-        "SELECT database FROM users WHERE userid = $1",
-        [userid]
+      const results = await promiseMapDatabaseOptions<QueryResult>(
+        async (db) => {
+          return await queryMultiDB(
+            db,
+            `SELECT database FROM users_${db} WHERE userid = $1`,
+            [userid]
+          );
+        }
       );
-      const user2 = result2.rows[0] as User;
-      const database = user2?.database;
+
+      const users = results.map((result) => result.rows as User[]).flat();
+
+      const database = users[0]?.database;
 
       await queryMultiDB(
         database,
