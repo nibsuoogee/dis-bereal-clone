@@ -1,3 +1,5 @@
+"use client";
+
 import { Input, Select, Option, Button, Stack } from "@mui/joy";
 import { DatabaseOption, User } from "../../../types";
 import { useState } from "react";
