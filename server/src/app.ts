@@ -4,6 +4,7 @@ import userRoutes from "./routes/userRoutes";
 import postRoutes from "./routes/postRoutes";
 import reactionRoutes from "./routes/reactionRoutes";
 import notificationRoutes from "./routes/notificationRoutes";
+import commentRoutes from "./routes/commentRoutes";
 
 const app = express();
 
@@ -17,5 +18,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/reactions", reactionRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/comments", commentRoutes);
 
 export default app;
