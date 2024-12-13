@@ -34,9 +34,7 @@ function TableSchemas(regionAbbreviation: string) {
       userid1: `UUID NOT NULL`,
       userid2: `UUID NOT NULL`,
       friendsincedate: `DATE NOT NULL`,
-      " ": `PRIMARY KEY (userid1, userid2),
-      FOREIGN KEY (userid1) REFERENCES users_${regionAbbreviation} (userid) ON DELETE CASCADE,
-      FOREIGN KEY (userid2) REFERENCES users_${regionAbbreviation} (userid) ON DELETE CASCADE`,
+      " ": `PRIMARY KEY (userid1, userid2)`,
     },
     posts: {
       postid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
@@ -55,20 +53,20 @@ function TableSchemas(regionAbbreviation: string) {
     comments: {
       commentid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
       postid: `UUID NOT NULL REFERENCES posts_${regionAbbreviation} ON DELETE CASCADE`,
-      userid: `UUID NOT NULL REFERENCES users_${regionAbbreviation} ON DELETE CASCADE`,
+      userid: `UUID NOT NULL`,
       text: `TEXT NOT NULL`,
       timestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
     },
     reactions: {
       reactionid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
       postid: `UUID NOT NULL REFERENCES posts_${regionAbbreviation} ON DELETE CASCADE`,
-      userid: `UUID NOT NULL REFERENCES users_${regionAbbreviation} ON DELETE CASCADE`,
+      userid: `UUID NOT NULL`,
       type: `VARCHAR(50) NOT NULL`,
       timestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
     },
     notifications: {
       notificationid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
-      userid: `UUID NOT NULL REFERENCES users_${regionAbbreviation} ON DELETE CASCADE`,
+      userid: `UUID NOT NULL`,
       senttimestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
       wasdismissed: `BOOLEAN NOT NULL`,
     },
@@ -115,10 +113,12 @@ export function createAllRegionalTablesSQL(
  * Create tables in all databases which should be replicated
  * @returns All SQL commands for creating regional tables for all regions
  */
-export function createAllRegionsAllTablesSQL() {
+export function createAllRegionsAllTablesSQL(
+  tableOptions: Record<string, string>
+) {
   const allRegionsAllRegionalTables = Object.entries(DatabaseOption).map(
     ([dbKey, dbValue]) => {
-      return createAllRegionalTablesSQL(dbValue, TableOptionReplicate);
+      return createAllRegionalTablesSQL(dbValue, tableOptions);
     }
   );
   return allRegionsAllRegionalTables.join("\n");

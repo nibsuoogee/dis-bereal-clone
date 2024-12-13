@@ -10,7 +10,12 @@ import {
   createViewsSQL,
   insertUserSQL,
 } from "../database/multiDatabaseSQL";
-import { DatabaseOption, TableOptionNoReplicate, User } from "@types";
+import {
+  DatabaseOption,
+  TableOptionNoReplicate,
+  TableOptionReplicate,
+  User,
+} from "@types";
 import sampleUsers from "../config/sampleData";
 import { UUIDTypes } from "uuid";
 
@@ -40,7 +45,8 @@ export async function promiseMapDatabaseOptions<T>(
  * Each step is in a separate loop to reduce chance of error.
  */
 async function initMultiDB() {
-  const regionalReplicatedTables = createAllRegionsAllTablesSQL();
+  const regionalReplicatedTables =
+    createAllRegionsAllTablesSQL(TableOptionReplicate);
   const allViewsSQL = createViewsSQL();
 
   // 0)
@@ -54,8 +60,8 @@ async function initMultiDB() {
       db,
       TableOptionNoReplicate
     );
-    await queryMultiDB(db, regionalTables, []);
     await queryMultiDB(db, regionalReplicatedTables, []);
+    await queryMultiDB(db, regionalTables, []);
   });
 
   // 2)
