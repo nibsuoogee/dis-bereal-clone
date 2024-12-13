@@ -2,20 +2,24 @@ import { handleControllerRequest } from "@controllers/handlers";
 import { Request, Response } from "express";
 import { queryMultiDB } from "../database/db";
 import { DatabaseOption, User } from "@types";
+import { promiseMapDatabaseOptions } from "@controllers/devController";
+import { QueryResult } from "pg";
 
 export const getUsers = async (req: Request, res: Response) => {
   return handleControllerRequest(
     res,
     async () => {
-      const result = await queryMultiDB(
-        "za" as DatabaseOption,
-        "SELECT * FROM users",
-        []
+      const results = await promiseMapDatabaseOptions<QueryResult>(
+        async (db) => {
+          return await queryMultiDB(db, `SELECT * FROM users_${db}`, []);
+        }
       );
+
+      const users = results.map((result) => result.rows as User[]).flat();
 
       return {
         message: "Users fetched successfully",
-        data: result.rows as User[],
+        data: users,
       };
     },
     "getUsers"
@@ -28,15 +32,25 @@ export const getUser = async (req: Request, res: Response) => {
     async () => {
       const { userid } = req.params;
 
-      const result = await queryMultiDB(
-        "za" as DatabaseOption,
-        "SELECT * FROM users WHERE userid = $1",
-        [userid]
+      const results = await promiseMapDatabaseOptions<QueryResult>(
+        async (db) => {
+          return await queryMultiDB(
+            db,
+            `SELECT * FROM users_${db} WHERE userid = $1`,
+            [userid]
+          );
+        }
       );
+
+      const users = results.map((result) => result.rows as User[]).flat();
+
+      if (users.length === 0) {
+        throw new Error("User not found");
+      }
 
       return {
         message: "User fetched successfully",
-        data: result.rows[0] as User,
+        data: users[0],
       };
     },
     "getUser"
@@ -49,26 +63,31 @@ export const addUser = async (req: Request, res: Response) => {
     async () => {
       const { username, fullname, email, passwordhash, database } = req.body;
 
-      const existingUser = await queryMultiDB(
-        database as DatabaseOption,
-        "SELECT userid FROM users WHERE username = $1 OR email = $2",
-        [username, email]
+      const results = await promiseMapDatabaseOptions<QueryResult>(
+        async (db) => {
+          return await queryMultiDB(
+            db,
+            `SELECT userid FROM users_${db} WHERE username = $1 OR email = $2`,
+            [username, email]
+          );
+        }
       );
 
-      if (existingUser.rows.length > 0) {
+      const users = results.map((result) => result.rows as User[]).flat();
+
+      if (users.length > 0) {
         throw new Error("Username or email is already in use");
       }
 
-      const creationDate = new Date();
-      let dbname = `users_${database}`;
-      const query = `INSERT INTO ${dbname} (username, fullname, email, passwordhash, creationDate, database) VALUES ($1, $2, $3, $4, $5, $6)`;
+      const query = `INSERT INTO users_${database}
+      (username, fullname, email, passwordhash, database) 
+      VALUES ($1, $2, $3, $4, $5)`;
 
       await queryMultiDB(database as DatabaseOption, query, [
         username,
         fullname,
         email,
         passwordhash,
-        creationDate,
         database,
       ]);
 
@@ -84,31 +103,37 @@ export const login = async (req: Request, res: Response) => {
     async () => {
       const { username, passwordHash } = req.body;
 
-      const userResult = await queryMultiDB(
-        "za" as DatabaseOption,
-        "SELECT * FROM users WHERE username = $1 AND passwordhash = $2",
-        [username, passwordHash]
+      const results = await promiseMapDatabaseOptions<QueryResult>(
+        async (db) => {
+          return await queryMultiDB(
+            db,
+            `SELECT * FROM users_${db} WHERE username = $1 AND passwordhash = $2`,
+            [username, passwordHash]
+          );
+        }
       );
 
-      if (userResult.rowCount == 0) {
+      const users = results.map((result) => result.rows as User[]).flat();
+
+      if (users.length == 0) {
         throw new Error("Username or e-mail incorrect");
       }
 
-      const row = userResult.rows[0];
+      /*const row = users[0];
 
       const user: User = {
         userid: row.userid,
         username: row.username,
         fullname: row.fullname,
         email: row.email,
-        passwordhash: row.passwordHash,
+        passwordhash: row.passwordhash,
         creationdate: row.creationdate,
         database: row.database,
-      };
+      };*/
 
       return {
         message: "Login successful",
-        data: user,
+        data: users[0],
       };
     },
     "addUser"

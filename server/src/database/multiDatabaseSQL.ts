@@ -1,5 +1,5 @@
 import { configDotenv } from "dotenv";
-import { DatabaseOption, TableOption, User } from "@types";
+import { DatabaseOption, TableOptionReplicate, User } from "@types";
 import { DB_NAME_PREFIX } from "src/config/constants";
 
 // Load environment variables
@@ -96,8 +96,11 @@ function createRegionalTableSQL(
  * @param regionAbbreviation e.g. uk
  * @returns All SQL commands for creating regional tables for a specific region
  */
-function createAllRegionalTablesSQL(regionAbbreviation: string) {
-  const createCommands = Object.entries(TableOption).map(
+export function createAllRegionalTablesSQL(
+  regionAbbreviation: string,
+  tableOptions: Record<string, string>
+) {
+  const createCommands = Object.entries(tableOptions).map(
     ([tableKey, tableValue]) => {
       const fields = createTableColumns(
         TableSchemas(regionAbbreviation)[tableKey as keyof typeof TableSchemas]
@@ -108,19 +111,25 @@ function createAllRegionalTablesSQL(regionAbbreviation: string) {
   return createCommands.join("\n");
 }
 
+/**
+ * Create tables in all databases which should be replicated
+ * @returns All SQL commands for creating regional tables for all regions
+ */
 export function createAllRegionsAllTablesSQL() {
   const allRegionsAllRegionalTables = Object.entries(DatabaseOption).map(
     ([dbKey, dbValue]) => {
-      return createAllRegionalTablesSQL(dbValue);
+      return createAllRegionalTablesSQL(dbValue, TableOptionReplicate);
     }
   );
   return allRegionsAllRegionalTables.join("\n");
 }
 
 export function createPublicationSQL(name: string) {
-  const tables = Object.entries(TableOption).map(([tableKey, tableValue]) => {
-    return `${tableValue}_${name}`;
-  });
+  const tables = Object.entries(TableOptionReplicate).map(
+    ([tableKey, tableValue]) => {
+      return `${tableValue}_${name}`;
+    }
+  );
   const tablesString = tables.join(", ");
   return `CREATE PUBLICATION pub_${name} FOR TABLE ${tablesString};`;
 }
@@ -164,7 +173,7 @@ export function createTableViewSQL(tableName: string) {
 }
 
 export function createViewsSQL() {
-  const tablesViews = Object.entries(TableOption).map(
+  const tablesViews = Object.entries(TableOptionReplicate).map(
     ([tableKey, tableValue]) => {
       return createTableViewSQL(tableValue);
     }
