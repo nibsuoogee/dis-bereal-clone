@@ -75,6 +75,7 @@ export enum TableOption {
 }
 
 export enum TableOptionReplicate {
+  users = "users",
   posts = "posts",
   locations = "locations",
   comments = "comments",
@@ -82,7 +83,6 @@ export enum TableOptionReplicate {
 }
 
 export enum TableOptionNoReplicate {
-  users = "users",
   friends = "friends",
   notifications = "notifications",
 }

@@ -102,3 +102,40 @@ export async function deleteWrapper(request: NextRequest) {
     return NextResponse.json({ message: errorMessage }, { status: 500 });
   }
 }
+
+/**
+ * Make a PATCH request to the Express server.
+ * @param request request object
+ * @param body what to stringify and send in the body
+ * @returns message, data
+ */
+export async function patchWrapper(request: NextRequest, body: string) {
+  let urlPathName = "";
+  try {
+    urlPathName = new URL(request.url).pathname;
+    const response = await fetch(`${API_CONFIG.baseURL}${urlPathName}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: body,
+    });
+    const { message, data } = await response.json();
+
+    if (response.status !== 200) {
+      reportError({
+        message: message,
+      });
+    }
+
+    return NextResponse.json({ message, data }, { status: response.status });
+  } catch (err) {
+    const errorMessage = `Error in ${urlPathName} route: ${getErrorMessage(
+      err
+    )}`;
+    reportError({
+      message: errorMessage,
+    });
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
+  }
+}

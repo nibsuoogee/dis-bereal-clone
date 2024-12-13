@@ -10,7 +10,7 @@ import {
   Stack,
 } from "@mui/joy";
 import { useDataContext } from "../contexts/DataContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { User } from "../../../types";
 import { useUserService } from "../services/users";
 
@@ -28,15 +28,17 @@ export default function DEVChangeUser() {
     setUsers(newUsers);
   }
 
-  useEffect(() => {
-    handleGetUsers();
-  }, []);
-
   return (
     <>
       <Card variant="soft" size="sm">
         <AccordionGroup>
-          <Accordion>
+          <Accordion
+            onChange={(event, expanded) => {
+              if (expanded) {
+                handleGetUsers();
+              }
+            }}
+          >
             <AccordionSummary>DEV: Sign in as user</AccordionSummary>
             <AccordionDetails>
               <Stack

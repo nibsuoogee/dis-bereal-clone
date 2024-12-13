@@ -2,10 +2,12 @@
 
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
 import {
+  serviceDeleteRequest,
   serviceGetRequest,
+  servicePatchRequest,
   servicePostRequest,
 } from "@/app/services/requestHandlers";
-import { User } from "@types";
+import { DatabaseOption, DBPayload, User } from "@types";
 import { UUIDTypes } from "uuid";
 
 export const useUserService = () => {
@@ -48,5 +50,36 @@ export const useUserService = () => {
     );
   }
 
-  return { getUsers, getUser, login };
+  const updateUser = async (
+    payload: DBPayload,
+    userid: UUIDTypes | null
+  ): Promise<User> => {
+    const routePath = `/api/users/${userid}`;
+    const defaultErrorMessage = "Failed to update user";
+
+    return await servicePatchRequest(
+      routePath,
+      payload,
+      defaultErrorMessage,
+      showSnackbar,
+      true
+    );
+  };
+
+  const deleteUser = async (
+    userid: UUIDTypes | null,
+    database: DatabaseOption
+  ): Promise<null> => {
+    const routePath = `/api/users/${userid}/${database}`;
+    const defaultErrorMessage = "Failed to delete user";
+
+    return await serviceDeleteRequest(
+      routePath,
+      defaultErrorMessage,
+      showSnackbar,
+      true
+    );
+  };
+
+  return { getUsers, getUser, login, updateUser, deleteUser };
 };
