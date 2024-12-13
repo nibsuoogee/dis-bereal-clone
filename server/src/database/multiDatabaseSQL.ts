@@ -11,7 +11,6 @@ configDotenv();
  * @returns A string with everything that comes after "CREATE TABLE x"
  */
 function createTableColumns(columns: Record<string, string>): string {
-  console.log("columns: ", columns);
   const columnDefinitions = Object.entries(columns)
     .map(([name, definition]) => `${name} ${definition}`)
     .join(",\n");
@@ -19,60 +18,60 @@ function createTableColumns(columns: Record<string, string>): string {
   return `${columnDefinitions}`;
 }
 
-const TableSchemas = {
-  users: {
-    userid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
-    username: `VARCHAR(255) NOT NULL`,
-    fullname: `VARCHAR(255) NOT NULL`,
-    email: `VARCHAR(255) NOT NULL`,
-    passwordhash: `VARCHAR(255) NOT NULL`,
-    photo: `BYTEA`,
-    creationdate: `DATE NOT NULL DEFAULT CURRENT_DATE`,
-    database: `VARCHAR(50) NOT NULL`,
-  },
-  friends: {
-    userid1: `UUID NOT NULL`,
-    userid2: `UUID NOT NULL`,
-    friendsincedate: `DATE NOT NULL`,
-    " ": `PRIMARY KEY (userid1, userid2),
-      FOREIGN KEY (userid1) REFERENCES users (userid) ON DELETE CASCADE,
-      FOREIGN KEY (userid2) REFERENCES users (userid) ON DELETE CASCADE`,
-  },
-  posts: {
-    postid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
-    userid: `UUID NOT NULL REFERENCES users ON DELETE CASCADE`,
-    video: `BYTEA`,
-    islate: `BOOLEAN NOT NULL`,
-    timestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
-    locationid: `UUID NOT NULL`,
-  },
-  locations: {
-    locationid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
-    postid: `UUID NOT NULL REFERENCES posts ON DELETE CASCADE`,
-    latitude: `DECIMAL(9,6) NOT NULL`,
-    longitude: `DECIMAL(9,6) NOT NULL`,
-  },
-  comments: {
-    commentid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
-    postid: `UUID NOT NULL REFERENCES posts ON DELETE CASCADE`,
-    userid: `UUID NOT NULL REFERENCES users ON DELETE CASCADE`,
-    text: `TEXT NOT NULL`,
-    timestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
-  },
-  reactions: {
-    reactionid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
-    postid: `UUID NOT NULL REFERENCES posts ON DELETE CASCADE`,
-    userid: `UUID NOT NULL REFERENCES users ON DELETE CASCADE`,
-    type: `VARCHAR(50) NOT NULL`,
-    timestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
-  },
-  notifications: {
-    notificationid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
-    userid: `UUID NOT NULL REFERENCES users ON DELETE CASCADE`,
-    senttimestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
-    wasdismissed: `BOOLEAN NOT NULL`,
-  },
-};
+function TableSchemas(regionAbbreviation: string) {
+  return {
+    users: {
+      userid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
+      username: `VARCHAR(255) NOT NULL`,
+      fullname: `VARCHAR(255) NOT NULL`,
+      email: `VARCHAR(255) NOT NULL`,
+      passwordhash: `VARCHAR(255) NOT NULL`,
+      photo: `BYTEA`,
+      creationdate: `DATE NOT NULL DEFAULT CURRENT_DATE`,
+      database: `VARCHAR(50) NOT NULL`,
+    },
+    friends: {
+      userid1: `UUID NOT NULL`,
+      userid2: `UUID NOT NULL`,
+      friendsincedate: `DATE NOT NULL`,
+      " ": `PRIMARY KEY (userid1, userid2)`,
+    },
+    posts: {
+      postid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
+      userid: `UUID NOT NULL REFERENCES users_${regionAbbreviation} ON DELETE CASCADE`,
+      video: `BYTEA`,
+      islate: `BOOLEAN NOT NULL`,
+      timestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+      locationid: `UUID NOT NULL`,
+    },
+    locations: {
+      locationid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
+      postid: `UUID NOT NULL REFERENCES posts_${regionAbbreviation} ON DELETE CASCADE`,
+      latitude: `DECIMAL(9,6) NOT NULL`,
+      longitude: `DECIMAL(9,6) NOT NULL`,
+    },
+    comments: {
+      commentid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
+      postid: `UUID NOT NULL REFERENCES posts_${regionAbbreviation} ON DELETE CASCADE`,
+      userid: `UUID NOT NULL`,
+      text: `TEXT NOT NULL`,
+      timestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    },
+    reactions: {
+      reactionid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
+      postid: `UUID NOT NULL REFERENCES posts_${regionAbbreviation} ON DELETE CASCADE`,
+      userid: `UUID NOT NULL`,
+      type: `VARCHAR(50) NOT NULL`,
+      timestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    },
+    notifications: {
+      notificationid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
+      userid: `UUID NOT NULL`,
+      senttimestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+      wasdismissed: `BOOLEAN NOT NULL`,
+    },
+  };
+}
 
 /**
  * Generates the SQL for creating any regional table
@@ -99,11 +98,10 @@ export function createAllRegionalTablesSQL(
   regionAbbreviation: string,
   tableOptions: Record<string, string>
 ) {
-  console.log("tableOptions: ", tableOptions);
   const createCommands = Object.entries(tableOptions).map(
     ([tableKey, tableValue]) => {
       const fields = createTableColumns(
-        TableSchemas[tableKey as keyof typeof TableSchemas]
+        TableSchemas(regionAbbreviation)[tableKey as keyof typeof TableSchemas]
       );
       return createRegionalTableSQL(tableValue, regionAbbreviation, fields);
     }

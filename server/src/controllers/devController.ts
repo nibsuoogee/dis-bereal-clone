@@ -7,7 +7,6 @@ import {
   createPublicationSQL,
   createReplicationSlotsSQL,
   createSubscriptionSQL,
-  createTableViewSQL,
   createViewsSQL,
   insertUserSQL,
 } from "../database/multiDatabaseSQL";
@@ -46,9 +45,9 @@ export async function promiseMapDatabaseOptions<T>(
  * Each step is in a separate loop to reduce chance of error.
  */
 async function initMultiDB() {
-  const allUsersTables = createAllRegionsAllTablesSQL({ users: "users" });
-  const allPostsTables = createAllRegionsAllTablesSQL({ posts: "posts" });
-  //const allViewsSQL = createViewsSQL();
+  const regionalReplicatedTables =
+    createAllRegionsAllTablesSQL(TableOptionReplicate);
+  const allViewsSQL = createViewsSQL();
 
   // 0)
   await promiseMapDatabaseOptions(async (db) => {
@@ -56,33 +55,14 @@ async function initMultiDB() {
   });
 
   // 1)
-  /*await promiseMapDatabaseOptions(async (db) => {
+  await promiseMapDatabaseOptions(async (db) => {
     const regionalTables = createAllRegionalTablesSQL(
       db,
       TableOptionNoReplicate
     );
     await queryMultiDB(db, regionalReplicatedTables, []);
     await queryMultiDB(db, regionalTables, []);
-  });*/
-  await promiseMapDatabaseOptions(async (db) => {
-    await queryMultiDB(db, allUsersTables, []);
   });
-
-  await promiseMapDatabaseOptions(async (db) => {
-    const usersView = createTableViewSQL("users");
-    await queryMultiDB(db, usersView, []);
-  });
-
-  await promiseMapDatabaseOptions(async (db) => {
-    await queryMultiDB(db, allPostsTables, []);
-  });
-
-  await promiseMapDatabaseOptions(async (db) => {
-    const postsView = createTableViewSQL("posts");
-    await queryMultiDB(db, postsView, []);
-  });
-
-  return { message: "Multi database initialized", data: null };
 
   // 2)
   await promiseMapDatabaseOptions(async (db) => {
@@ -100,6 +80,11 @@ async function initMultiDB() {
   await promiseMapDatabaseOptions(async (db) => {
     const subscribeOtherDatabasesSQL = createSubscriptionSQL(db);
     await queryMultiDB(db, subscribeOtherDatabasesSQL, []);
+  });
+
+  // 5)
+  await promiseMapDatabaseOptions(async (db) => {
+    await queryMultiDB(db, allViewsSQL, []);
   });
 
   return { message: "Multi database initialized", data: null };
