@@ -1,9 +1,18 @@
-import { Box, Button, Card, Grid, Typography } from "@mui/joy";
+import {
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@mui/joy";
 import { useFriendsService } from "../services/friends";
-import { useUserService } from "../services/users";
-import { useState, useEffect, Fragment } from "react";
-import { User } from "@types";
+import { useState, useEffect } from "react";
+import { DBPayload, FriendRequest, User } from "@types";
 import { useDataContext } from "@/app/contexts/DataContext";
+import { UUIDTypes } from "uuid";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 export default function AddFriendList() {
   const { addFriend, getNonFriends } = useFriendsService();
@@ -11,22 +20,26 @@ export default function AddFriendList() {
   const { currentUser } = useDataContext();
 
   async function handleGetNonFriends() {
-    let data = { userid: currentUser.userid, database: currentUser.database };
-    console.log(data);
-    if (currentUser.userid) {
-      const newUsers = await getNonFriends(data);
-      setUsers(newUsers);
-    }
+    if (!currentUser?.userid || !currentUser?.database) return;
+    const newUsers = await getNonFriends(
+      currentUser.userid,
+      currentUser.database
+    );
+    setUsers(newUsers);
   }
 
-  async function handleAddFriend(user: User) {
-    if (currentUser.userid) {
-      await addFriend({
-        userid1: currentUser.userid,
-        userid2: user.userid,
-        database: currentUser.database,
-      });
-    }
+  async function handleAddFriend(userid: UUIDTypes | null) {
+    if (!currentUser?.userid || !userid) return;
+    const friendRequest: FriendRequest = {
+      userid1: currentUser.userid,
+      userid2: userid,
+    };
+    const payload: DBPayload = {
+      database: currentUser.database,
+      obj: friendRequest,
+    };
+    await addFriend(payload);
+    handleGetNonFriends();
   }
 
   useEffect(() => {
@@ -41,53 +54,49 @@ export default function AddFriendList() {
         margin: "0 auto",
       }}
     >
-      <Card
-        variant="soft"
+      <Grid
+        container
+        spacing={2}
         sx={{
-          maxHeight: "400px",
-          overflow: "auto",
-          padding: "16px",
-          borderRadius: "8px",
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "16px",
         }}
       >
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: "16px",
-          }}
-        >
-          {users && users.length > 0 ? (
-            users.map((user) => (
-              <Box
-                key={user.userid.toString()}
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "8px",
-                  backgroundColor: "lightgray",
-                  borderRadius: "8px",
-                  marginBottom: "8px",
-                }}
-              >
-                <Typography>{user.username}</Typography>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => handleAddFriend(user)}
-                >
-                  Add friend
-                </Button>
-              </Box>
+        {users && users.length > 0
+          ? users.map((user, index) => (
+              <Card key={index} variant="soft">
+                <CardContent orientation="horizontal">
+                  <Tooltip title={"Add friend"} variant="plain">
+                    <IconButton
+                      size="lg"
+                      variant="outlined"
+                      color="neutral"
+                      onClick={() => handleAddFriend(user.userid)}
+                    >
+                      <PersonAddIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <div>
+                    <Typography level="body-xs">{user.username}</Typography>
+                    <Typography
+                      width={"150px"}
+                      sx={{
+                        fontSize: "lg",
+                        fontWeight: "lg",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {user.fullname}
+                    </Typography>
+                  </div>
+                </CardContent>
+              </Card>
             ))
-          ) : (
-            <Typography>No friends to add!</Typography>
-          )}
-        </Grid>
-      </Card>
+          : ""}
+      </Grid>
     </Box>
   );
 }

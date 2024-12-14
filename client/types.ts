@@ -112,3 +112,8 @@ export interface DBPayload {
   database: DatabaseOption;
   obj: unknown;
 }
+
+export interface FriendRequest {
+  userid1: UUIDTypes; // The user who sent the friend request
+  userid2: UUIDTypes;
+}

@@ -2,16 +2,21 @@
 
 import { useSnackbar } from "@/app/contexts/SnackbarContext";
 import {
+  serviceDeleteRequest,
   serviceGetRequest,
   servicePostRequest,
 } from "@/app/services/requestHandlers";
-import { User } from "@types";
+import { DatabaseOption, DBPayload, User } from "@types";
+import { UUIDTypes } from "uuid";
 
 export const useFriendsService = () => {
   const { showSnackbar } = useSnackbar();
 
-  const getFriends = async (): Promise<User[]> => {
-    const routePath = "/api/friends";
+  const getFriends = async (
+    userid: UUIDTypes | null,
+    database: DatabaseOption
+  ): Promise<User[]> => {
+    const routePath = `/api/friends/${database}/${userid}`;
     const defaultErrorMessage = "Failed to fetch friends";
     return await serviceGetRequest(
       routePath,
@@ -21,30 +26,46 @@ export const useFriendsService = () => {
     );
   };
 
-  const getNonFriends = async (data: any): Promise<User[]> => {
-    const routePath = "/api/friends/nonFriends";
+  const getNonFriends = async (
+    userid: UUIDTypes | null,
+    database: DatabaseOption
+  ): Promise<User[]> => {
+    const routePath = `/api/friends/nonfriends/${database}/${userid}`;
     const defaultErrorMessage = "Failed to fetch non-friends";
-    return await servicePostRequest(
+    return await serviceGetRequest(
       routePath,
-      data,
       defaultErrorMessage,
       showSnackbar,
       true
     );
   };
 
-  const addFriend = async (data: any): Promise<User[]> => {
-    console.log(data);
+  const addFriend = async (payload: DBPayload): Promise<User[]> => {
     const routePath = "/api/friends";
     const defaultErrorMessage = "Failed to add friend";
     return await servicePostRequest(
       routePath,
-      data,
+      payload,
       defaultErrorMessage,
       showSnackbar,
       true
     );
   };
 
-  return { getFriends, addFriend, getNonFriends };
+  const removeFriend = async (
+    database: DatabaseOption,
+    userid1: UUIDTypes | null,
+    userid2: UUIDTypes | null
+  ): Promise<User[]> => {
+    const routePath = `/api/friends/${database}/${userid1}/${userid2}`;
+    const defaultErrorMessage = "Failed to remove friend";
+    return await serviceDeleteRequest(
+      routePath,
+      defaultErrorMessage,
+      showSnackbar,
+      true
+    );
+  };
+
+  return { getFriends, addFriend, getNonFriends, removeFriend };
 };

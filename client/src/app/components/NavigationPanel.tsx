@@ -31,14 +31,14 @@ export default function NavigationPanel() {
             <LinkIconButton linkPath="/views/dashboard" tooltipText="Dashboard">
               <DashboardOutlined />
             </LinkIconButton>
-            <LinkIconButton linkPath="/views/login" tooltipText="login">
-              <LoginOutlined />
-            </LinkIconButton>
             <LinkIconButton linkPath="/views/profile" tooltipText="Profile">
               <AccountCircleOutlined />
             </LinkIconButton>
             <LinkIconButton linkPath="/views/friends" tooltipText="Friends">
               <GroupsOutlined />
+            </LinkIconButton>
+            <LinkIconButton linkPath="/views/login" tooltipText="login">
+              <LoginOutlined />
             </LinkIconButton>
             <LinkIconButton linkPath="/views/register" tooltipText="Register">
               <HowToReg />
