@@ -17,7 +17,6 @@ export default function NotificationPanel() {
 
   async function handleGetNotification() {
     const notifications = (await getUserNotifications(
-      false,
       currentUser?.userid
     )) as Notification[];
 

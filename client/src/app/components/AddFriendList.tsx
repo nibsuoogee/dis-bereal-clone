@@ -13,6 +13,7 @@ import { DBPayload, FriendRequest, User } from "@types";
 import { useDataContext } from "@/app/contexts/DataContext";
 import { UUIDTypes } from "uuid";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import { getDatabaseName } from "@/app/lib/conversions";
 
 export default function AddFriendList() {
   const { addFriend, getNonFriends } = useFriendsService();
@@ -21,10 +22,7 @@ export default function AddFriendList() {
 
   async function handleGetNonFriends() {
     if (!currentUser?.userid || !currentUser?.database) return;
-    const newUsers = await getNonFriends(
-      currentUser.userid,
-      currentUser.database
-    );
+    const newUsers = await getNonFriends(currentUser.userid);
     setUsers(newUsers);
   }
 
@@ -69,8 +67,7 @@ export default function AddFriendList() {
                 <CardContent orientation="horizontal">
                   <Tooltip title={"Add friend"} variant="plain">
                     <IconButton
-                      size="lg"
-                      variant="outlined"
+                      variant="plain"
                       color="neutral"
                       onClick={() => handleAddFriend(user.userid)}
                     >
@@ -90,6 +87,10 @@ export default function AddFriendList() {
                       }}
                     >
                       {user.fullname}
+                    </Typography>
+                    <Typography level="body-xs">
+                      Database:{" "}
+                      {getDatabaseName(user.database) ?? "No database"}
                     </Typography>
                   </div>
                 </CardContent>

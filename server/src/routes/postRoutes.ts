@@ -1,5 +1,6 @@
 import {
   deletePost,
+  getFriendsPosts,
   getPosts,
   getUserPosts,
   getVideo,
@@ -12,6 +13,7 @@ export const router = express.Router();
 router.get("/", getPosts);
 router.get("/:userid", getUserPosts);
 router.get("/video/:postid", getVideo);
+router.get("/friends/:userid", getFriendsPosts);
 
 router.post("/", uploadPost);
 

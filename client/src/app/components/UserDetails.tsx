@@ -18,7 +18,7 @@ import PublicIcon from "@mui/icons-material/Public";
 import PasswordIcon from "@mui/icons-material/Password";
 import SaveIcon from "@mui/icons-material/Save";
 import { DatabaseOption, DBPayload, User } from "types";
-import { timestampToReadableDate } from "../lib/conversions";
+import { getDatabaseName, timestampToReadableDate } from "../lib/conversions";
 import { useUserService } from "../services/users";
 import { useEffect, useState } from "react";
 
@@ -35,12 +35,6 @@ export default function UserDetails() {
     email: "",
     passwordhash: "",
   });
-
-  function getDatabaseName(database: DatabaseOption) {
-    return Object.keys(DatabaseOption)[
-      Object.values(DatabaseOption).indexOf(database)
-    ];
-  }
 
   async function handleChangeDetails(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;

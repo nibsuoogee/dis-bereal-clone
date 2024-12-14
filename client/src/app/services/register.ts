@@ -14,8 +14,7 @@ export const useRegisterService = () => {
       routePath,
       userdata,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 

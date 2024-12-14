@@ -59,7 +59,7 @@ function TableSchemas(regionAbbreviation: string) {
     },
     reactions: {
       reactionid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
-      postid: `UUID NOT NULL REFERENCES posts_${regionAbbreviation} ON DELETE CASCADE`,
+      postid: `UUID NOT NULL`,
       userid: `UUID NOT NULL`,
       type: `VARCHAR(50) NOT NULL`,
       timestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,

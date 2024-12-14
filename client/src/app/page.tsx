@@ -25,7 +25,7 @@ export default function Home() {
         }}
       >
         BeReal clone
-      </Typography>{" "}
+      </Typography>
     </PageLayoutShell>
   );
 }

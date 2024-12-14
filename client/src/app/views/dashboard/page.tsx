@@ -18,7 +18,7 @@ import { useDataContext } from "../../contexts/DataContext";
 
 export default function Dashboard() {
   const { currentUser } = useDataContext();
-  const { getPosts, getUserPosts } = usePostService();
+  const { getPosts, getUserPosts, getFriendsPosts } = usePostService();
   const [posts, setPosts] = useState<Post[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -60,7 +60,12 @@ export default function Dashboard() {
       >
         <Button onClick={() => handleGetPosts(getPosts(true))}>For you</Button>
         <Button
-          onClick={() => handleGetPosts(getUserPosts(true, currentUser.userid))}
+          onClick={() => handleGetPosts(getFriendsPosts(currentUser.userid))}
+        >
+          Friends
+        </Button>
+        <Button
+          onClick={() => handleGetPosts(getUserPosts(currentUser.userid))}
         >
           Your posts
         </Button>

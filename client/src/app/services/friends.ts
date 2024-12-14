@@ -6,38 +6,26 @@ import {
   serviceGetRequest,
   servicePostRequest,
 } from "@/app/services/requestHandlers";
-import { DatabaseOption, DBPayload, User } from "@types";
+import { DBPayload, User } from "@types";
 import { UUIDTypes } from "uuid";
 
 export const useFriendsService = () => {
   const { showSnackbar } = useSnackbar();
 
-  const getFriends = async (
-    userid: UUIDTypes | null,
-    database: DatabaseOption
-  ): Promise<User[]> => {
-    const routePath = `/api/friends/${database}/${userid}`;
+  const getFriends = async (userid: UUIDTypes | null): Promise<User[]> => {
+    const routePath = `/api/friends/${userid}`;
     const defaultErrorMessage = "Failed to fetch friends";
     return await serviceGetRequest(
       routePath,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 
-  const getNonFriends = async (
-    userid: UUIDTypes | null,
-    database: DatabaseOption
-  ): Promise<User[]> => {
-    const routePath = `/api/friends/nonfriends/${database}/${userid}`;
+  const getNonFriends = async (userid: UUIDTypes | null): Promise<User[]> => {
+    const routePath = `/api/friends/nonfriends/${userid}`;
     const defaultErrorMessage = "Failed to fetch non-friends";
-    return await serviceGetRequest(
-      routePath,
-      defaultErrorMessage,
-      showSnackbar,
-      true
-    );
+    return await serviceGetRequest(routePath, defaultErrorMessage, () => null);
   };
 
   const addFriend = async (payload: DBPayload): Promise<User[]> => {
@@ -47,23 +35,20 @@ export const useFriendsService = () => {
       routePath,
       payload,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 
   const removeFriend = async (
-    database: DatabaseOption,
     userid1: UUIDTypes | null,
     userid2: UUIDTypes | null
   ): Promise<User[]> => {
-    const routePath = `/api/friends/${database}/${userid1}/${userid2}`;
+    const routePath = `/api/friends/${userid1}/${userid2}`;
     const defaultErrorMessage = "Failed to remove friend";
     return await serviceDeleteRequest(
       routePath,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 

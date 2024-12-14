@@ -21,14 +21,14 @@ export default function FriendList() {
 
   async function handleGetFriends() {
     if (!currentUser?.userid || !currentUser?.database) return;
-    const friends = await getFriends(currentUser.userid, currentUser.database);
+    const friends = await getFriends(currentUser.userid);
     if (!friends) return;
     setFriends(friends);
   }
 
   async function handleRemoveFriend(friendid: UUIDTypes | null) {
     if (!currentUser?.database || !currentUser?.userid || !friendid) return;
-    await removeFriend(currentUser.database, currentUser.userid, friendid);
+    await removeFriend(currentUser.userid, friendid);
     handleGetFriends();
   }
 

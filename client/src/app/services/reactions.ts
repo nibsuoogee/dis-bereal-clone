@@ -12,32 +12,20 @@ export const useReactionService = () => {
   const { showSnackbar } = useSnackbar();
 
   const getReactions = async (
-    showResponseSnackbar: boolean,
     postid: UUIDTypes | null
   ): Promise<ReactionCounts> => {
     const routePath = `/api/reactions/${postid}`;
     const defaultErrorMessage = "Failed to fetch reactions";
-    return await serviceGetRequest(
-      routePath,
-      defaultErrorMessage,
-      showSnackbar,
-      showResponseSnackbar
-    );
+    return await serviceGetRequest(routePath, defaultErrorMessage, () => null);
   };
 
   const getUserReactions = async (
-    showResponseSnackbar: boolean,
     postid: UUIDTypes | null,
     userid: UUIDTypes | null
   ): Promise<ReactionCounts> => {
     const routePath = `/api/reactions/${postid}/${userid}`;
     const defaultErrorMessage = "Failed to fetch user reactions";
-    return await serviceGetRequest(
-      routePath,
-      defaultErrorMessage,
-      showSnackbar,
-      showResponseSnackbar
-    );
+    return await serviceGetRequest(routePath, defaultErrorMessage, () => null);
   };
 
   const postReaction = async (payload: DBPayload): Promise<null> => {
@@ -48,8 +36,7 @@ export const useReactionService = () => {
       routePath,
       payload,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 
