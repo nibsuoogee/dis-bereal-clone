@@ -33,7 +33,7 @@ function TableSchemas(regionAbbreviation: string) {
     friends: {
       userid1: `UUID NOT NULL`,
       userid2: `UUID NOT NULL`,
-      friendsincedate: `DATE NOT NULL`,
+      friendsincedate: `DATE`,
       " ": `PRIMARY KEY (userid1, userid2)`,
     },
     posts: {
