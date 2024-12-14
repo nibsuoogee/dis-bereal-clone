@@ -1,27 +1,39 @@
-import { Box, Button, Card, Grid, Typography } from "@mui/joy";
+import {
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@mui/joy";
 import { useFriendsService } from "../services/friends";
-import { useUserService } from "../services/users";
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect } from "react";
 import { User } from "@types";
 import { useDataContext } from "@/app/contexts/DataContext";
+import CloseIcon from "@mui/icons-material/Close";
+import { UUIDTypes } from "uuid";
 
 export default function FriendList() {
-  const { getFriends } = useFriendsService();
+  const { getFriends, removeFriend } = useFriendsService();
   const [friends, setFriends] = useState<User[]>([]);
   const { currentUser } = useDataContext();
-  const [removedFriend, setRemovedFriend] = useState<User[]>([]);
 
   async function handleGetFriends() {
-    const friends = await getFriends();
+    if (!currentUser?.userid || !currentUser?.database) return;
+    const friends = await getFriends(currentUser.userid);
+    if (!friends) return;
     setFriends(friends);
   }
 
-  async function handleRemoveFriend(user: User) {
-    //await removeFriend({ userid1: currentUser.userid, userid2: user.userid });
+  async function handleRemoveFriend(friendid: UUIDTypes | null) {
+    if (!currentUser?.database || !currentUser?.userid || !friendid) return;
+    await removeFriend(currentUser.userid, friendid);
+    handleGetFriends();
   }
 
   useEffect(() => {
-    //handleGetFriends();
+    handleGetFriends();
   }, []);
 
   return (
@@ -32,45 +44,49 @@ export default function FriendList() {
         margin: "0 auto",
       }}
     >
-      <Card
-        variant="soft"
+      <Grid
+        container
+        spacing={2}
         sx={{
-          maxHeight: "400px", // Set a fixed height for the card
-          overflow: "auto", // Enable scrolling if content exceeds height
-          padding: "16px",
-          borderRadius: "8px",
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "16px",
         }}
       >
-        <Grid
-          container
-          spacing={2}
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)", // Two columns layout
-            gap: "16px",
-          }}
-        >
-          {friends.map((friend) => (
-            <Box
-              key={friend.userid.toString()}
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "8px",
-                backgroundColor: "lightgray",
-                borderRadius: "8px",
-                marginBottom: "8px",
-              }}
-            >
-              <Typography>{friend.username}</Typography>
-              <Button variant="outlined" color="primary">
-                Remove friend
-              </Button>
-            </Box>
-          ))}
-        </Grid>
-      </Card>
+        {friends && friends.length > 0
+          ? friends.map((friend, index) => (
+              <Card key={index} variant="soft">
+                <CardContent orientation="horizontal">
+                  <Tooltip title={"Remove friend"} variant="plain">
+                    <IconButton
+                      size="lg"
+                      variant="plain"
+                      color="neutral"
+                      onClick={() => handleRemoveFriend(friend.userid)}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <div>
+                    <Typography level="body-xs">{friend.username}</Typography>
+                    <Typography
+                      width={"150px"}
+                      sx={{
+                        fontSize: "lg",
+                        fontWeight: "lg",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {friend.fullname}
+                    </Typography>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          : ""}
+      </Grid>
     </Box>
   );
 }

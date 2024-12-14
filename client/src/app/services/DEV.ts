@@ -15,8 +15,7 @@ export const useDEVService = () => {
       routePath,
       content,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 
@@ -28,8 +27,7 @@ export const useDEVService = () => {
       routePath,
       content,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 
@@ -41,8 +39,7 @@ export const useDEVService = () => {
       routePath,
       content,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 
@@ -56,8 +53,7 @@ export const useDEVService = () => {
       routePath,
       content,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 

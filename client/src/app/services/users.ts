@@ -19,23 +19,14 @@ export const useUserService = () => {
     return await serviceGetRequest(
       routePath,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 
-  const getUser = async (
-    showResponseSnackbar: boolean,
-    userid: UUIDTypes | null
-  ): Promise<User> => {
+  const getUser = async (userid: UUIDTypes | null): Promise<User> => {
     const routePath = `/api/users/${userid}`;
     const defaultErrorMessage = "Failed to fetch user";
-    return await serviceGetRequest(
-      routePath,
-      defaultErrorMessage,
-      showSnackbar,
-      showResponseSnackbar
-    );
+    return await serviceGetRequest(routePath, defaultErrorMessage, () => null);
   };
 
   async function login(userData: any): Promise<User> {
@@ -45,8 +36,7 @@ export const useUserService = () => {
       routePath,
       userData,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   }
 
@@ -61,8 +51,7 @@ export const useUserService = () => {
       routePath,
       payload,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 
@@ -76,8 +65,7 @@ export const useUserService = () => {
     return await serviceDeleteRequest(
       routePath,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 

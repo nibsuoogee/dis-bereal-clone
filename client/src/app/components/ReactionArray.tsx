@@ -50,14 +50,13 @@ export default function ReactionArray({
   );
 
   async function handleGetReactions() {
-    const newReactions = await getReactions(false, post.postid);
+    const newReactions = await getReactions(post.postid);
     setTotalReactions(newReactions);
   }
 
   async function handleGetUserReactions() {
     if (!currentUser?.userid) return;
     const newReactions = await getUserReactions(
-      false,
       post.postid,
       currentUser.userid
     );

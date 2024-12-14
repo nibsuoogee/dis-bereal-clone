@@ -18,22 +18,17 @@ export const usePostService = () => {
     return await serviceGetRequest(
       routePath,
       defaultErrorMessage,
-      showSnackbar,
-      showResponseSnackbar
+      showResponseSnackbar ? showSnackbar : () => null
     );
   };
 
-  const getUserPosts = async (
-    showResponseSnackbar: boolean,
-    userid: UUIDTypes | null
-  ): Promise<Post[]> => {
+  const getUserPosts = async (userid: UUIDTypes | null): Promise<Post[]> => {
     const routePath = `/api/posts/${userid}`;
     const defaultErrorMessage = "Failed to fetch user posts";
     return await serviceGetRequest(
       routePath,
       defaultErrorMessage,
-      showSnackbar,
-      showResponseSnackbar
+      showSnackbar
     );
   };
 
@@ -45,8 +40,7 @@ export const usePostService = () => {
       routePath,
       payload,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 
@@ -57,10 +51,19 @@ export const usePostService = () => {
     return await serviceDeleteRequest(
       routePath,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 
-  return { getPosts, getUserPosts, uploadPost, deletePost };
+  const getFriendsPosts = async (userid: UUIDTypes | null): Promise<Post[]> => {
+    const routePath = `/api/posts/friends/${userid}`;
+    const defaultErrorMessage = "Failed to fetch friend posts";
+    return await serviceGetRequest(
+      routePath,
+      defaultErrorMessage,
+      showSnackbar
+    );
+  };
+
+  return { getPosts, getUserPosts, uploadPost, deletePost, getFriendsPosts };
 };

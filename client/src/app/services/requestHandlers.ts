@@ -13,8 +13,7 @@ export async function servicePostRequest(
   routePath: string,
   content: unknown,
   defaultErrorMessage: string,
-  showSnackbar: (message: string) => void,
-  showResponseSnackbar: boolean
+  showSnackbar: (message: string) => void
 ) {
   try {
     const response = await fetch(routePath, {
@@ -30,9 +29,7 @@ export async function servicePostRequest(
       throw new Error(message ?? defaultErrorMessage);
     }
 
-    if (showResponseSnackbar) {
-      showSnackbar(message);
-    }
+    showSnackbar(message);
 
     return data;
   } catch (err) {
@@ -51,8 +48,7 @@ export async function servicePostRequest(
 export async function serviceGetRequest(
   routePath: string,
   defaultErrorMessage: string,
-  showSnackbar: (message: string) => void,
-  showResponseSnackbar: boolean
+  showSnackbar: (message: string) => void
 ) {
   try {
     const response = await fetch(routePath, {
@@ -64,9 +60,7 @@ export async function serviceGetRequest(
       throw new Error(message ?? defaultErrorMessage);
     }
 
-    if (showResponseSnackbar) {
-      showSnackbar(message);
-    }
+    showSnackbar(message);
 
     return data;
   } catch (err) {
@@ -86,8 +80,7 @@ export async function serviceGetRequest(
 export async function serviceDeleteRequest(
   routePath: string,
   defaultErrorMessage: string,
-  showSnackbar: (message: string) => void,
-  showResponseSnackbar: boolean
+  showSnackbar: (message: string) => void
 ) {
   try {
     const response = await fetch(routePath, {
@@ -99,9 +92,7 @@ export async function serviceDeleteRequest(
       throw new Error(message ?? defaultErrorMessage);
     }
 
-    if (showResponseSnackbar) {
-      showSnackbar(message);
-    }
+    showSnackbar(message);
 
     return data;
   } catch (err) {
@@ -123,8 +114,7 @@ export async function servicePatchRequest(
   routePath: string,
   content: unknown,
   defaultErrorMessage: string,
-  showSnackbar: (message: string) => void,
-  showResponseSnackbar: boolean
+  showSnackbar: (message: string) => void
 ) {
   try {
     const response = await fetch(routePath, {
@@ -140,9 +130,7 @@ export async function servicePatchRequest(
       throw new Error(message ?? defaultErrorMessage);
     }
 
-    if (showResponseSnackbar) {
-      showSnackbar(message);
-    }
+    showSnackbar(message);
 
     return data;
   } catch (err) {

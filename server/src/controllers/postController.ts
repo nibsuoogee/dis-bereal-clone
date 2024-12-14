@@ -2,10 +2,18 @@ import { Request, Response } from "express";
 import { handleControllerRequest } from "@controllers/handlers";
 import { queryMultiDB } from "@database/db";
 import { getErrorMessage, reportError } from "@utils/logger";
-import { DatabaseOption, DBPayload, Notification, Post, User } from "@types";
+import {
+  DatabaseOption,
+  DBPayload,
+  Friend,
+  Notification,
+  Post,
+  User,
+} from "@types";
 import { TIME_TO_BEREAL_MS } from "@config/constants";
 import { promiseMapDatabaseOptions } from "@controllers/devController";
 import { QueryResult } from "pg";
+import { UUIDTypes } from "uuid";
 
 export const getPosts = async (req: Request, res: Response) => {
   return handleControllerRequest(
@@ -210,5 +218,57 @@ export const deletePost = async (req: Request, res: Response) => {
       };
     },
     "deletePost"
+  );
+};
+
+export const getFriendsPosts = async (req: Request, res: Response) => {
+  return handleControllerRequest(
+    res,
+    async () => {
+      const { userid } = req.params;
+
+      const results = await promiseMapDatabaseOptions(async (db) => {
+        return await queryMultiDB(
+          db,
+          `SELECT * FROM friends_${db} WHERE (userid1 = $1) 
+          OR (userid2 = $1)`,
+          [userid]
+        );
+      });
+
+      const friendRows = results
+        .map((result) => result.rows as Friend[])
+        .flat();
+
+      // for each result, get the user that is not userid
+      const friendids: UUIDTypes[] = friendRows.map((friendRow) => {
+        if (friendRow.userid1 !== userid) {
+          return friendRow.userid1;
+        } else {
+          return friendRow.userid2;
+        }
+      });
+
+      if (friendids.length === 0) {
+        return {
+          message: "No friends found",
+          data: [],
+        };
+      }
+
+      const result = await queryMultiDB(
+        "za" as DatabaseOption,
+        `SELECT * FROM posts WHERE userid IN (${friendids
+          .map((id, index) => `$${index + 1}`)
+          .join(",")})`,
+        friendids
+      );
+
+      return {
+        message: "Posts fetched successfully",
+        data: result.rows as Post[],
+      };
+    },
+    "getPosts"
   );
 };

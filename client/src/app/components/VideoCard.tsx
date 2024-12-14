@@ -38,7 +38,7 @@ export default function VideoCard({
   };
 
   async function handleGetUser() {
-    const newUser = await getUser(false, post.userid);
+    const newUser = await getUser(post.userid);
     setUsername(newUser?.username);
   }
 
