@@ -1,4 +1,4 @@
-# Data-Intensive Systems - BeReal Clone
+# Data-Intensive Systems - BeReal Clone 🎥
 
 ## Development
 
@@ -44,7 +44,7 @@ max_replication_slots = 64
 max_wal_senders = 64
 ```
 
-To apply these changes, restart the PostgreSQL service. Navigate to your PostgreSQL binaries folder. 
+To apply these changes, restart the PostgreSQL service. Navigate to your PostgreSQL binaries folder (using Windows cmd as **administrator**). 
 ```
 cd "C:\Program Files\PostgreSQL\17\bin"
 ```
@@ -153,4 +153,4 @@ For example, from the client dashboard view `\client\src\app\views\dashboard\pag
 
 ### TypeScript types 🧪
 
-`\shared\types.ts` contains all common type definitions for the data structures used in the project, such as User and Post. Use these common definitions in the client and server code to ensure consistency.
+`\client\types.ts` contains all common type definitions for the data structures used in the project, such as User and Post. Use these definitions in the client and server code to ensure consistency.

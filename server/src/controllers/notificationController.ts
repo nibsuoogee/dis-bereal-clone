@@ -1,7 +1,9 @@
-import { DatabaseOption, Notification } from "@types";
+import { Notification } from "@types";
 import { queryMultiDB } from "../database/db";
 import { handleControllerRequest } from "./handlers";
 import { Request, Response } from "express";
+import { promiseMapDatabaseOptions } from "@controllers/devController";
+import { QueryResult } from "pg";
 
 export const getUserNotifications = async (req: Request, res: Response) => {
   return handleControllerRequest(
@@ -9,15 +11,21 @@ export const getUserNotifications = async (req: Request, res: Response) => {
     async () => {
       const { userid } = req.params;
 
-      const result = await queryMultiDB(
-        "za" as DatabaseOption,
-        "SELECT * FROM notifications \
+      const results = await promiseMapDatabaseOptions<QueryResult>(
+        async (db) => {
+          return await queryMultiDB(
+            db,
+            `SELECT * FROM notifications_${db} \
         WHERE userid = $1 \
-        ORDER BY senttimestamp DESC LIMIT 1;",
-        [userid]
+        ORDER BY senttimestamp DESC LIMIT 1;`,
+            [userid]
+          );
+        }
       );
 
-      const notifications = result.rows as Notification[];
+      const notifications = results
+        .map((result) => result.rows as Notification[])
+        .flat();
 
       return {
         message: "Notifications fetched successfully",

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { queryMultiDB } from "../database/db";
 import { handleControllerRequest } from "@controllers/handlers";
 import {
+  createAllRegionalTablesSQL,
   createAllRegionsAllTablesSQL,
   createPublicationSQL,
   createReplicationSlotsSQL,
@@ -9,7 +10,12 @@ import {
   createViewsSQL,
   insertUserSQL,
 } from "../database/multiDatabaseSQL";
-import { DatabaseOption, User } from "@types";
+import {
+  DatabaseOption,
+  TableOptionNoReplicate,
+  TableOptionReplicate,
+  User,
+} from "@types";
 import sampleUsers from "../config/sampleData";
 import { UUIDTypes } from "uuid";
 
@@ -17,17 +23,19 @@ import { UUIDTypes } from "uuid";
  * Perform an operation on each database, waiting for all to finish.
  * @param operations The function to be called on each database
  */
-async function promiseMapDatabaseOptions(
-  operations: (db: DatabaseOption) => Promise<void>
+export async function promiseMapDatabaseOptions<T>(
+  operations: (db: DatabaseOption) => Promise<T>
 ) {
-  await Promise.all(
+  const results = await Promise.all(
     Object.entries(DatabaseOption).map(async ([dbKey, dbValue]) => {
-      await operations(dbValue);
+      return await operations(dbValue);
     })
   );
+  return results;
 }
 
 /**
+ * Initialize all databases.
  * 0) Enable extension for uuid-ossp
  * 1) Create all region specific tables in all databases
  * 2) Create publications for each region
@@ -37,7 +45,8 @@ async function promiseMapDatabaseOptions(
  * Each step is in a separate loop to reduce chance of error.
  */
 async function initMultiDB() {
-  const allCreateTablesSQL = createAllRegionsAllTablesSQL();
+  const regionalReplicatedTables =
+    createAllRegionsAllTablesSQL(TableOptionReplicate);
   const allViewsSQL = createViewsSQL();
 
   // 0)
@@ -47,7 +56,12 @@ async function initMultiDB() {
 
   // 1)
   await promiseMapDatabaseOptions(async (db) => {
-    await queryMultiDB(db, allCreateTablesSQL, []);
+    const regionalTables = createAllRegionalTablesSQL(
+      db,
+      TableOptionNoReplicate
+    );
+    await queryMultiDB(db, regionalReplicatedTables, []);
+    await queryMultiDB(db, regionalTables, []);
   });
 
   // 2)
@@ -77,6 +91,7 @@ async function initMultiDB() {
 }
 
 /**
+ * Reset all databases.
  * 1) Drop all views
  * 2) Drop all subscriptions
  * 3) Drop all publications

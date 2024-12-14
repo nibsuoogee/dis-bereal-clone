@@ -70,7 +70,7 @@ export const postReaction = async (req: Request, res: Response) => {
     async () => {
       const payload = req.body as DBPayload;
       const reaction = payload.obj as Reaction;
-      const database = payload.database;
+      const database = "za" as DatabaseOption; //payload.database;
 
       // Check if the reaction already exists
       const result = await queryMultiDB(
