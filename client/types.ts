@@ -112,3 +112,4 @@ export interface DBPayload {
   database: DatabaseOption;
   obj: unknown;
 }
+export type { UUIDTypes };
