@@ -5,6 +5,8 @@ import postRoutes from "./routes/postRoutes";
 import reactionRoutes from "./routes/reactionRoutes";
 import notificationRoutes from "./routes/notificationRoutes";
 import commentRoutes from "./routes/commentRoutes";
+import friendRoutes from "./routes/friendRoutes";
+
 
 const app = express();
 
@@ -19,5 +21,6 @@ app.use("/api/posts", postRoutes);
 app.use("/api/reactions", reactionRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/friends", friendRoutes);
 
 export default app;

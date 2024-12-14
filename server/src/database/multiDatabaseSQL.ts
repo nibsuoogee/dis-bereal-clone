@@ -1,5 +1,5 @@
 import { configDotenv } from "dotenv";
-import { DatabaseOption, TableOption, User } from "@types";
+import { DatabaseOption, TableOptionReplicate, User } from "@types";
 import { DB_NAME_PREFIX } from "src/config/constants";
 
 // Load environment variables
@@ -18,57 +18,60 @@ function createTableColumns(columns: Record<string, string>): string {
   return `${columnDefinitions}`;
 }
 
-const TableSchemas = {
-  users: {
-    userid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
-    username: "VARCHAR(255) NOT NULL",
-    fullname: "VARCHAR(255) NOT NULL",
-    email: "VARCHAR(255) NOT NULL",
-    passwordhash: "VARCHAR(255) NOT NULL",
-    photo: "BYTEA",
-    creationdate: "DATE NOT NULL DEFAULT CURRENT_DATE",
-    database: "VARCHAR(50) NOT NULL",
-  },
-  friends: {
-    userid1: "UUID NOT NULL",
-    userid2: "UUID NOT NULL",
-    friendsincedate: "DATE NOT NULL",
-  },
-  posts: {
-    postid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
-    userid: "UUID NOT NULL",
-    video: "BYTEA",
-    islate: "BOOLEAN NOT NULL",
-    timestamp: "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
-    locationid: "UUID NOT NULL",
-  },
-  locations: {
-    locationid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
-    postid: "UUID NOT NULL",
-    latitude: "DECIMAL(9,6) NOT NULL",
-    longitude: "DECIMAL(9,6) NOT NULL",
-  },
-  comments: {
-    commentid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
-    postid: "UUID NOT NULL",
-    userid: "UUID NOT NULL",
-    text: "TEXT NOT NULL",
-    timestamp: "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
-  },
-  reactions: {
-    reactionid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
-    postid: "UUID NOT NULL",
-    userid: "UUID NOT NULL",
-    type: "VARCHAR(50) NOT NULL",
-    timestamp: "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
-  },
-  notifications: {
-    notificationid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
-    userid: "UUID NOT NULL",
-    senttimestamp: "TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP",
-    wasdismissed: "BOOLEAN NOT NULL",
-  },
-};
+function TableSchemas(regionAbbreviation: string) {
+  return {
+    users: {
+      userid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
+      username: `VARCHAR(255) NOT NULL`,
+      fullname: `VARCHAR(255) NOT NULL`,
+      email: `VARCHAR(255) NOT NULL`,
+      passwordhash: `VARCHAR(255) NOT NULL`,
+      photo: `BYTEA`,
+      creationdate: `DATE NOT NULL DEFAULT CURRENT_DATE`,
+      database: `VARCHAR(50) NOT NULL`,
+    },
+    friends: {
+      userid1: `UUID NOT NULL`,
+      userid2: `UUID NOT NULL`,
+      friendsincedate: `DATE`,
+      " ": `PRIMARY KEY (userid1, userid2)`,
+    },
+    posts: {
+      postid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
+      userid: `UUID NOT NULL REFERENCES users_${regionAbbreviation} ON DELETE CASCADE`,
+      video: `BYTEA`,
+      islate: `BOOLEAN NOT NULL`,
+      timestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+      locationid: `UUID NOT NULL`,
+    },
+    locations: {
+      locationid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
+      postid: `UUID NOT NULL REFERENCES posts_${regionAbbreviation} ON DELETE CASCADE`,
+      latitude: `DECIMAL(9,6) NOT NULL`,
+      longitude: `DECIMAL(9,6) NOT NULL`,
+    },
+    comments: {
+      commentid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
+      postid: `UUID NOT NULL REFERENCES posts_${regionAbbreviation} ON DELETE CASCADE`,
+      userid: `UUID NOT NULL`,
+      text: `TEXT NOT NULL`,
+      timestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    },
+    reactions: {
+      reactionid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
+      postid: `UUID NOT NULL REFERENCES posts_${regionAbbreviation} ON DELETE CASCADE`,
+      userid: `UUID NOT NULL`,
+      type: `VARCHAR(50) NOT NULL`,
+      timestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+    },
+    notifications: {
+      notificationid: `UUID PRIMARY KEY DEFAULT uuid_generate_v4()`,
+      userid: `UUID NOT NULL`,
+      senttimestamp: `TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP`,
+      wasdismissed: `BOOLEAN NOT NULL`,
+    },
+  };
+}
 
 /**
  * Generates the SQL for creating any regional table
@@ -91,11 +94,14 @@ function createRegionalTableSQL(
  * @param regionAbbreviation e.g. uk
  * @returns All SQL commands for creating regional tables for a specific region
  */
-function createAllRegionalTablesSQL(regionAbbreviation: string) {
-  const createCommands = Object.entries(TableOption).map(
+export function createAllRegionalTablesSQL(
+  regionAbbreviation: string,
+  tableOptions: Record<string, string>
+) {
+  const createCommands = Object.entries(tableOptions).map(
     ([tableKey, tableValue]) => {
       const fields = createTableColumns(
-        TableSchemas[tableKey as keyof typeof TableSchemas]
+        TableSchemas(regionAbbreviation)[tableKey as keyof typeof TableSchemas]
       );
       return createRegionalTableSQL(tableValue, regionAbbreviation, fields);
     }
@@ -103,19 +109,27 @@ function createAllRegionalTablesSQL(regionAbbreviation: string) {
   return createCommands.join("\n");
 }
 
-export function createAllRegionsAllTablesSQL() {
+/**
+ * Create tables in all databases which should be replicated
+ * @returns All SQL commands for creating regional tables for all regions
+ */
+export function createAllRegionsAllTablesSQL(
+  tableOptions: Record<string, string>
+) {
   const allRegionsAllRegionalTables = Object.entries(DatabaseOption).map(
     ([dbKey, dbValue]) => {
-      return createAllRegionalTablesSQL(dbValue);
+      return createAllRegionalTablesSQL(dbValue, tableOptions);
     }
   );
   return allRegionsAllRegionalTables.join("\n");
 }
 
 export function createPublicationSQL(name: string) {
-  const tables = Object.entries(TableOption).map(([tableKey, tableValue]) => {
-    return `${tableValue}_${name}`;
-  });
+  const tables = Object.entries(TableOptionReplicate).map(
+    ([tableKey, tableValue]) => {
+      return `${tableValue}_${name}`;
+    }
+  );
   const tablesString = tables.join(", ");
   return `CREATE PUBLICATION pub_${name} FOR TABLE ${tablesString};`;
 }
@@ -159,7 +173,7 @@ export function createTableViewSQL(tableName: string) {
 }
 
 export function createViewsSQL() {
-  const tablesViews = Object.entries(TableOption).map(
+  const tablesViews = Object.entries(TableOptionReplicate).map(
     ([tableKey, tableValue]) => {
       return createTableViewSQL(tableValue);
     }

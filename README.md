@@ -1,4 +1,4 @@
-# Data-Intensive Systems - BeReal Clone
+# Data-Intensive Systems - BeReal Clone 🎥
 
 ## Development
 
@@ -153,4 +153,4 @@ For example, from the client dashboard view `\client\src\app\views\dashboard\pag
 
 ### TypeScript types 🧪
 
-`\shared\types.ts` contains all common type definitions for the data structures used in the project, such as User and Post. Use these common definitions in the client and server code to ensure consistency.
+`\client\types.ts` contains all common type definitions for the data structures used in the project, such as User and Post. Use these definitions in the client and server code to ensure consistency.

@@ -35,17 +35,17 @@ Object.values(DatabaseOption).forEach((dbName: DatabaseOption) => {
 });
 
 // Function to query a specific database
-export const queryMultiDB = (
+export async function queryMultiDB(
   dbName: DatabaseOption,
   text: string,
   params: any[]
-) => {
+) {
   if (!pools[dbName]) {
     throw new Error(`No connection pool found for database: ${dbName}`);
   }
 
-  return pools[dbName].query(text, params);
-};
+  return await pools[dbName].query(text, params);
+}
 
 // Create a connection pool
 const pool = new Pool({
