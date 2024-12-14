@@ -32,7 +32,7 @@ const TableSchemas = {
   friends: {
     userid1: "UUID NOT NULL",
     userid2: "UUID NOT NULL",
-    friendsincedate: "DATE NOT NULL",
+    friendsincedate: "DATE",
   },
   posts: {
     postid: "UUID PRIMARY KEY DEFAULT uuid_generate_v4()",
