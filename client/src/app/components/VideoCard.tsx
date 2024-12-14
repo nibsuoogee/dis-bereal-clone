@@ -7,7 +7,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/joy";
-import { Post, UUIDTypes } from "@types";
+import { Post, User } from "@types";
 import { API_CONFIG } from "@/app/config/api";
 import ClearIcon from "@mui/icons-material/Clear";
 import { usePostService } from "@/app/services/posts";
@@ -28,7 +28,7 @@ export default function VideoCard({
   const { currentUser } = useDataContext();
   const { deletePost } = usePostService();
   const { getUser } = useUserService();
-  const [username, setUsername] = useState<string>("");
+  const [poster, setPoster] = useState<User>({} as User);
 
   const isUsersPost = currentUser?.userid === post?.userid;
 
@@ -39,7 +39,8 @@ export default function VideoCard({
 
   async function handleGetUser() {
     const newUser = await getUser(post.userid);
-    setUsername(newUser?.username);
+    if (!newUser) return;
+    setPoster(newUser);
   }
 
   useEffect(() => {
@@ -64,7 +65,6 @@ export default function VideoCard({
               />
             </video>
           </CardCover>
-          {/*<CardContent></CardContent>*/}
         </Card>
         <Card size="sm">
           <Stack
@@ -78,7 +78,7 @@ export default function VideoCard({
               level="body-lg"
               sx={{ fontWeight: "lg", mt: { xs: 12, sm: 18 } }}
             >
-              {username ?? "No username"}
+              {poster?.username ?? "No username"}
             </Typography>
             <Typography
               level="body-sm"
@@ -114,7 +114,7 @@ export default function VideoCard({
         </Card>
 
         <Stack spacing={1}>
-          <CommentSection postid={post.postid} />
+          <CommentSection postid={post.postid} database={poster?.database} />
         </Stack>
       </Stack>
     </Grid>

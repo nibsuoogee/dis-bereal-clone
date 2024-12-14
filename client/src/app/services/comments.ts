@@ -7,48 +7,47 @@ import {
   serviceDeleteRequest,
 } from "@/app/services/requestHandlers";
 import { UUIDTypes } from "uuid";
-import { Comment } from "@types";
+import { Comment, DatabaseOption, DBPayload } from "@types";
 
 export const useCommentService = () => {
   const { showSnackbar } = useSnackbar();
 
-  const getComments = async (postid: UUIDTypes | null): Promise<Comment[]> => {
-    const routePath = `/api/comments/${postid}`;
+  const getComments = async (
+    postid: UUIDTypes | null,
+    database: DatabaseOption
+  ): Promise<Comment[]> => {
+    const routePath = `/api/comments/${postid}/${database}`;
     const defaultErrorMessage = "Failed to fetch comments";
     return await serviceGetRequest(
       routePath,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 
-  const uploadComment = async (commentPayload: {
-    postid: UUIDTypes | null;
-    content: string;
-    userid: UUIDTypes; 
-  }): Promise<null> => {
+  const uploadComment = async (payload: DBPayload): Promise<null> => {
     const routePath = "/api/comments";
     const defaultErrorMessage = "Failed to upload comment";
 
     return await servicePostRequest(
       routePath,
-      commentPayload,
+      payload,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 
-  const deleteComment = async (commentid: UUIDTypes): Promise<null> => {
-    const routePath = `/api/comments/${commentid}`;
+  const deleteComment = async (
+    commentid: UUIDTypes,
+    database: DatabaseOption
+  ): Promise<null> => {
+    const routePath = `/api/comments/${commentid}/${database}`;
     const defaultErrorMessage = "Failed to delete comment";
-  
+
     return await serviceDeleteRequest(
       routePath,
       defaultErrorMessage,
-      showSnackbar,
-      true
+      showSnackbar
     );
   };
 
