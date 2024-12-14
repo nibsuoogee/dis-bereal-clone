@@ -11,7 +11,13 @@ export const getComments = async (req: Request, res: Response) => {
 
       const result = await queryMultiDB(
         "za" as DatabaseOption,
-        "SELECT * FROM comments WHERE postid = $1 ORDER BY timestamp ASC",
+        `
+        SELECT c.commentid, c.postid, c.userid, c.text AS content, c.timestamp, u.username
+        FROM comments_za c
+        JOIN users u ON c.userid = u.userid
+        WHERE c.postid = $1
+        ORDER BY c.timestamp ASC
+        `,
         [postid]
       );
 
