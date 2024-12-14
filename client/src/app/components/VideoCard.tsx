@@ -7,7 +7,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/joy";
-import { Post } from "@types";
+import { Post, UUIDTypes } from "@types";
 import { API_CONFIG } from "@/app/config/api";
 import ClearIcon from "@mui/icons-material/Clear";
 import { usePostService } from "@/app/services/posts";
@@ -16,6 +16,7 @@ import { useDataContext } from "../contexts/DataContext";
 import { useUserService } from "../services/users";
 import { useEffect, useState } from "react";
 import { timestampToReadableDate } from "../lib/conversions";
+import CommentSection from "./CommentSection";
 
 export default function VideoCard({
   post,
@@ -111,6 +112,10 @@ export default function VideoCard({
             )}
           </Stack>
         </Card>
+
+        <Stack spacing={1}>
+          <CommentSection postid={post.postid} />
+        </Stack>
       </Stack>
     </Grid>
   );
