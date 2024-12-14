@@ -51,3 +51,46 @@ export const addComment = async (req: Request, res: Response) => {
     "addComment"
   );
 };
+
+export const deleteComment = async (req: Request, res: Response) => {
+  return handleControllerRequest(
+    res,
+    async () => {
+      const { commentid } = req.params;
+
+      const result = await queryMultiDB(
+        "za" as DatabaseOption,
+        "SELECT userid FROM comments_za WHERE commentid = $1",
+        [commentid]
+      );
+      const userid = result.rows[0]?.userid;
+
+      if (!userid) {
+        throw new Error("Comment not found or user mismatch.");
+      }
+
+      const result2 = await queryMultiDB(
+        "za" as DatabaseOption,
+        "SELECT database FROM users WHERE userid = $1",
+        [userid]
+      );
+      const database = result2.rows[0]?.database;
+
+      if (!database) {
+        throw new Error("User database not found.");
+      }
+
+      await queryMultiDB(
+        database,
+        `DELETE FROM comments_${database} WHERE commentid = $1`,
+        [commentid]
+      );
+
+      return {
+        message: "Comment deleted successfully",
+        data: null,
+      };
+    },
+    "deleteComment"
+  );
+};
