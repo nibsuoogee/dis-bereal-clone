@@ -44,7 +44,7 @@ export default function VideoUpload({
     };
 
     await uploadPost(payload);
-    handleGetPosts();
+    //handleGetPosts();
     setNotificationTimestamp(null);
   }
 

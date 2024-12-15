@@ -146,6 +146,22 @@ const sampleUsers = [
     creationdate: null,
     database: "de" as DatabaseOption,
   },
+  {
+    username: "user19_za",
+    fullname: "Michael Adams",
+    email: "michael.a@email.com",
+    passwordhash: "hash19",
+    creationdate: null,
+    database: "za" as DatabaseOption,
+  },
+  {
+    username: "user20_br",
+    fullname: "Julia Lima",
+    email: "julia.l@email.com",
+    passwordhash: "hash20",
+    creationdate: null,
+    database: "br" as DatabaseOption,
+  },
 ];
 
 export default sampleUsers;

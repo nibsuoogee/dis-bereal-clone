@@ -75,7 +75,7 @@ export default function AddFriendList() {
                       {user.fullname}
                     </Typography>
                     <Typography level="body-xs">
-                      Database:
+                      Database:{" "}
                       {getDatabaseName(user.database) ?? "No database"}
                     </Typography>
                   </div>

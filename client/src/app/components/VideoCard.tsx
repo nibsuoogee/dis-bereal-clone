@@ -34,7 +34,7 @@ export default function VideoCard({
 
   const handleDeletePost = async () => {
     await deletePost(post.postid);
-    handleGetPosts();
+    //handleGetPosts();
   };
 
   async function handleGetUser() {
@@ -48,8 +48,8 @@ export default function VideoCard({
   }, []);
 
   return (
-    <Stack spacing={1} className="py-2 inline-block">
-      <Card sx={{ height: "600px", width: "338px" }}>
+    <Stack spacing={1} className="py-2 inline-block pr-2">
+      <Card sx={{ height: "500px", width: "281px" }}>
         <CardCover>
           <video autoPlay muted controls>
             <source

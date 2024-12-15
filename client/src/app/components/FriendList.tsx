@@ -69,7 +69,7 @@ export default function FriendList() {
                       {friend.fullname}
                     </Typography>
                     <Typography level="body-xs">
-                      Database:
+                      Database:{" "}
                       {getDatabaseName(friend.database) ?? "No database"}
                     </Typography>
                   </div>

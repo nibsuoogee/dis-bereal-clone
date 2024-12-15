@@ -30,7 +30,7 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    handleGetPosts(getPosts(true));
+    //handleGetPosts(getPosts(true));
   }, []);
 
   return (
@@ -70,7 +70,7 @@ export default function Dashboard() {
         </Button>
       </ButtonGroup>
 
-      <div className="gap-8 sm:columns-1 md:columns-3 lg:columns-4">
+      <div className="gap-1 sm:columns-1 md:columns-3 lg:columns-4">
         {posts.map((post, index) => (
           <VideoCard
             key={index}
