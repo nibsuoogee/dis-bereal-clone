@@ -13,6 +13,7 @@ import { User } from "@types";
 import { useDataContext } from "@/app/contexts/DataContext";
 import CloseIcon from "@mui/icons-material/Close";
 import { UUIDTypes } from "uuid";
+import { getDatabaseName } from "@/app/lib/conversions";
 
 export default function FriendList() {
   const { getFriends, removeFriend } = useFriendsService();
@@ -37,25 +38,11 @@ export default function FriendList() {
   }, []);
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        maxWidth: "600px",
-        margin: "0 auto",
-      }}
-    >
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
-          gap: "16px",
-        }}
-      >
-        {friends && friends.length > 0
-          ? friends.map((friend, index) => (
-              <Card key={index} variant="soft">
+    <Grid container spacing={2}>
+      {friends && friends.length > 0
+        ? friends.map((friend, index) => (
+            <Grid key={index}>
+              <Card variant="soft">
                 <CardContent orientation="horizontal">
                   <Tooltip title={"Remove friend"} variant="plain">
                     <IconButton
@@ -81,12 +68,16 @@ export default function FriendList() {
                     >
                       {friend.fullname}
                     </Typography>
+                    <Typography level="body-xs">
+                      Database:
+                      {getDatabaseName(friend.database) ?? "No database"}
+                    </Typography>
                   </div>
                 </CardContent>
               </Card>
-            ))
-          : ""}
-      </Grid>
-    </Box>
+            </Grid>
+          ))
+        : ""}
+    </Grid>
   );
 }

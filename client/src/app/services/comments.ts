@@ -18,11 +18,7 @@ export const useCommentService = () => {
   ): Promise<Comment[]> => {
     const routePath = `/api/comments/${postid}/${database}`;
     const defaultErrorMessage = "Failed to fetch comments";
-    return await serviceGetRequest(
-      routePath,
-      defaultErrorMessage,
-      showSnackbar
-    );
+    return await serviceGetRequest(routePath, defaultErrorMessage, () => null);
   };
 
   const uploadComment = async (payload: DBPayload): Promise<null> => {

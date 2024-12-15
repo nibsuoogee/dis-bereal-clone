@@ -4,7 +4,6 @@ import {
   Button,
   ButtonGroup,
   CircularProgress,
-  Grid,
   Stack,
   Typography,
 } from "@mui/joy";
@@ -71,15 +70,7 @@ export default function Dashboard() {
         </Button>
       </ButtonGroup>
 
-      <Grid
-        container
-        spacing={1}
-        columns={{ xs: 4, sm: 8, md: 12 }}
-        sx={{
-          justifyContent: "flex-center",
-          alignItems: "center",
-        }}
-      >
+      <div className="gap-8 sm:columns-1 md:columns-3 lg:columns-4">
         {posts.map((post, index) => (
           <VideoCard
             key={index}
@@ -87,7 +78,7 @@ export default function Dashboard() {
             handleGetPosts={() => handleGetPosts(getPosts(false))}
           />
         ))}
-      </Grid>
+      </div>
     </PageLayoutShell>
   );
 }

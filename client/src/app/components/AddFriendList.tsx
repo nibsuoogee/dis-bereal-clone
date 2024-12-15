@@ -45,25 +45,11 @@ export default function AddFriendList() {
   }, []);
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        maxWidth: "600px",
-        margin: "0 auto",
-      }}
-    >
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
-          gap: "16px",
-        }}
-      >
-        {users && users.length > 0
-          ? users.map((user, index) => (
-              <Card key={index} variant="soft">
+    <Grid container spacing={2}>
+      {users && users.length > 0
+        ? users.map((user, index) => (
+            <Grid key={index}>
+              <Card variant="soft">
                 <CardContent orientation="horizontal">
                   <Tooltip title={"Add friend"} variant="plain">
                     <IconButton
@@ -89,15 +75,15 @@ export default function AddFriendList() {
                       {user.fullname}
                     </Typography>
                     <Typography level="body-xs">
-                      Database:{" "}
+                      Database:
                       {getDatabaseName(user.database) ?? "No database"}
                     </Typography>
                   </div>
                 </CardContent>
               </Card>
-            ))
-          : ""}
-      </Grid>
-    </Box>
+            </Grid>
+          ))
+        : ""}
+    </Grid>
   );
 }

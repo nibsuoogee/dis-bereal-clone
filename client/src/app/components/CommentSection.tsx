@@ -9,6 +9,7 @@ import {
   Box,
   IconButton,
   Tooltip,
+  Sheet,
 } from "@mui/joy";
 import { useCommentService } from "../services/comments";
 import { useDataContext } from "../contexts/DataContext";
@@ -36,7 +37,7 @@ export default function CommentSection({
 
   useEffect(() => {
     fetchComments();
-  }, []);
+  }, [postid, database]);
 
   const handleSubmit = async () => {
     if (newComment.trim() === "") return;
@@ -65,18 +66,8 @@ export default function CommentSection({
   };
 
   return (
-    <Stack spacing={2}>
-      <Box
-        sx={{
-          maxHeight: "600px",
-          overflowY: "auto",
-          padding: "1rem",
-          border: "1px solid #ddd",
-          borderRadius: "2px",
-          backgroundColor: "#f9f9f9",
-          scrollbarWidth: "none",
-        }}
-      >
+    <>
+      <div className="max-h-[600px] overflow-auto w-full">
         {comments.map((comment: Comment & { username?: string }) => (
           <Box
             key={comment.commentid.toString()}
@@ -85,6 +76,7 @@ export default function CommentSection({
               border: "1px solid #ccc",
               borderRadius: "8px",
               mb: 1,
+              maxHeight: "200px",
             }}
           >
             <Typography level="body-md" sx={{ fontWeight: "bold" }}>
@@ -127,8 +119,7 @@ export default function CommentSection({
             </Stack>
           </Box>
         ))}
-      </Box>
-
+      </div>
       <Textarea
         value={newComment}
         onChange={(e) => setNewComment(e.target.value)}
@@ -140,11 +131,17 @@ export default function CommentSection({
           border: "1px solid #ccc",
           borderRadius: "2px",
           p: 1,
+          width: "100%",
         }}
       />
-      <Button onClick={handleSubmit} disabled={!newComment.trim()}>
+      <Button
+        color="neutral"
+        variant="outlined"
+        onClick={handleSubmit}
+        disabled={!newComment.trim()}
+      >
         Post Comment
       </Button>
-    </Stack>
+    </>
   );
 }
