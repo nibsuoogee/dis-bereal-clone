@@ -81,6 +81,7 @@ export default function RegisterForm() {
         <Input
           placeholder="password"
           name="passwordhash"
+          type="password"
           value={userdata.passwordhash}
           onChange={handleChange}
           required

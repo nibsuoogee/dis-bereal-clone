@@ -7,7 +7,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/joy";
-import { Post, UUIDTypes } from "@types";
+import { Post, User } from "@types";
 import { API_CONFIG } from "@/app/config/api";
 import ClearIcon from "@mui/icons-material/Clear";
 import { usePostService } from "@/app/services/posts";
@@ -28,18 +28,19 @@ export default function VideoCard({
   const { currentUser } = useDataContext();
   const { deletePost } = usePostService();
   const { getUser } = useUserService();
-  const [username, setUsername] = useState<string>("");
+  const [poster, setPoster] = useState<User>({} as User);
 
   const isUsersPost = currentUser?.userid === post?.userid;
 
   const handleDeletePost = async () => {
     await deletePost(post.postid);
-    handleGetPosts();
+    //handleGetPosts();
   };
 
   async function handleGetUser() {
     const newUser = await getUser(post.userid);
-    setUsername(newUser?.username);
+    if (!newUser) return;
+    setPoster(newUser);
   }
 
   useEffect(() => {
@@ -47,76 +48,52 @@ export default function VideoCard({
   }, []);
 
   return (
-    <Grid>
-      <Stack
-        spacing={1}
-        sx={{
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-        }}
-      >
-        <Card sx={{ height: "600px", width: "338px" }}>
-          <CardCover>
-            <video autoPlay muted controls>
-              <source
-                src={`${API_CONFIG.baseURL}/api/posts/video/${post.postid}`}
-                type="video/mp4"
-              />
-            </video>
-          </CardCover>
-          {/*<CardContent></CardContent>*/}
-        </Card>
-        <Card size="sm">
-          <Stack
-            spacing={1}
-            sx={{
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-            }}
-          >
-            <Typography
-              level="body-lg"
-              sx={{ fontWeight: "lg", mt: { xs: 12, sm: 18 } }}
-            >
-              {username ?? "No username"}
-            </Typography>
-            <Typography
-              level="body-sm"
-              sx={{ fontWeight: "lg", mt: { xs: 12, sm: 18 } }}
-            >
-              {post.timestamp
-                ? timestampToReadableDate(post.timestamp)
-                : "No date"}
-            </Typography>{" "}
-            <Typography
-              level="body-sm"
-              sx={{ fontWeight: "lg", mt: { xs: 12, sm: 18 } }}
-            >
-              {post.islate ? "Posted late" : "Posted on time"}
-            </Typography>
-            <ReactionArray
-              post={post}
-              buttonsDisabled={isUsersPost}
-            ></ReactionArray>
-            {isUsersPost ? (
-              <Tooltip title="Delete post" variant="plain">
-                <IconButton
-                  variant="outlined"
-                  onClick={() => handleDeletePost()}
-                >
-                  <ClearIcon />
-                </IconButton>
-              </Tooltip>
-            ) : (
-              ""
-            )}
-          </Stack>
-        </Card>
-
-        <Stack spacing={1}>
-          <CommentSection postid={post.postid} />
+    <Stack spacing={1} className="py-2 inline-block pr-2">
+      <Card sx={{ height: "500px", width: "281px" }}>
+        <CardCover>
+          <video autoPlay muted controls>
+            <source
+              src={`${API_CONFIG.baseURL}/api/posts/video/${post.postid}`}
+              type="video/mp4"
+            />
+          </video>
+        </CardCover>
+      </Card>
+      <Card size="sm" sx={{ width: "100%" }}>
+        <Stack
+          spacing={1}
+          sx={{
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
+          }}
+        >
+          <Typography level="body-lg" sx={{ fontWeight: "lg", mt: 12 }}>
+            {poster?.username ?? "No username"}
+          </Typography>
+          <Typography level="body-sm" sx={{ fontWeight: "lg", mt: 12 }}>
+            {post.timestamp
+              ? timestampToReadableDate(post.timestamp)
+              : "No date"}
+          </Typography>{" "}
+          <Typography level="body-sm" sx={{ fontWeight: "lg", mt: 12 }}>
+            {post.islate ? "Posted late" : "Posted on time"}
+          </Typography>
+          <ReactionArray
+            post={post}
+            buttonsDisabled={isUsersPost}
+          ></ReactionArray>
+          {isUsersPost ? (
+            <Tooltip title="Delete post" variant="plain">
+              <IconButton variant="outlined" onClick={() => handleDeletePost()}>
+                <ClearIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            ""
+          )}
+          <CommentSection postid={post.postid} database={poster.database} />
         </Stack>
-      </Stack>
-    </Grid>
+      </Card>
+    </Stack>
   );
 }

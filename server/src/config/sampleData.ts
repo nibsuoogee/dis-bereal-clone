@@ -1,9 +1,8 @@
 import { DatabaseOption, User } from "@types";
 
 // userid will actually be generated automatically by postgres
-const sampleUsers: User[] = [
+const sampleUsers = [
   {
-    userid: "550e8400-e29b-41d4-a716-446655440000",
     username: "user1_za",
     fullname: "John Smith",
     email: "john.smith@email.com",
@@ -12,7 +11,6 @@ const sampleUsers: User[] = [
     database: "za" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440001",
     username: "user2_br",
     fullname: "Maria Silva",
     email: "maria.silva@email.com",
@@ -21,7 +19,6 @@ const sampleUsers: User[] = [
     database: "br" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440002",
     username: "user3_us",
     fullname: "Mike Johnson",
     email: "mike.j@email.com",
@@ -30,7 +27,6 @@ const sampleUsers: User[] = [
     database: "us" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440003",
     username: "user4_jp",
     fullname: "Yuki Tanaka",
     email: "yuki.t@email.com",
@@ -39,7 +35,6 @@ const sampleUsers: User[] = [
     database: "jp" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440004",
     username: "user5_uk",
     fullname: "Emma Wilson",
     email: "emma.w@email.com",
@@ -48,7 +43,6 @@ const sampleUsers: User[] = [
     database: "uk" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440005",
     username: "user6_de",
     fullname: "Hans Mueller",
     email: "hans.m@email.com",
@@ -57,7 +51,6 @@ const sampleUsers: User[] = [
     database: "de" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440006",
     username: "user7_za",
     fullname: "Sarah Brown",
     email: "sarah.b@email.com",
@@ -66,7 +59,6 @@ const sampleUsers: User[] = [
     database: "za" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440007",
     username: "user8_br",
     fullname: "Pedro Santos",
     email: "pedro.s@email.com",
@@ -75,7 +67,6 @@ const sampleUsers: User[] = [
     database: "br" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440008",
     username: "user9_us",
     fullname: "Lisa Davis",
     email: "lisa.d@email.com",
@@ -84,7 +75,6 @@ const sampleUsers: User[] = [
     database: "us" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440009",
     username: "user10_jp",
     fullname: "Kenji Sato",
     email: "kenji.s@email.com",
@@ -93,7 +83,6 @@ const sampleUsers: User[] = [
     database: "jp" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440010",
     username: "user11_uk",
     fullname: "James Taylor",
     email: "james.t@email.com",
@@ -102,7 +91,6 @@ const sampleUsers: User[] = [
     database: "uk" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440011",
     username: "user12_de",
     fullname: "Anna Schmidt",
     email: "anna.s@email.com",
@@ -111,7 +99,6 @@ const sampleUsers: User[] = [
     database: "de" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440012",
     username: "user13_za",
     fullname: "David Green",
     email: "david.g@email.com",
@@ -120,7 +107,6 @@ const sampleUsers: User[] = [
     database: "za" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440013",
     username: "user14_br",
     fullname: "Ana Costa",
     email: "ana.c@email.com",
@@ -129,7 +115,6 @@ const sampleUsers: User[] = [
     database: "br" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440014",
     username: "user15_us",
     fullname: "Tom Wilson",
     email: "tom.w@email.com",
@@ -138,7 +123,6 @@ const sampleUsers: User[] = [
     database: "us" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440015",
     username: "user16_jp",
     fullname: "Hiro Yamamoto",
     email: "hiro.y@email.com",
@@ -147,7 +131,6 @@ const sampleUsers: User[] = [
     database: "jp" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440016",
     username: "user17_uk",
     fullname: "Oliver Brown",
     email: "oliver.b@email.com",
@@ -156,13 +139,28 @@ const sampleUsers: User[] = [
     database: "uk" as DatabaseOption,
   },
   {
-    userid: "550e8400-e29b-41d4-a716-446655440017",
     username: "user18_de",
     fullname: "Laura Weber",
     email: "laura.w@email.com",
     passwordhash: "hash18",
     creationdate: null,
     database: "de" as DatabaseOption,
+  },
+  {
+    username: "user19_za",
+    fullname: "Michael Adams",
+    email: "michael.a@email.com",
+    passwordhash: "hash19",
+    creationdate: null,
+    database: "za" as DatabaseOption,
+  },
+  {
+    username: "user20_br",
+    fullname: "Julia Lima",
+    email: "julia.l@email.com",
+    passwordhash: "hash20",
+    creationdate: null,
+    database: "br" as DatabaseOption,
   },
 ];
 
