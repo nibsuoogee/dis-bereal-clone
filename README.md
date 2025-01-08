@@ -1,5 +1,7 @@
 # Data-Intensive Systems - BeReal Clone 🎥
 
+Watch the demo video [here](https://youtu.be/lQSg1HDiJbU)!
+
 ## Development
 
 ### Prerequisites 📋
